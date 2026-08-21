@@ -6,7 +6,7 @@
   "scripts": {
     "convert-catalogue": "python scripts/convert-pdf-to-images.py",
     "dev": "vite",
-    "build": "npm run convert-catalogue && vite build",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.app.json"
