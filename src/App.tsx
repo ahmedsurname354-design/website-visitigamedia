@@ -17,6 +17,8 @@ const NewsPage = lazy(() => import('@/pages/NewsPage'));
 const NewsDetailPage = lazy(() => import('@/pages/NewsDetailPage'));
 const LoginPage = lazy(() => import('@/pages/admin/LoginPage'));
 const DashboardPage = lazy(() => import('@/pages/admin/DashboardPage'));
+const PortfoliosPage = lazy(() => import('@/pages/admin/PortfoliosPage'));
+const NewsManagerPage = lazy(() => import('@/pages/admin/NewsManagerPage'));
 
 function PublicLayout() {
   return <><Navbar /><main><Outlet /></main><Footer /></>;
@@ -52,8 +54,8 @@ function AnimatedRoutes() {
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<DashboardPage />} />
                 <Route path="products" element={<Navigate to="/admin" replace />} />
-                <Route path="portfolios" element={<AdminPlaceholder title="Portofolio" />} />
-                <Route path="news" element={<AdminPlaceholder title="Berita" />} />
+                <Route path="portfolios" element={<PortfoliosPage />} />
+                <Route path="news" element={<NewsManagerPage />} />
               </Route>
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
@@ -62,10 +64,6 @@ function AnimatedRoutes() {
       </PageTransition>
     </AnimatePresence>
   );
-}
-
-function AdminPlaceholder({ title }: { title: string }) {
-  return <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm"><h2 className="text-2xl font-black">{title}</h2><p className="mt-2 text-sm text-slate-500">Struktur database dan navigasi sudah siap. Gunakan halaman Produk sebagai template CRUD untuk modul ini.</p></div>;
 }
 
 function PageTransition({ children }: { children: ReactNode }) {
