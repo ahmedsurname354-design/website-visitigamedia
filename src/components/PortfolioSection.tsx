@@ -567,13 +567,13 @@ export default function PortfolioSection() {
   // null means Supabase is unavailable; an empty array means the admin has
   // intentionally removed every project, so do not resurrect static content.
   const [remoteProjects, setRemoteProjects] = useState<Portfolio[] | null>(null);
-  const [selectedProject, setSelectedProject] = useState<{ img: string; title: string; category: string; client?: string; description?: string } | null>(null);
+  const [selectedProject, setSelectedProject] = useState<{ img: string; title: string; category: string; client?: string; description?: string; overview?: string; challenge?: string; solution?: string } | null>(null);
   const { ref, isInView } = useScrollReveal();
   const { lang } = useTranslation();
 
   useEffect(() => { void listPublicPortfolios().then(setRemoteProjects).catch(() => setRemoteProjects([])); }, []);
   const displayedProjects = remoteProjects !== null
-    ? remoteProjects.map((project) => ({ img: project.image_url, title: project.title, category: project.category, client: project.client, description: project.description }))
+    ? remoteProjects.map((project) => ({ img: project.image_url, title: project.title, category: project.category, client: project.client, description: project.description, overview: project.overview, challenge: project.challenge, solution: project.solution }))
     : projects;
   const displayedCategories = remoteProjects !== null
     ? ['View all', ...Array.from(new Set(displayedProjects.map((project) => project.category)))]
@@ -612,9 +612,9 @@ export default function PortfolioSection() {
     const isPlaceholder = (value: string | undefined) => value?.startsWith('Tulis ');
     const detailCopy = {
       subtitle,
-      overview: isPlaceholder(customDetailCopy?.overview) ? defaultDetailCopy.overview! : customDetailCopy?.overview ?? defaultDetailCopy.overview!,
-      challenge: isPlaceholder(customDetailCopy?.challenge) ? defaultDetailCopy.challenge! : customDetailCopy?.challenge ?? defaultDetailCopy.challenge!,
-      solution: isPlaceholder(customDetailCopy?.solution) ? defaultDetailCopy.solution! : customDetailCopy?.solution ?? defaultDetailCopy.solution!,
+      overview: selectedProject.overview || (isPlaceholder(customDetailCopy?.overview) ? defaultDetailCopy.overview! : customDetailCopy?.overview ?? defaultDetailCopy.overview!),
+      challenge: selectedProject.challenge || (isPlaceholder(customDetailCopy?.challenge) ? defaultDetailCopy.challenge! : customDetailCopy?.challenge ?? defaultDetailCopy.challenge!),
+      solution: selectedProject.solution || (isPlaceholder(customDetailCopy?.solution) ? defaultDetailCopy.solution! : customDetailCopy?.solution ?? defaultDetailCopy.solution!),
     };
     const detail: ProjectDetailData = {
       title: selectedProject.title,

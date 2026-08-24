@@ -5,11 +5,14 @@ export interface Portfolio {
   client: string;
   category: string;
   description: string;
+  overview: string;
+  challenge: string;
+  solution: string;
   created_at: string;
   updated_at: string;
 }
 
-export type PortfolioInput = Pick<Portfolio, 'title' | 'image_url' | 'client' | 'category' | 'description'>;
+export type PortfolioInput = Pick<Portfolio, 'title' | 'image_url' | 'client' | 'category' | 'description' | 'overview' | 'challenge' | 'solution'>;
 
 export interface NewsRecord {
   id: string;
