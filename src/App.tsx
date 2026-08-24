@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProtectedRoute from '@/components/admin/ProtectedRoute';
 import AdminLayout from '@/components/admin/AdminLayout';
+import { recordPageView } from '@/lib/analytics';
 const HomePage = lazy(() => import('@/pages/HomePage'));
 const AboutPage = lazy(() => import('@/pages/AboutPage'));
 const ServicesPage = lazy(() => import('@/pages/ServicesPage'));
@@ -31,6 +32,10 @@ function AnimatedRoutes() {
     // A route already fades in; instant scroll positioning prevents two
     // competing animations and keeps the new page stable.
     window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [location.pathname]);
+
+  useEffect(() => {
+    void recordPageView(location.pathname);
   }, [location.pathname]);
 
   return (
