@@ -37,9 +37,9 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
         {/* Logo */}
-        <a href="#home" className="flex items-center gap-3 group">
+        <NavLink to="/" aria-label={t('navbar.home')} className="flex items-center gap-3 group">
           <Logo className="h-14 sm:h-20 lg:h-24" />
-        </a>
+        </NavLink>
 
         <div className="hidden lg:flex ml-auto items-center gap-8">
           {/* Desktop nav */}

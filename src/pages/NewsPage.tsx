@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Clock3, MoveRight } from 'lucide-react';
 import { useTranslation, type Lang } from '@/i18n';
@@ -98,12 +98,15 @@ export default function NewsPage() {
   const popular = popularArticles.map((article) => localizeArticle(article, lang));
   const sidebar = sidebarArticles;
   const activeArticle = featured[activeSlide];
-  const chooseSlide = (direction: number) => setActiveSlide((current) => (current + direction + featured.length) % featured.length);
+  const chooseSlide = useCallback(
+    (direction: number) => setActiveSlide((current) => (current + direction + featuredArticles.length) % featuredArticles.length),
+    [],
+  );
 
   useEffect(() => {
     const timer = window.setInterval(() => chooseSlide(1), 6500);
     return () => window.clearInterval(timer);
-  }, []);
+  }, [chooseSlide]);
 
   return (
     <div className="bg-[#fffaf3] text-[#241811]">

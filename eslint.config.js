@@ -21,7 +21,12 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': [
         'warn',
-        { allowConstantExport: true },
+        {
+          allowConstantExport: true,
+          // These values are intentionally shared with the article-detail page
+          // and the language hook is shared by all page components.
+          allowExportNames: ['featuredArticles', 'popularArticles', 'localizeArticle', 'useTranslation', 'useAuth'],
+        },
       ],
     },
   }

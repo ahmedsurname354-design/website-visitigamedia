@@ -21,4 +21,4 @@ dist-ssr
 *.sln
 *.sw?
 .env
-src/assets/service-showreel.mp4
+src/assets/service-showreel.mov

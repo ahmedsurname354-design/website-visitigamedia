@@ -11,27 +11,37 @@ export default function CTASection() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsSubmitting(true);
-    setFormStatus('idle');
-
-    const form = new FormData(event.currentTarget);
-    const { error } = await supabase.from('contact_messages').insert({
-      name: String(form.get('name') ?? ''),
-      email: String(form.get('email') ?? ''),
-      phone: String(form.get('phone') ?? ''),
-      message: String(form.get('message') ?? ''),
-    });
-
-    setIsSubmitting(false);
-
-    if (error) {
-      console.error('Failed to submit contact message:', error.message);
+    if (!supabase) {
       setFormStatus('error');
       return;
     }
 
-    event.currentTarget.reset();
-    setFormStatus('success');
+    setIsSubmitting(true);
+    setFormStatus('idle');
+
+    const form = new FormData(event.currentTarget);
+    try {
+      const { error } = await supabase.from('contact_messages').insert({
+        name: String(form.get('name') ?? '').trim(),
+        email: String(form.get('email') ?? '').trim(),
+        phone: String(form.get('phone') ?? '').trim() || null,
+        message: String(form.get('message') ?? '').trim(),
+      });
+
+      if (error) {
+        console.error('Failed to submit contact message:', error.message);
+        setFormStatus('error');
+        return;
+      }
+
+      event.currentTarget.reset();
+      setFormStatus('success');
+    } catch (error) {
+      console.error('Unexpected error while submitting contact message:', error);
+      setFormStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -134,7 +144,7 @@ export default function CTASection() {
                   {isSubmitting ? 'Mengirim...' : 'Kirim Permintaan'}
                 </button>
                 {formStatus === 'success' && <p role="status" className="text-sm text-white">Pesan berhasil dikirim. Terima kasih!</p>}
-                {formStatus === 'error' && <p role="alert" className="text-sm text-white">Pesan belum terkirim. Silakan coba lagi.</p>}
+                {formStatus === 'error' && <p role="alert" className="text-sm text-white">Pesan belum terkirim. Periksa koneksi atau konfigurasi formulir, lalu coba lagi.</p>}
               </div>
             </form>
 
