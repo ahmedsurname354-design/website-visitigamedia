@@ -13,6 +13,10 @@ export async function listPortfolios(): Promise<Portfolio[]> {
   return data as Portfolio[];
 }
 
+export async function listPublicPortfolios(): Promise<Portfolio[]> {
+  return listPortfolios();
+}
+
 export async function savePortfolio(input: PortfolioInput, id?: string): Promise<void> {
   const query = id ? client().from('portfolios').update(input).eq('id', id) : client().from('portfolios').insert(input);
   const { error } = await query;
@@ -28,6 +32,18 @@ export async function listNews(): Promise<NewsRecord[]> {
   const { data, error } = await client().from('news').select('*').order('published_at', { ascending: false, nullsFirst: false });
   if (error) throw error;
   return data as NewsRecord[];
+}
+
+export async function listPublicNews(): Promise<NewsRecord[]> {
+  const { data, error } = await client().from('news').select('*').not('published_at', 'is', null).order('published_at', { ascending: false });
+  if (error) throw error;
+  return data as NewsRecord[];
+}
+
+export async function getPublicNews(id: string): Promise<NewsRecord | null> {
+  const { data, error } = await client().from('news').select('*').eq('id', id).not('published_at', 'is', null).maybeSingle();
+  if (error) throw error;
+  return data as NewsRecord | null;
 }
 
 export async function saveNews(input: NewsInput, id?: string): Promise<void> {

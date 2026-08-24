@@ -1,29 +1,13 @@
-import { ArrowLeft, Share2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowLeft, LoaderCircle } from 'lucide-react';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { useTranslation } from '@/i18n';
-import { featuredArticles, localizeArticle, popularArticles } from '@/pages/NewsPage';
+import { getPublicNews } from '@/lib/adminApi';
+import type { NewsRecord } from '@/types/admin';
 
 export default function NewsDetailPage() {
-  const { id } = useParams();
-  const { lang } = useTranslation();
-  const article = [...featuredArticles, ...popularArticles].find((item) => item.id === Number(id));
-
+  const { id } = useParams(); const [article, setArticle] = useState<NewsRecord | null | undefined>(undefined);
+  useEffect(() => { if (id) void getPublicNews(id).then(setArticle).catch(() => setArticle(null)); }, [id]);
+  if (article === undefined) return <main className="grid min-h-screen place-items-center"><LoaderCircle className="h-6 w-6 animate-spin text-orange-500" /></main>;
   if (!article) return <Navigate to="/news" replace />;
-  const story = localizeArticle(article, lang);
-  const copy = lang === 'id'
-    ? { back: 'Kembali ke berita', intro: 'Artikel Visitiga', share: 'Bagikan artikel' }
-    : { back: 'Back to news', intro: 'Visitiga article', share: 'Share article' };
-
-  return (
-    <article className="bg-[#fffaf3] pb-20 pt-28 text-[#241811] sm:pt-36">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6">
-        <Link to="/news" className="inline-flex items-center gap-2 text-sm font-bold text-orange-600 transition hover:-translate-x-1"><ArrowLeft className="h-4 w-4" />{copy.back}</Link>
-        <p className="mt-10 text-xs font-bold uppercase tracking-[0.24em] text-orange-600">{story.category}</p>
-        <h1 className="mt-4 max-w-4xl text-4xl font-black leading-[1.04] tracking-[-0.045em] sm:text-6xl">{story.title}</h1>
-        <p className="mt-6 max-w-2xl text-lg leading-8 text-[#735c4d]">{story.excerpt}</p>
-      </div>
-      <div className="mx-auto mt-10 max-w-6xl px-4 sm:px-6"><img src={story.image} alt="" className="aspect-[16/8] w-full rounded-2xl object-cover shadow-xl shadow-orange-950/10" /></div>
-      <div className="mx-auto mt-14 max-w-2xl px-4 sm:px-6"><p className="text-xs font-bold uppercase tracking-[0.22em] text-orange-600">{copy.intro}</p><div className="mt-6 space-y-5">{story.content.map((paragraph) => <p key={paragraph} className="text-base leading-8 text-[#5d4030]">{paragraph}</p>)}</div><button className="mt-10 inline-flex items-center gap-2 rounded-full border border-orange-300 px-5 py-3 text-sm font-bold text-orange-700 transition hover:bg-orange-100"><Share2 className="h-4 w-4" />{copy.share}</button></div>
-    </article>
-  );
+  return <article className="min-h-screen bg-[#fffaf3] pb-20 pt-32 text-[#241811] sm:pt-40"><div className="mx-auto max-w-4xl px-4 sm:px-6"><Link to="/news" className="inline-flex items-center gap-2 text-sm font-bold text-orange-600"><ArrowLeft className="h-4 w-4" />Kembali ke berita</Link><p className="mt-10 text-xs font-bold uppercase tracking-[.24em] text-orange-600">{article.category}</p><h1 className="mt-4 text-4xl font-black leading-tight sm:text-6xl">{article.title}</h1><p className="mt-5 text-lg text-[#735c4d]">{article.excerpt}</p><p className="mt-5 text-sm text-[#735c4d]">{article.author} · {new Date(article.published_at!).toLocaleDateString('id-ID')}</p></div><img src={article.cover_image} alt={article.title} className="mx-auto mt-10 aspect-[16/8] w-full max-w-6xl object-cover sm:rounded-2xl" /><div className="mx-auto mt-12 max-w-2xl whitespace-pre-wrap px-4 text-base leading-8 text-[#5d4030] sm:px-6">{article.content}</div></article>;
 }

@@ -1,8 +1,10 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import ProjectDetail, { type ProjectDetailData } from '@/components/ProjectDetail';
 import { useTranslation } from '@/i18n';
+import { listPublicPortfolios } from '@/lib/adminApi';
+import type { Portfolio } from '@/types/admin';
 
 const categories = ['View all', 'Audio Visual', 'Conventional Media', 'Indoor Media', 'Outdoor Media', 'Rental LED'];
 
@@ -562,9 +564,20 @@ const projectDetailsByImage: Partial<Record<string, ProjectDetailCopy>> = {
 
 export default function PortfolioSection() {
   const [selectedCategory, setSelectedCategory] = useState('View all');
-  const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null);
+  // null means Supabase is unavailable; an empty array means the admin has
+  // intentionally removed every project, so do not resurrect static content.
+  const [remoteProjects, setRemoteProjects] = useState<Portfolio[] | null>(null);
+  const [selectedProject, setSelectedProject] = useState<{ img: string; title: string; category: string; client?: string; description?: string } | null>(null);
   const { ref, isInView } = useScrollReveal();
   const { lang } = useTranslation();
+
+  useEffect(() => { void listPublicPortfolios().then(setRemoteProjects).catch(() => setRemoteProjects([])); }, []);
+  const displayedProjects = remoteProjects !== null
+    ? remoteProjects.map((project) => ({ img: project.image_url, title: project.title, category: project.category, client: project.client, description: project.description }))
+    : projects;
+  const displayedCategories = remoteProjects !== null
+    ? ['View all', ...Array.from(new Set(displayedProjects.map((project) => project.category)))]
+    : categories;
 
   const handleBackToProjects = () => {
     setSelectedProject(null);
@@ -572,21 +585,21 @@ export default function PortfolioSection() {
   };
 
   const filteredProjects = useMemo(
-    () => (selectedCategory === 'View all' ? projects : projects.filter((project) => project.category === selectedCategory)),
-    [selectedCategory]
+    () => (selectedCategory === 'View all' ? displayedProjects : displayedProjects.filter((project) => project.category === selectedCategory)),
+    [displayedProjects, selectedCategory]
   );
 
   if (selectedProject) {
     const galleryPool = selectedCategory === 'View all'
-      ? projects
-      : projects.filter((project) => project.category === selectedCategory);
+      ? displayedProjects
+      : displayedProjects.filter((project) => project.category === selectedCategory);
     const selectedIndex = galleryPool.findIndex((project) => project.img === selectedProject.img);
     const relatedProjects = [
       ...galleryPool.slice(selectedIndex + 1),
       ...galleryPool.slice(0, selectedIndex),
     ].slice(0, 4);
     const customDetailCopy = projectDetailsByImage[selectedProject.img];
-    const subtitle = customDetailCopy?.subtitle ?? `Instalasi ${selectedProject.category.toLowerCase()} yang dirancang khusus untuk menciptakan pengalaman visual yang jelas dan berdampak tinggi.`;
+    const subtitle = selectedProject.description || customDetailCopy?.subtitle || `Instalasi ${selectedProject.category.toLowerCase()} yang dirancang khusus untuk menciptakan pengalaman visual yang jelas dan berdampak tinggi.`;
     const defaultDetailCopy: ProjectDetailCopy = {
       subtitle,
       overview: lang === 'id' ? 'Proyek ini memadukan teknologi layar, penempatan yang tepat, dan pelaksanaan yang andal untuk menciptakan solusi visual yang mendukung ruang serta tujuan komunikasi klien.' : 'This project brings together display technology, thoughtful placement, and dependable execution to create a visual solution that supports the client’s space and communication goals.',
@@ -610,7 +623,7 @@ export default function PortfolioSection() {
       coverImage: selectedProject.img,
       role: lang === 'id' ? 'Desain & Instalasi' : 'Design & Installation',
       timeline: lang === 'id' ? 'Berdasarkan proyek' : 'Project-based',
-      client: lang === 'id' ? 'Klien Rahasia' : 'Confidential Client',
+      client: selectedProject.client || (lang === 'id' ? 'Klien Rahasia' : 'Confidential Client'),
       techStack: ['LED Display', 'Content System', 'On-site Installation'],
       overview: detailCopy.overview,
       challenge: detailCopy.challenge,
@@ -650,7 +663,7 @@ export default function PortfolioSection() {
         </motion.div>
 
         <div className="flex flex-wrap gap-3 mb-12">
-          {categories.map((category) => (
+          {displayedCategories.map((category) => (
             <button
               type="button"
               key={category}
