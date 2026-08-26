@@ -9,3 +9,4 @@ drop policy if exists "Admins update website media" on storage.objects;
 create policy "Admins update website media" on storage.objects for update to authenticated using (bucket_id = 'website-media' and public.is_admin()) with check (bucket_id = 'website-media' and public.is_admin());
 drop policy if exists "Admins delete website media" on storage.objects;
 create policy "Admins delete website media" on storage.objects for delete to authenticated using (bucket_id = 'website-media' and public.is_admin());
+    

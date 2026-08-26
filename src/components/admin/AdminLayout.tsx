@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronLeft, LayoutDashboard, LogOut, Menu, Newspaper, Package, PanelsTopLeft } from 'lucide-react';
+import { ChevronLeft, LayoutDashboard, LoaderCircle, LogOut, Menu, Newspaper, Package, PanelsTopLeft } from 'lucide-react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -14,13 +14,21 @@ const links = [
 export default function AdminLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [logoutError, setLogoutError] = useState('');
   const { session, signOut } = useAuth();
   const navigate = useNavigate();
   const email = session?.user.email ?? 'Admin';
 
   const logout = async () => {
-    await signOut();
-    navigate('/admin/login', { replace: true });
+    setLoggingOut(true);
+    setLogoutError('');
+    try {
+      await signOut();
+      navigate('/admin/login', { replace: true });
+    } catch (reason) {
+      setLogoutError(reason instanceof Error ? reason.message : 'Sesi tidak dapat diakhiri. Silakan coba lagi.');
+    } finally { setLoggingOut(false); }
   };
 
   return (
@@ -43,9 +51,9 @@ export default function AdminLayout() {
       <div className={`min-h-screen transition-[margin] duration-300 ${collapsed ? 'lg:ml-[88px]' : 'lg:ml-64'}`}>
         <header className="sticky top-0 z-30 flex h-20 items-center justify-between border-b border-slate-200 bg-white/90 px-4 backdrop-blur sm:px-8">
           <div className="flex items-center gap-3"><button onClick={() => setMobileOpen(true)} className="rounded-lg p-2 hover:bg-slate-100 lg:hidden" aria-label="Buka menu"><Menu className="h-5 w-5" /></button><div><p className="text-xs font-semibold uppercase tracking-[.2em] text-orange-600">Content control</p><h1 className="font-bold">Admin Dashboard</h1></div></div>
-          <div className="flex items-center gap-3"><div className="hidden text-right sm:block"><p className="max-w-48 truncate text-sm font-semibold">{email}</p><p className="text-xs text-slate-500">Administrator</p></div><div className="grid h-10 w-10 place-items-center rounded-full bg-orange-100 text-sm font-bold text-orange-700">{email.slice(0, 1).toUpperCase()}</div><button onClick={() => void logout()} className="rounded-lg p-2 text-slate-500 transition hover:bg-red-50 hover:text-red-600" aria-label="Keluar"><LogOut className="h-5 w-5" /></button></div>
+          <div className="flex items-center gap-3"><div className="hidden text-right sm:block"><p className="max-w-48 truncate text-sm font-semibold">{email}</p><p className="text-xs text-slate-500">Administrator</p></div><div className="grid h-10 w-10 place-items-center rounded-full bg-orange-100 text-sm font-bold text-orange-700">{email.slice(0, 1).toUpperCase()}</div><button disabled={loggingOut} onClick={() => void logout()} className="inline-flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-semibold text-slate-500 transition hover:bg-red-50 hover:text-red-600 disabled:cursor-wait disabled:opacity-60" aria-label="Keluar" title="Keluar">{loggingOut ? <LoaderCircle className="h-5 w-5 animate-spin" /> : <LogOut className="h-5 w-5" />}<span className="hidden md:inline">Keluar</span></button></div>
         </header>
-        <main className="p-4 sm:p-8"><motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .25 }}><Outlet /></motion.div></main>
+        <main className="p-4 sm:p-8">{logoutError && <p role="alert" className="mx-auto mb-5 max-w-7xl rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{logoutError}</p>}<motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .25 }}><Outlet /></motion.div></main>
       </div>
     </div>
   );
