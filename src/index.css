@@ -507,3 +507,53 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .accordion-card, .accordion-card * { transition-duration: .01ms !important; }
 }
+
+/* Summernote is a Bootstrap-oriented editor; align it with the admin dashboard. */
+.note-editor.note-frame {
+  margin-top: .5rem;
+  overflow: hidden;
+  border: 1px solid #cbd5e1;
+  border-radius: .875rem;
+  box-shadow: none;
+}
+.note-editor .note-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  padding: .65rem;
+  border: 0;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+.note-editor .note-btn-group { margin: 0 !important; }
+.note-editor .note-btn {
+  min-width: 2rem;
+  height: 2rem;
+  border: 1px solid #e2e8f0;
+  border-radius: .45rem;
+  color: #475569;
+  background: #fff;
+  box-shadow: none;
+}
+.note-editor .note-btn:hover, .note-editor .note-btn:focus, .note-editor .note-btn.active {
+  border-color: #fb923c;
+  color: #c2410c;
+  background: #fff7ed;
+  box-shadow: none;
+}
+.note-editor .note-editing-area .note-editable {
+  min-height: 20rem;
+  padding: 1rem;
+  color: #334155;
+  background: #fff;
+  line-height: 1.7;
+}
+.note-editor .note-statusbar { border-top-color: #e2e8f0; background: #f8fafc; }
+.note-editor .dropdown-menu { border-color: #e2e8f0; border-radius: .65rem; box-shadow: 0 10px 25px rgb(15 23 42 / .12); }
+.note-editor .note-modal-content { border-radius: 1rem; box-shadow: 0 20px 50px rgb(15 23 42 / .28); }
+
+@media (max-width: 640px) {
+  .note-editor .note-toolbar { gap: .25rem; padding: .5rem; }
+  .note-editor .note-btn { min-width: 1.9rem; padding: .25rem; }
+  .note-editor .note-editing-area .note-editable { min-height: 16rem; padding: .85rem; }
+}
