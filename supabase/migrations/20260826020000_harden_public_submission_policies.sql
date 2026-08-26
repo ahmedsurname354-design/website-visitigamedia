@@ -3,16 +3,16 @@
 do $$
 begin
   if not exists (select 1 from pg_constraint where conname = 'contact_messages_name_length') then
-    alter table public.contact_messages add constraint contact_messages_name_length check (char_length(trim(name)) between 2 and 120);
+    alter table public.contact_messages add constraint contact_messages_name_length check (char_length(trim(name)) between 2 and 120) not valid;
   end if;
   if not exists (select 1 from pg_constraint where conname = 'contact_messages_email_format') then
-    alter table public.contact_messages add constraint contact_messages_email_format check (char_length(email) between 5 and 254 and email ~* '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$');
+    alter table public.contact_messages add constraint contact_messages_email_format check (char_length(email) between 5 and 254 and email ~* '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$') not valid;
   end if;
   if not exists (select 1 from pg_constraint where conname = 'contact_messages_phone_length') then
-    alter table public.contact_messages add constraint contact_messages_phone_length check (phone is null or char_length(trim(phone)) between 7 and 30);
+    alter table public.contact_messages add constraint contact_messages_phone_length check (nullif(trim(phone), '') is null or char_length(trim(phone)) between 7 and 30) not valid;
   end if;
   if not exists (select 1 from pg_constraint where conname = 'contact_messages_message_length') then
-    alter table public.contact_messages add constraint contact_messages_message_length check (char_length(trim(message)) between 10 and 5000);
+    alter table public.contact_messages add constraint contact_messages_message_length check (char_length(trim(message)) between 10 and 5000) not valid;
   end if;
 end $$;
 
@@ -23,7 +23,7 @@ with check (
   char_length(trim(name)) between 2 and 120
   and char_length(email) between 5 and 254
   and email ~* '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$'
-  and (phone is null or char_length(trim(phone)) between 7 and 30)
+  and (nullif(trim(phone), '') is null or char_length(trim(phone)) between 7 and 30)
   and char_length(trim(message)) between 10 and 5000
   and created_at between now() - interval '5 minutes' and now() + interval '5 minutes'
 );
