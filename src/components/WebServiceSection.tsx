@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { Play, ArrowUpRight } from 'lucide-react';
-import serviceShowreel from '@/assets/service-showreel.mov';
 
 export default function WebServiceSection() {
   const { ref, isInView } = useScrollReveal();
@@ -51,15 +50,17 @@ export default function WebServiceSection() {
             className="relative rounded-3xl overflow-hidden border border-white/10 shadow-[0_40px_120px_rgba(0,0,0,0.25)]"
           >
             <video
-              src={serviceShowreel}
               aria-label="Service showreel"
               className="block h-[520px] w-full object-cover"
-              autoPlay
-              muted
-              loop
               playsInline
               controls
-            />
+              preload="none"
+              poster="/videos/service-showreel-poster.jpg"
+            >
+              <source src="/videos/service-showreel.webm" type="video/webm" />
+              <source src="/videos/service-showreel.mp4" type="video/mp4" />
+              Browser Anda tidak mendukung pemutaran video.
+            </video>
           </motion.div>
         </div>
       </div>
