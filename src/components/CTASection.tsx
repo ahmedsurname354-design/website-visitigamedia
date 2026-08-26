@@ -4,20 +4,35 @@ import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { ArrowRight, Phone, Mail, MapPin } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
+function getContactErrorMessage(error: { code?: string; message?: string }) {
+  if (error.code === '42501') {
+    return 'Pengiriman ditolak oleh konfigurasi keamanan form. Pastikan migration security terbaru sudah dijalankan di Supabase.';
+  }
+
+  if (error.code === '23514') {
+    return 'Periksa kembali data: nama minimal 2 karakter, pesan minimal 10 karakter, dan nomor WhatsApp bila diisi harus valid.';
+  }
+
+  return 'Pesan belum terkirim. Periksa koneksi, lalu coba lagi.';
+}
+
 export default function CTASection() {
   const { ref, isInView } = useScrollReveal();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [formError, setFormError] = useState('');
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!supabase) {
+      setFormError('Konfigurasi formulir belum tersedia. Hubungi administrator website.');
       setFormStatus('error');
       return;
     }
 
     setIsSubmitting(true);
     setFormStatus('idle');
+    setFormError('');
 
     const form = new FormData(event.currentTarget);
     try {
@@ -30,6 +45,7 @@ export default function CTASection() {
 
       if (error) {
         console.error('Failed to submit contact message:', error.message);
+        setFormError(getContactErrorMessage(error));
         setFormStatus('error');
         return;
       }
@@ -38,6 +54,7 @@ export default function CTASection() {
       setFormStatus('success');
     } catch (error) {
       console.error('Unexpected error while submitting contact message:', error);
+      setFormError('Pesan belum terkirim. Periksa koneksi, lalu coba lagi.');
       setFormStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -151,7 +168,7 @@ export default function CTASection() {
                   {isSubmitting ? 'Mengirim...' : 'Kirim Permintaan'}
                 </button>
                 {formStatus === 'success' && <p role="status" className="text-sm text-white">Pesan berhasil dikirim. Terima kasih!</p>}
-                {formStatus === 'error' && <p role="alert" className="text-sm text-white">Pesan belum terkirim. Periksa koneksi atau konfigurasi formulir, lalu coba lagi.</p>}
+                {formStatus === 'error' && <p role="alert" className="text-sm text-white">{formError}</p>}
               </div>
             </form>
 
