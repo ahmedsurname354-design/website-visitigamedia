@@ -457,6 +457,66 @@ body {
   .accordion-card__action { right: 1.25rem; bottom: 1.25rem; }
 }
 
+/* Public site visual system: a quieter editorial palette and consistent spacing. */
+.public-site {
+  background: #fffaf5;
+  color: #2b2521;
+}
+.public-site .theme-section,
+.public-site .theme-section-alt {
+  padding-top: clamp(4.5rem, 8vw, 6.5rem);
+  padding-bottom: clamp(4.5rem, 8vw, 6.5rem);
+  background-image: none;
+}
+.public-site .theme-section { background-color: #fffaf5; }
+.public-site .theme-section-alt { background-color: #f5eee6; }
+.public-site .theme-section .bg-white\/5,
+.public-site .theme-section .bg-white\/10,
+.public-site .theme-section-alt .bg-white\/5,
+.public-site .theme-section-alt .bg-white\/10 {
+  background-color: rgb(255 255 255 / .78) !important;
+}
+.public-site .theme-section .border-white\/10,
+.public-site .theme-section-alt .border-white\/10 {
+  border-color: #e7d8ca !important;
+}
+.public-site .theme-section .shadow-\[0_20px_70px_rgba\(0\,0\,0\,0\.12\)\] {
+  box-shadow: 0 14px 36px rgb(82 54 33 / .08) !important;
+}
+.public-site .theme-section h2,
+.public-site .theme-section-alt h2 {
+  letter-spacing: -.035em;
+}
+.public-site .theme-section p,
+.public-site .theme-section-alt p { color: #705d4f; }
+.public-site .theme-section .text-orange-500,
+.public-site .theme-section-alt .text-orange-500 { color: #d85e24 !important; }
+.public-site .theme-section .bg-orange-500,
+.public-site .theme-section-alt .bg-orange-500 { background-color: #df6428 !important; }
+.public-site .theme-navbar {
+  background: rgb(255 250 245 / .92);
+  border-bottom: 1px solid rgb(231 216 202 / .8);
+  box-shadow: 0 8px 24px rgb(52 32 18 / .06);
+}
+.public-site .theme-navbar .theme-nav-text { color: #2b2521; }
+.public-site .theme-mobile-menu { background: #fffaf5; border-top: 1px solid #eadccd; }
+.public-site .theme-mobile-menu .text-white\/80 { color: #4c3d33 !important; }
+.site-footer { color: #fef7f1; background: #27211e; }
+.site-footer .text-white\/50 { color: rgb(255 247 241 / .62) !important; }
+.site-footer .text-white\/40 { color: rgb(255 247 241 / .46) !important; }
+.site-footer .text-white\/70 { color: rgb(255 247 241 / .78) !important; }
+.site-footer .text-white { color: #fffaf5 !important; }
+.site-footer .border-white\/5 { border-color: rgb(255 255 255 / .12) !important; }
+.site-footer .bg-white\/5 { background-color: rgb(255 255 255 / .08) !important; }
+
+@media (max-width: 640px) {
+  .public-site .theme-section,
+  .public-site .theme-section-alt { padding-top: 4rem; padding-bottom: 4rem; }
+  .public-site .theme-section .grid,
+  .public-site .theme-section-alt .grid { gap: 1rem; }
+  .public-site .theme-keep-light .text-lg { font-size: 1rem; line-height: 1.65; }
+}
+
 /* Compact phone layout: prevents controls and horizontal sections exceeding the viewport. */
 @media (max-width: 380px) {
   .flipbook-control { padding-right: .75rem; padding-left: .75rem; }

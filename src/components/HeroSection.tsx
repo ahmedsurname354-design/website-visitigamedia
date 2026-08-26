@@ -9,7 +9,7 @@ export default function HeroSection() {
   const { t } = useTranslation();
 
   return (
-    <section id="home" className="theme-keep-light relative min-h-screen flex items-center overflow-hidden bg-white">
+    <section id="home" className="theme-keep-light relative flex min-h-[82svh] items-center overflow-hidden bg-white sm:min-h-[88svh]">
       {/* Background image */}
       <div className="absolute inset-0">
         <img

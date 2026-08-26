@@ -32,7 +32,7 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="theme-section border-t border-white/5 pt-16 pb-8">
+    <footer className="site-footer border-t border-slate-800 pt-14 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="grid lg:grid-cols-5 gap-12 mb-12">
           {/* Brand */}

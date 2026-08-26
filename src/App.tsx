@@ -23,7 +23,7 @@ const NewsManagerPage = lazy(() => import('@/pages/admin/NewsManagerPage'));
 const ProductsManagerPage = lazy(() => import('@/pages/admin/ProductsManagerPage'));
 
 function PublicLayout() {
-  return <><Navbar /><main><Outlet /></main><Footer /></>;
+  return <div className="public-site"><Navbar /><main><Outlet /></main><Footer /></div>;
 }
 
 function AnimatedRoutes() {

@@ -32,18 +32,18 @@ export default function Navbar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, delay: 0.2 }}
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        scrolled ? 'theme-navbar backdrop-blur-md py-3 shadow-lg' : 'bg-transparent py-3 sm:py-5'
+        scrolled ? 'theme-navbar backdrop-blur-md py-2.5 shadow-sm' : 'bg-transparent py-3 sm:py-4'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
         {/* Logo */}
         <NavLink to="/" aria-label={t('navbar.home')} className="flex items-center gap-3 group">
-          <Logo className="h-14 sm:h-20 lg:h-24" />
+          <Logo className="h-11 sm:h-12 lg:h-14" />
         </NavLink>
 
-        <div className="hidden lg:flex ml-auto items-center gap-8">
+        <div className="hidden lg:flex ml-auto items-center gap-6">
           {/* Desktop nav */}
-          <ul className="flex items-center gap-8">
+          <ul className="flex items-center gap-6">
             {navLinks.map((link) => (
               <li key={link.labelKey}>
                 <NavLink
