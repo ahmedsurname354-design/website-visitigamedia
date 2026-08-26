@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "convert-catalogue": "python scripts/convert-pdf-to-images.py",
+    "optimize-images": "node scripts/optimize-images.mjs",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
