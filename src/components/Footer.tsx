@@ -21,7 +21,7 @@ const linkMap: Record<string, string> = {
   Portfolio: '/portfolio',
   Blog: '/news',
   FAQ: '/faq',
-  Support: 'mailto:marcomm@visitiga.com',
+  Support: 'mailto:marcomm@visitiga.com?subject=Konsultasi%20Visitiga%20Media',
 };
 
 const socials = [

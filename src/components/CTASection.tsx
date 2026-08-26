@@ -79,7 +79,7 @@ export default function CTASection() {
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
               </a>
               <a
-                href="mailto:marcomm@visitiga.com"
+                href="mailto:marcomm@visitiga.com?subject=Konsultasi%20Visitiga%20Media"
                 className="bg-white/20 hover:bg-white/30 text-white px-7 py-4 rounded-full font-semibold transition-all duration-300 hover:-translate-y-0.5"
               >
                 Email Us
@@ -158,7 +158,7 @@ export default function CTASection() {
                   </div>
                 </div>
                 <div className="contact-info-card rounded-3xl p-4">
-                  <a href="mailto:marcomm@visitiga.com" className="flex items-center gap-3 text-sm transition-colors duration-200">
+                  <a href="mailto:marcomm@visitiga.com?subject=Konsultasi%20Visitiga%20Media" className="flex items-center gap-3 text-sm transition-colors duration-200">
                     <Mail className="w-4 h-4 text-orange-400" />
                     <span>marcomm@visitiga.com</span>
                   </a>

@@ -35,7 +35,7 @@ export default function WebServiceSection() {
                 <ArrowUpRight className="w-4 h-4" />
               </a>
               <a
-                href="mailto:marcomm@visitiga.com"
+                href="mailto:marcomm@visitiga.com?subject=Konsultasi%20Visitiga%20Media"
                 className="inline-flex items-center gap-2 border border-white/10 bg-white/5 text-white px-7 py-4 rounded-full font-semibold transition-all duration-300 hover:bg-white/10"
               >
                 Email Marketing
