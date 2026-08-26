@@ -96,6 +96,8 @@ export default function CTASection() {
                   id="contact-name"
                   name="name"
                   required
+                  minLength={2}
+                  maxLength={120}
                   autoComplete="name"
                   placeholder="Nama Anda"
                   className="contact-field w-full rounded-xl px-4 py-3 outline-none transition"
@@ -108,6 +110,7 @@ export default function CTASection() {
                   name="email"
                   type="email"
                   required
+                  maxLength={254}
                   autoComplete="email"
                   placeholder="email@anda.com"
                   className="contact-field w-full rounded-xl px-4 py-3 outline-none transition"
@@ -119,6 +122,8 @@ export default function CTASection() {
                   id="contact-phone"
                   name="phone"
                   type="tel"
+                  minLength={7}
+                  maxLength={30}
                   autoComplete="tel"
                   placeholder="08xxxxxxxxxx"
                   className="contact-field w-full rounded-xl px-4 py-3 outline-none transition"
@@ -130,6 +135,8 @@ export default function CTASection() {
                   id="contact-message"
                   name="message"
                   required
+                  minLength={10}
+                  maxLength={5000}
                   rows={4}
                   placeholder="Ceritakan kebutuhan LED display Anda..."
                   className="contact-field w-full resize-y rounded-xl px-4 py-3 outline-none transition"
