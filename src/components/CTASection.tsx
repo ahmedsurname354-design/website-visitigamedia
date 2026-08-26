@@ -13,6 +13,10 @@ function getContactErrorMessage(error: { code?: string; message?: string }) {
     return 'Periksa kembali data: nama minimal 2 karakter, pesan minimal 10 karakter, dan nomor WhatsApp bila diisi harus valid.';
   }
 
+  if (error.message?.toLowerCase().includes('fetch')) {
+    return 'Tidak dapat terhubung ke layanan formulir. Periksa VITE_SUPABASE_URL dan VITE_SUPABASE_PUBLISHABLE_KEY di Vercel.';
+  }
+
   return 'Pesan belum terkirim. Periksa koneksi, lalu coba lagi.';
 }
 
@@ -54,7 +58,7 @@ export default function CTASection() {
       setFormStatus('success');
     } catch (error) {
       console.error('Unexpected error while submitting contact message:', error);
-      setFormError('Pesan belum terkirim. Periksa koneksi, lalu coba lagi.');
+      setFormError(getContactErrorMessage(error instanceof Error ? error : {}));
       setFormStatus('error');
     } finally {
       setIsSubmitting(false);
