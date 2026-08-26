@@ -19,10 +19,13 @@ export default function ProductFlipbook() {
   const pageNumberRef = useRef<HTMLSpanElement>(null);
   const statusRef = useRef<HTMLParagraphElement>(null);
   const fullscreenRef = useRef<HTMLDivElement>(null);
+  const hydratePagesRef = useRef<(page: number) => void>(() => undefined);
   const [currentPage, setCurrentPage] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const changePage = (direction: 'next' | 'previous') => {
+    // Preload the destination before the page-turn animation starts.
+    hydratePagesRef.current(currentPage + (direction === 'next' ? 1 : -1));
     if (direction === 'next') flipRef.current?.flipNext();
     else flipRef.current?.flipPrev();
   };
@@ -66,7 +69,9 @@ export default function ProductFlipbook() {
 
           const img = document.createElement('img');
           const pageNum = String(index + 1).padStart(2, '0');
-          img.src = `${IMAGE_BASE_URL}/page-${pageNum}.png`;
+          // Do not assign `src` here: 26 large PNGs would otherwise download
+          // immediately when the catalogue section is opened.
+          img.dataset.src = `${IMAGE_BASE_URL}/page-${pageNum}.png`;
           img.alt = `Catalogue page ${index + 1}`;
           img.style.width = '100%';
           img.style.height = '100%';
@@ -75,6 +80,18 @@ export default function ProductFlipbook() {
           book.appendChild(page);
           return page;
         });
+
+        const hydratePages = (activePage: number) => {
+          for (let index = Math.max(0, activePage - 1); index <= Math.min(PAGE_COUNT - 1, activePage + 2); index += 1) {
+            const image = pageElements[index].querySelector('img');
+            if (image && !image.getAttribute('src') && image.dataset.src) {
+              image.src = image.dataset.src;
+              image.decoding = 'async';
+            }
+          }
+        };
+        hydratePagesRef.current = hydratePages;
+        hydratePages(0);
 
         pageFlip = new PageFlip(book, {
           width: 420,
@@ -94,6 +111,7 @@ export default function ProductFlipbook() {
 
         pageFlip.on('flip', (event) => {
           setCurrentPage(event.data);
+          hydratePages(event.data);
           if (pageNumberRef.current) pageNumberRef.current.textContent = `${event.data + 1} / ${PAGE_COUNT}`;
         });
         pageFlip.loadFromHTML(pageElements);
@@ -113,6 +131,7 @@ export default function ProductFlipbook() {
     return () => {
       cancelled = true;
       flipRef.current = null;
+      hydratePagesRef.current = () => undefined;
       pageFlip?.destroy();
     };
   }, []);
