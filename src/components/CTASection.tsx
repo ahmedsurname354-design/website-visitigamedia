@@ -98,7 +98,7 @@ export default function CTASection() {
                   required
                   autoComplete="name"
                   placeholder="Nama Anda"
-                  className="w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white placeholder:text-white/50 outline-none transition focus:border-white focus:bg-white/15"
+                  className="contact-field w-full rounded-xl px-4 py-3 outline-none transition"
                 />
               </div>
               <div>
@@ -110,7 +110,7 @@ export default function CTASection() {
                   required
                   autoComplete="email"
                   placeholder="email@anda.com"
-                  className="w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white placeholder:text-white/50 outline-none transition focus:border-white focus:bg-white/15"
+                  className="contact-field w-full rounded-xl px-4 py-3 outline-none transition"
                 />
               </div>
               <div>
@@ -121,7 +121,7 @@ export default function CTASection() {
                   type="tel"
                   autoComplete="tel"
                   placeholder="08xxxxxxxxxx"
-                  className="w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white placeholder:text-white/50 outline-none transition focus:border-white focus:bg-white/15"
+                  className="contact-field w-full rounded-xl px-4 py-3 outline-none transition"
                 />
               </div>
               <div className="sm:col-span-2">
@@ -132,7 +132,7 @@ export default function CTASection() {
                   required
                   rows={4}
                   placeholder="Ceritakan kebutuhan LED display Anda..."
-                  className="w-full resize-y rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white placeholder:text-white/50 outline-none transition focus:border-white focus:bg-white/15"
+                  className="contact-field w-full resize-y rounded-xl px-4 py-3 outline-none transition"
                 />
               </div>
               <div className="sm:col-span-2 flex flex-wrap items-center gap-4">
@@ -151,19 +151,19 @@ export default function CTASection() {
             {/* Contact info */}
             <div className="grid lg:grid-cols-[1fr,320px] gap-6 mt-14 max-w-4xl mx-auto items-start">
               <div className="grid gap-4">
-                <div className="rounded-3xl border border-white/10 bg-white/5 p-4 text-white/90">
+                <div className="contact-info-card rounded-3xl p-4">
                   <div className="flex items-center gap-3 text-sm">
                     <Phone className="w-4 h-4 text-orange-400" />
                     <span>+62 812 3456 7890</span>
                   </div>
                 </div>
-                <div className="rounded-3xl border border-white/10 bg-white/5 p-4 text-white/90">
-                  <a href="mailto:marcomm@visitiga.com" className="flex items-center gap-3 text-sm text-white/90 hover:text-white transition-colors duration-200">
+                <div className="contact-info-card rounded-3xl p-4">
+                  <a href="mailto:marcomm@visitiga.com" className="flex items-center gap-3 text-sm transition-colors duration-200">
                     <Mail className="w-4 h-4 text-orange-400" />
                     <span>marcomm@visitiga.com</span>
                   </a>
                 </div>
-                <div className="rounded-3xl border border-white/10 bg-white/5 p-4 text-white/90">
+                <div className="contact-info-card rounded-3xl p-4">
                   <div className="flex items-center gap-3 text-sm">
                     <MapPin className="w-4 h-4 text-orange-400" />
                     <span>Jl. Setra Dago Barat No.9 Antapani, Bandung</span>
