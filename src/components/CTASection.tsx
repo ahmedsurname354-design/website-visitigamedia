@@ -154,7 +154,7 @@ export default function CTASection() {
                 <div className="contact-info-card rounded-3xl p-4">
                   <div className="flex items-center gap-3 text-sm">
                     <Phone className="w-4 h-4 text-orange-400" />
-                    <span>+62 812 3456 7890</span>
+                    <span>+62 822 5878 8780</span>
                   </div>
                 </div>
                 <div className="contact-info-card rounded-3xl p-4">
