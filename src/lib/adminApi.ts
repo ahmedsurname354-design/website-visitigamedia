@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
-import type { NewsInput, NewsRecord, Portfolio, PortfolioInput } from '@/types/admin';
+import type { NewsInput, NewsRecord, Portfolio, PortfolioInput, Product, ProductInput } from '@/types/admin';
 
 function client(): SupabaseClient {
   if (!supabase) throw new Error('Supabase belum dikonfigurasi.');
@@ -54,5 +54,26 @@ export async function saveNews(input: NewsInput, id?: string): Promise<void> {
 
 export async function deleteNews(id: string): Promise<void> {
   const { error } = await client().from('news').delete().eq('id', id);
+  if (error) throw error;
+}
+
+export async function listProducts(): Promise<Product[]> {
+  const { data, error } = await client().from('products').select('*').order('sort_order').order('created_at');
+  if (error) throw error;
+  return data as Product[];
+}
+
+export async function listPublicProducts(): Promise<Product[]> {
+  return listProducts();
+}
+
+export async function saveProduct(input: ProductInput, id?: string): Promise<void> {
+  const query = id ? client().from('products').update(input).eq('id', id) : client().from('products').insert(input);
+  const { error } = await query;
+  if (error) throw error;
+}
+
+export async function deleteProduct(id: string): Promise<void> {
+  const { error } = await client().from('products').delete().eq('id', id);
   if (error) throw error;
 }

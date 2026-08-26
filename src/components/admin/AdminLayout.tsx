@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronLeft, LayoutDashboard, LogOut, Menu, Newspaper, PanelsTopLeft } from 'lucide-react';
+import { ChevronLeft, LayoutDashboard, LogOut, Menu, Newspaper, Package, PanelsTopLeft } from 'lucide-react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
 const links = [
   { to: '/admin', label: 'Overview', icon: LayoutDashboard, end: true },
+  { to: '/admin/products', label: 'Produk', icon: Package },
   { to: '/admin/portfolios', label: 'Portofolio', icon: PanelsTopLeft },
   { to: '/admin/news', label: 'Berita', icon: Newspaper },
 ];

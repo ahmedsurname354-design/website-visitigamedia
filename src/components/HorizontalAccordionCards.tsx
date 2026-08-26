@@ -1,4 +1,5 @@
-import { useState, type CSSProperties } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
+import { listPublicProducts } from '@/lib/adminApi';
 
 type AccordionItem = {
   title: string;
@@ -10,7 +11,7 @@ type AccordionItem = {
 };
 
 // Ubah isi array ini untuk mengganti teks, warna, dan gambar setiap kartu.
-const accordionItems: AccordionItem[] = [
+const fallbackItems: AccordionItem[] = [
   {
     title: 'LED OUTDOOR',
     label: '01 / Experience',
@@ -63,10 +64,23 @@ const accordionItems: AccordionItem[] = [
 
 export default function HorizontalAccordionCards() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [items, setItems] = useState<AccordionItem[]>(fallbackItems);
+
+  useEffect(() => {
+    let active = true;
+    void listPublicProducts().then((products) => {
+      if (!active || products.length === 0) return;
+      setItems(products.map((product) => ({ title: product.name, label: product.label, description: product.description, image: product.image_url, color: product.color, accent: product.accent })));
+      setActiveIndex(0);
+    }).catch(() => {
+      // Static cards keep the public product page functional until Supabase is configured.
+    });
+    return () => { active = false; };
+  }, []);
 
   return (
     <div className="accordion-cards" aria-label="Layanan media kami">
-      {accordionItems.map((item, index) => {
+      {items.map((item, index) => {
         const isActive = activeIndex === index;
 
         return (

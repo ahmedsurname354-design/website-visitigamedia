@@ -28,3 +28,19 @@ export interface NewsRecord {
 }
 
 export type NewsInput = Pick<NewsRecord, 'title' | 'cover_image' | 'content' | 'author' | 'category' | 'excerpt' | 'published_at'>;
+
+export interface Product {
+  id: string;
+  name: string;
+  image_url: string;
+  category: string;
+  description: string;
+  label: string;
+  color: string;
+  accent: string;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export type ProductInput = Pick<Product, 'name' | 'image_url' | 'category' | 'description' | 'label' | 'color' | 'accent' | 'sort_order'>;

@@ -20,6 +20,7 @@ const LoginPage = lazy(() => import('@/pages/admin/LoginPage'));
 const DashboardPage = lazy(() => import('@/pages/admin/DashboardPage'));
 const PortfoliosPage = lazy(() => import('@/pages/admin/PortfoliosPage'));
 const NewsManagerPage = lazy(() => import('@/pages/admin/NewsManagerPage'));
+const ProductsManagerPage = lazy(() => import('@/pages/admin/ProductsManagerPage'));
 
 function PublicLayout() {
   return <><Navbar /><main><Outlet /></main><Footer /></>;
@@ -58,7 +59,7 @@ function AnimatedRoutes() {
             <Route element={<ProtectedRoute />}>
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<DashboardPage />} />
-                <Route path="products" element={<Navigate to="/admin" replace />} />
+                <Route path="products" element={<ProductsManagerPage />} />
                 <Route path="portfolios" element={<PortfoliosPage />} />
                 <Route path="news" element={<NewsManagerPage />} />
               </Route>
