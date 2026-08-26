@@ -88,11 +88,19 @@ function PageTransition({ children }: { children: ReactNode }) {
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 640px)').matches);
   const theme: 'light' | 'dark' = 'light';
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 2200);
+    const timer = setTimeout(() => setIsLoading(false), isMobile ? 450 : 1200);
     return () => clearTimeout(timer);
+  }, [isMobile]);
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 640px)');
+    const sync = () => setIsMobile(media.matches);
+    media.addEventListener('change', sync);
+    return () => media.removeEventListener('change', sync);
   }, []);
 
   useEffect(() => {
@@ -101,15 +109,11 @@ function App() {
   }, []);
 
   return (
-    <MotionConfig reducedMotion="user">
+    <MotionConfig reducedMotion={isMobile ? 'always' : 'user'}>
       <LoadingScreen isLoading={isLoading} />
       <div className={`app-shell theme-${theme} overflow-x-hidden`}>
         <Router>
-          <Navbar />
-          <main>
-            <AnimatedRoutes />
-          </main>
-          <Footer />
+          <AnimatedRoutes />
         </Router>
       </div>
     </MotionConfig>

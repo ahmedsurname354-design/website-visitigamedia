@@ -465,6 +465,16 @@ body {
 
 /* Phone-first spacing and typography for 320–640px screens. */
 @media (max-width: 640px) {
+  /* Phone GPUs struggle with large blur layers and continuous layout animation. */
+  html { scroll-behavior: auto; }
+  .theme-section, .theme-section-alt { background-image: none; }
+  .theme-keep-light > .absolute .blur-3xl { display: none; }
+  .accordion-card, .accordion-card *, .client-logo, .client-logo-slot { transition: none !important; animation: none !important; }
+  .accordion-card, .accordion-card.is-active { flex: 0 0 auto; min-height: 22rem; }
+  .accordion-card__image-wrap, .accordion-card.is-active .accordion-card__image-wrap { top: 2.75rem; right: 0; width: 16rem; height: 12rem; transform: none; }
+  .accordion-card__copy, .accordion-card.is-active .accordion-card__copy { max-width: 100%; margin-top: 13rem; margin-bottom: 0; transform: none; }
+  .accordion-card__description, .accordion-card.is-active .accordion-card__description { max-height: 14rem; margin-top: .75rem; opacity: 1; transform: none; }
+  .accordion-card__label { transition: none; }
   .theme-section,
   .theme-section-alt {
     padding-top: 4rem !important;

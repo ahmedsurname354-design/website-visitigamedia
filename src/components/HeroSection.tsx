@@ -14,7 +14,10 @@ export default function HeroSection() {
       <div className="absolute inset-0">
         <img
           src={heroImg}
+          srcSet={`${heroImg}&w=768&dpr=1 768w, ${heroImg} 1260w`}
+          sizes="100vw"
           alt="Tampilan LED di kota pada malam hari"
+          fetchPriority="high"
           className="w-full h-full object-cover opacity-60"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/30" />
