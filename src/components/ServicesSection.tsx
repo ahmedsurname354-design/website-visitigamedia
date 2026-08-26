@@ -52,7 +52,9 @@ export default function ServicesSection() {
                   ))}
                 </div>
                 <a
-                  href="#contact"
+                  href="https://bit.ly/49NclAE"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="mt-7 inline-flex items-center gap-2 text-orange-500 text-sm font-semibold transition-all duration-300 hover:gap-3"
                 >
                   {service.action}
