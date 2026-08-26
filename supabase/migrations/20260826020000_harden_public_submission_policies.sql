@@ -17,8 +17,9 @@ begin
 end $$;
 
 drop policy if exists "Anyone can submit contact messages" on public.contact_messages;
+drop policy if exists "Visitors submit validated contact messages" on public.contact_messages;
 create policy "Visitors submit validated contact messages"
-on public.contact_messages for insert to anon
+on public.contact_messages for insert to anon, authenticated
 with check (
   char_length(trim(name)) between 2 and 120
   and char_length(email) between 5 and 254
@@ -29,6 +30,7 @@ with check (
 );
 
 drop policy if exists "Anyone can record page views" on public.website_events;
+drop policy if exists "Visitors record validated page views" on public.website_events;
 create policy "Visitors record validated page views"
 on public.website_events for insert to anon, authenticated
 with check (
