@@ -4,6 +4,27 @@ import { getProductCatalogue, saveProductCatalogue } from '@/lib/adminApi';
 import { supabase } from '@/lib/supabase';
 
 const MAX_PDF_SIZE = 30 * 1024 * 1024;
+const MEDIA_BUCKET = 'website-media';
+const CATALOGUE_FOLDER = 'catalogues';
+
+async function removeOldCatalogues(activeFileName: string) {
+  if (!supabase) return;
+  const storage = supabase.storage.from(MEDIA_BUCKET);
+  const oldPaths: string[] = [];
+  const pageSize = 100;
+
+  for (let offset = 0; ; offset += pageSize) {
+    const { data, error } = await storage.list(CATALOGUE_FOLDER, { limit: pageSize, offset, sortBy: { column: 'name', order: 'asc' } });
+    if (error) throw error;
+    oldPaths.push(...data.filter((item) => item.name !== activeFileName).map((item) => `${CATALOGUE_FOLDER}/${item.name}`));
+    if (data.length < pageSize) break;
+  }
+
+  if (oldPaths.length > 0) {
+    const { error } = await storage.remove(oldPaths);
+    if (error) throw error;
+  }
+}
 
 export function CatalogueUploadCard() {
   const [title, setTitle] = useState('Product Catalogue');
@@ -28,15 +49,31 @@ export function CatalogueUploadCard() {
     if (file.size > MAX_PDF_SIZE) { setError('Ukuran PDF maksimal 30 MB.'); return; }
     if (!supabase) { setError('Supabase belum dikonfigurasi.'); return; }
     setUploading(true); setError(''); setMessage('');
+    const fileName = `${crypto.randomUUID()}.pdf`;
+    const path = `${CATALOGUE_FOLDER}/${fileName}`;
+    let catalogueSaved = false;
     try {
-      const path = `catalogues/${crypto.randomUUID()}.pdf`;
-      const { error: uploadError } = await supabase.storage.from('website-media').upload(path, file, { cacheControl: '3600', contentType: 'application/pdf', upsert: false });
+      const storage = supabase.storage.from(MEDIA_BUCKET);
+      const { error: uploadError } = await storage.upload(path, file, { cacheControl: '3600', contentType: 'application/pdf', upsert: false });
       if (uploadError) throw uploadError;
-      const { data } = supabase.storage.from('website-media').getPublicUrl(path);
+      const { data } = storage.getPublicUrl(path);
       await saveProductCatalogue(title.trim() || 'Product Catalogue', data.publicUrl);
+      catalogueSaved = true;
       setFileUrl(data.publicUrl);
-      setMessage('Katalog berhasil diganti. Halaman Product akan memakai PDF baru.');
-    } catch (reason) { setError(reason instanceof Error ? reason.message : 'Katalog tidak dapat diunggah.'); }
+      try {
+        await removeOldCatalogues(fileName);
+        setMessage('Katalog berhasil diganti dan file katalog lama sudah dibersihkan.');
+      } catch (cleanupError) {
+        console.warn('Katalog aktif, tetapi file lama tidak dapat dibersihkan:', cleanupError);
+        setMessage('Katalog berhasil diganti, tetapi beberapa file lama belum dapat dibersihkan.');
+      }
+    } catch (reason) {
+      if (!catalogueSaved) {
+        const { error: rollbackError } = await supabase.storage.from(MEDIA_BUCKET).remove([path]);
+        if (rollbackError) console.warn('File upload yang gagal disimpan tidak dapat dibersihkan:', rollbackError);
+      }
+      setError(reason instanceof Error ? reason.message : 'Katalog tidak dapat diunggah.');
+    }
     finally { setUploading(false); }
   };
 
