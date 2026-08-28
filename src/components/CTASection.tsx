@@ -32,6 +32,8 @@ export default function CTASection() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const formElement = event.currentTarget;
+
     if (!supabase) {
       setFormError('Konfigurasi formulir belum tersedia. Hubungi administrator website.');
       setFormStatus('error');
@@ -42,7 +44,7 @@ export default function CTASection() {
     setFormStatus('idle');
     setFormError('');
 
-    const form = new FormData(event.currentTarget);
+    const form = new FormData(formElement);
     try {
       const { error } = await supabase.from('contact_messages').insert({
         name: String(form.get('name') ?? '').trim(),
@@ -58,7 +60,7 @@ export default function CTASection() {
         return;
       }
 
-      event.currentTarget.reset();
+      formElement.reset();
       setFormStatus('success');
     } catch (error) {
       console.error('Unexpected error while submitting contact message:', error);
