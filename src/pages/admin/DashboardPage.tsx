@@ -7,6 +7,14 @@ type LeadRow = { created_at: string };
 type Preset = '7d' | '30d' | '1y' | 'custom';
 type ChartItem = { label: string; value: number; title: string };
 type Summary = { visitors: number; views: number; leads: number; previousVisitors: number; previousViews: number; previousLeads: number; chart: ChartItem[] };
+const DAY_MS = 86_400_000;
+const PAGE_SIZE = 1000;
+const PRESETS: ReadonlyArray<readonly [Preset, string]> = [
+  ['7d', '7 hari'],
+  ['30d', '1 bulan'],
+  ['1y', '1 tahun'],
+  ['custom', 'Kustom'],
+];
 const emptySummary: Summary = { visitors: 0, views: 0, leads: 0, previousVisitors: 0, previousViews: 0, previousLeads: 0, chart: [] };
 
 function localDateValue(date: Date) {
@@ -19,17 +27,22 @@ function startOfDay(value: string | Date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
 
+function addDays(date: Date, days: number) {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
 function selectedRange(preset: Preset, customStart: string, customEnd: string) {
   const today = startOfDay(new Date());
-  const end = new Date(today); end.setDate(end.getDate() + 1);
+  const end = addDays(today, 1);
   let start = new Date(today);
   if (preset === '7d') start.setDate(start.getDate() - 6);
   if (preset === '30d') start.setDate(start.getDate() - 29);
   if (preset === '1y') { start = new Date(today.getFullYear(), today.getMonth(), 1); start.setMonth(start.getMonth() - 11); }
   if (preset === 'custom') {
     start = startOfDay(customStart);
-    const customEndExclusive = startOfDay(customEnd); customEndExclusive.setDate(customEndExclusive.getDate() + 1);
-    return { start, end: customEndExclusive };
+    return { start, end: addDays(startOfDay(customEnd), 1) };
   }
   return { start, end };
 }
@@ -45,7 +58,7 @@ function change(current: number, previous: number) {
 }
 
 function buildChart(events: EventRow[], start: Date, end: Date): ChartItem[] {
-  const days = Math.ceil((end.getTime() - start.getTime()) / 86_400_000);
+  const days = Math.ceil((end.getTime() - start.getTime()) / DAY_MS);
   const monthly = days > 90;
   const buckets = new Map<string, number>();
   const cursor = new Date(start);
@@ -72,13 +85,12 @@ function buildChart(events: EventRow[], start: Date, end: Date): ChartItem[] {
 async function fetchRows<T extends EventRow | LeadRow>(table: 'website_events' | 'contact_messages', columns: string, start: Date, end: Date): Promise<T[]> {
   if (!supabase) return [];
   const rows: T[] = [];
-  const pageSize = 1000;
-  for (let from = 0; ; from += pageSize) {
-    const { data, error } = await supabase.from(table).select(columns).gte('created_at', start.toISOString()).lt('created_at', end.toISOString()).order('created_at').range(from, from + pageSize - 1);
+  for (let from = 0; ; from += PAGE_SIZE) {
+    const { data, error } = await supabase.from(table).select(columns).gte('created_at', start.toISOString()).lt('created_at', end.toISOString()).order('created_at').range(from, from + PAGE_SIZE - 1);
     if (error) throw error;
     const page = (data ?? []) as unknown as T[];
     rows.push(...page);
-    if (page.length < pageSize) break;
+    if (page.length < PAGE_SIZE) break;
   }
   return rows;
 }
@@ -138,7 +150,10 @@ export default function DashboardPage() {
   const max = Math.max(...summary.chart.map((item) => item.value), 1);
 
   return <div className="mx-auto max-w-7xl space-y-8">
-    <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between"><div><h2 className="text-2xl font-black tracking-tight sm:text-3xl">Ringkasan aktivitas</h2><p className="mt-2 text-sm text-slate-500">{periodLabel}. Data diperbarui otomatis.</p></div><div className="flex flex-wrap items-center gap-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">{([['7d', '7 hari'], ['30d', '1 bulan'], ['1y', '1 tahun'], ['custom', 'Kustom']] as const).map(([value, label]) => <button key={value} type="button" onClick={() => setPreset(value)} className={`rounded-xl px-4 py-2 text-sm font-bold transition ${preset === value ? 'bg-orange-500 text-white' : 'text-slate-600 hover:bg-slate-100'}`}>{label}</button>)}</div></div>
+    <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+      <div><h2 className="text-2xl font-black tracking-tight sm:text-3xl">Ringkasan aktivitas</h2><p className="mt-2 text-sm text-slate-500">{periodLabel}. Data diperbarui otomatis.</p></div>
+      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">{PRESETS.map(([value, label]) => <button key={value} type="button" onClick={() => setPreset(value)} className={`rounded-xl px-4 py-2 text-sm font-bold transition ${preset === value ? 'bg-orange-500 text-white' : 'text-slate-600 hover:bg-slate-100'}`}>{label}</button>)}</div>
+    </div>
     {preset === 'custom' && <section className="flex flex-wrap items-end gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><CalendarDays className="mb-2.5 h-5 w-5 text-orange-500" /><DateInput label="Dari tanggal" value={customStart} max={customEnd} onChange={setCustomStart} /><DateInput label="Sampai tanggal" value={customEnd} min={customStart} max={localDateValue(today)} onChange={setCustomEnd} /></section>}
     {error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
     <section className="grid gap-4 md:grid-cols-3">{stats.map(({ label, value, previous, icon: Icon, color }) => { const trend = change(value, previous); const positive = value >= previous; return <article key={label} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"><div className="flex items-start justify-between"><div className={`grid h-11 w-11 place-items-center rounded-xl ${color} text-white`}><Icon className="h-5 w-5" /></div><span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-bold ${positive ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>{positive ? <ArrowUpRight className="h-3.5 w-3.5" /> : <ArrowDownRight className="h-3.5 w-3.5" />}{trend}</span></div><p className="mt-6 text-sm font-medium text-slate-500">{label}</p><p className="mt-1 text-3xl font-black tracking-tight">{loading ? <LoaderCircle className="h-7 w-7 animate-spin" /> : value.toLocaleString('id-ID')}</p><p className="mt-1 text-xs text-slate-400">dibanding periode sebelumnya</p></article>; })}</section>
@@ -147,5 +162,5 @@ export default function DashboardPage() {
 }
 
 function DateInput({ label, value, min, max, onChange }: { label: string; value: string; min?: string; max?: string; onChange: (value: string) => void }) {
-  return <label className="text-xs font-bold text-slate-500">{label}<input type="date" value={value} min={min} max={max} onChange={(event) => onChange(event.target.value)} className="mt-1 block rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 outline-none focus:border-orange-500" /></label>;
+  return <label className="text-xs font-bold text-slate-500">{label}<input required type="date" value={value} min={min} max={max} onChange={(event) => { if (event.target.value) onChange(event.target.value); }} className="mt-1 block rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 outline-none focus:border-orange-500" /></label>;
 }
