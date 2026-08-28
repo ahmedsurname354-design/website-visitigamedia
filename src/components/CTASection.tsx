@@ -4,7 +4,21 @@ import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { ArrowRight, Phone, Mail, MapPin } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
+const submissionKeyName = 'visitiga_contact_submission_key';
+
+function contactSubmissionKey() {
+  const existing = localStorage.getItem(submissionKeyName);
+  if (existing && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(existing)) return existing;
+  const key = crypto.randomUUID();
+  localStorage.setItem(submissionKeyName, key);
+  return key;
+}
+
 function getContactErrorMessage(error: { code?: string; message?: string }) {
+  if (error.message?.toLowerCase().includes('rate limit')) {
+    return 'Terlalu banyak percobaan. Tunggu sekitar 15 menit sebelum mengirim kembali.';
+  }
+
   if (error.code === '401' || error.message?.toLowerCase().includes('unauthorized')) {
     return 'Layanan formulir menolak kredensial website. Periksa kembali publishable key Supabase di Vercel.';
   }
@@ -46,11 +60,13 @@ export default function CTASection() {
 
     const form = new FormData(formElement);
     try {
-      const { error } = await supabase.from('contact_messages').insert({
-        name: String(form.get('name') ?? '').trim(),
-        email: String(form.get('email') ?? '').trim(),
-        phone: String(form.get('phone') ?? '').trim() || null,
-        message: String(form.get('message') ?? '').trim(),
+      const { error } = await supabase.rpc('submit_contact_message', {
+        p_name: String(form.get('name') ?? '').trim(),
+        p_email: String(form.get('email') ?? '').trim(),
+        p_phone: String(form.get('phone') ?? '').trim() || null,
+        p_message: String(form.get('message') ?? '').trim(),
+        p_submission_key: contactSubmissionKey(),
+        p_honeypot: String(form.get('company') ?? ''),
       });
 
       if (error) {
@@ -117,6 +133,9 @@ export default function CTASection() {
               onSubmit={handleSubmit}
               className="mt-10 grid gap-4 rounded-3xl border border-white/15 bg-black/10 p-5 text-left sm:grid-cols-2 sm:p-6 max-w-3xl mx-auto"
             >
+              <div className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+                <label htmlFor="contact-company">Perusahaan<input id="contact-company" name="company" type="text" tabIndex={-1} autoComplete="off" /></label>
+              </div>
               <div>
                 <label htmlFor="contact-name" className="mb-2 block text-sm font-medium text-white">Nama</label>
                 <input

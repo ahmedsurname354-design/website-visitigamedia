@@ -7,6 +7,17 @@ function client(): SupabaseClient {
   return supabase;
 }
 
+function assertSafeMediaUrl(value: string, label: string) {
+  if (value.length > 2048) throw new Error(`${label} terlalu panjang.`);
+  if (value.startsWith('/') && !value.startsWith('//')) return;
+  try {
+    if (new URL(value).protocol === 'https:') return;
+  } catch {
+    // Fall through to the user-facing validation error.
+  }
+  throw new Error(`${label} harus berupa path website atau URL HTTPS yang valid.`);
+}
+
 export async function listPortfolios(): Promise<Portfolio[]> {
   const { data, error } = await client().from('portfolios').select('*').order('created_at', { ascending: false });
   if (error) throw error;
@@ -18,6 +29,7 @@ export async function listPublicPortfolios(): Promise<Portfolio[]> {
 }
 
 export async function savePortfolio(input: PortfolioInput, id?: string): Promise<void> {
+  assertSafeMediaUrl(input.image_url, 'URL gambar project');
   const query = id ? client().from('portfolios').update(input).eq('id', id) : client().from('portfolios').insert(input);
   const { error } = await query;
   if (error) throw error;
@@ -47,6 +59,7 @@ export async function getPublicNews(id: string): Promise<NewsRecord | null> {
 }
 
 export async function saveNews(input: NewsInput, id?: string): Promise<void> {
+  assertSafeMediaUrl(input.cover_image, 'URL cover berita');
   const query = id ? client().from('news').update(input).eq('id', id) : client().from('news').insert(input);
   const { error } = await query;
   if (error) throw error;
@@ -68,6 +81,7 @@ export async function listPublicProducts(): Promise<Product[]> {
 }
 
 export async function saveProduct(input: ProductInput, id?: string): Promise<void> {
+  assertSafeMediaUrl(input.image_url, 'URL gambar produk');
   const query = id ? client().from('products').update(input).eq('id', id) : client().from('products').insert(input);
   const { error } = await query;
   if (error) throw error;
@@ -85,6 +99,7 @@ export async function getProductCatalogue(): Promise<ProductCatalogue | null> {
 }
 
 export async function saveProductCatalogue(title: string, fileUrl: string): Promise<void> {
+  assertSafeMediaUrl(fileUrl, 'URL katalog');
   const { error } = await client().from('product_catalogue').upsert({ id: 1, title, file_url: fileUrl });
   if (error) throw error;
 }

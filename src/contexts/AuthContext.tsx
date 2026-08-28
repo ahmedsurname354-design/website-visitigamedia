@@ -12,6 +12,7 @@ interface AuthContextValue {
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+const ADMIN_IDLE_TIMEOUT_MS = 30 * 60 * 1000;
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
@@ -31,6 +32,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => setSession(nextSession));
     return () => listener.subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    const client = supabase;
+    if (!client || session?.user.app_metadata.role !== 'admin') return;
+    let timeout = window.setTimeout(() => undefined, ADMIN_IDLE_TIMEOUT_MS);
+    const expireSession = () => {
+      void client.auth.signOut({ scope: 'local' }).finally(() => setSession(null));
+    };
+    const resetTimeout = () => {
+      window.clearTimeout(timeout);
+      timeout = window.setTimeout(expireSession, ADMIN_IDLE_TIMEOUT_MS);
+    };
+    const events: Array<keyof WindowEventMap> = ['pointerdown', 'keydown', 'scroll', 'touchstart'];
+    events.forEach((event) => window.addEventListener(event, resetTimeout, { passive: true }));
+    resetTimeout();
+    return () => {
+      window.clearTimeout(timeout);
+      events.forEach((event) => window.removeEventListener(event, resetTimeout));
+    };
+  }, [session]);
 
   const value = useMemo<AuthContextValue>(() => ({
     session,
