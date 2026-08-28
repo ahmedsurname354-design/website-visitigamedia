@@ -5,6 +5,10 @@ import { ArrowRight, Phone, Mail, MapPin } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
 function getContactErrorMessage(error: { code?: string; message?: string }) {
+  if (error.code === '401' || error.message?.toLowerCase().includes('unauthorized')) {
+    return 'Layanan formulir menolak kredensial website. Periksa kembali publishable key Supabase di Vercel.';
+  }
+
   if (error.code === '42501') {
     return 'Pengiriman ditolak oleh konfigurasi keamanan form. Pastikan migration security terbaru sudah dijalankan di Supabase.';
   }
