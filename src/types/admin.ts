@@ -51,3 +51,17 @@ export interface ProductCatalogue {
   file_url: string;
   updated_at: string;
 }
+
+export type LeadStatus = 'new' | 'contacted' | 'completed' | 'spam';
+
+export interface ContactLead {
+  id: number;
+  name: string;
+  email: string;
+  phone: string | null;
+  message: string;
+  status: LeadStatus;
+  notes: string;
+  created_at: string;
+  updated_at: string;
+}

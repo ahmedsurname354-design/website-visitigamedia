@@ -1,11 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronLeft, LayoutDashboard, LoaderCircle, LogOut, Menu, Newspaper, Package, PanelsTopLeft } from 'lucide-react';
+import { ChevronLeft, Inbox, LayoutDashboard, LoaderCircle, LogOut, Menu, Newspaper, Package, PanelsTopLeft } from 'lucide-react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { countNewContactLeads } from '@/lib/adminApi';
+import { supabase } from '@/lib/supabase';
 
 const links = [
   { to: '/admin', label: 'Overview', icon: LayoutDashboard, end: true },
+  { to: '/admin/leads', label: 'Leads', icon: Inbox },
   { to: '/admin/products', label: 'Produk', icon: Package },
   { to: '/admin/portfolios', label: 'Portofolio', icon: PanelsTopLeft },
   { to: '/admin/news', label: 'Berita', icon: Newspaper },
@@ -16,9 +19,19 @@ export default function AdminLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState('');
+  const [newLeadCount, setNewLeadCount] = useState(0);
   const { session, signOut } = useAuth();
   const navigate = useNavigate();
   const email = session?.user.email ?? 'Admin';
+
+  useEffect(() => {
+    const client = supabase;
+    if (!client) return;
+    const refresh = () => void countNewContactLeads().then(setNewLeadCount).catch(() => undefined);
+    refresh();
+    const channel = client.channel('admin-new-lead-count').on('postgres_changes', { event: '*', schema: 'public', table: 'contact_messages' }, refresh).subscribe();
+    return () => { void client.removeChannel(channel); };
+  }, []);
 
   const logout = async () => {
     setLoggingOut(true);
@@ -42,8 +55,8 @@ export default function AdminLayout() {
           {!collapsed && <span className="whitespace-nowrap font-bold tracking-tight text-white">Visitiga Admin</span>}
         </div>
         <nav className="flex-1 space-y-2 p-3">
-          {links.map(({ to, label, icon: Icon, end }) => <NavLink key={to} to={to} end={end} onClick={() => setMobileOpen(false)} className={({ isActive }) => `flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition ${isActive ? 'bg-orange-500 text-slate-950' : 'hover:bg-white/10 hover:text-white'}`}>
-            <Icon className="h-5 w-5 shrink-0" /> {!collapsed && <span>{label}</span>}
+          {links.map(({ to, label, icon: Icon, end }) => <NavLink key={to} to={to} end={end} onClick={() => setMobileOpen(false)} className={({ isActive }) => `relative flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition ${isActive ? 'bg-orange-500 text-slate-950' : 'hover:bg-white/10 hover:text-white'}`}>
+            <Icon className="h-5 w-5 shrink-0" /> {!collapsed && <span>{label}</span>}{to === '/admin/leads' && newLeadCount > 0 && <span className={`${collapsed ? 'absolute right-2 top-2 h-2.5 w-2.5 p-0' : 'ml-auto min-w-6 px-1.5 py-0.5 text-center text-[11px]'} rounded-full bg-red-500 font-bold text-white`}>{collapsed ? '' : newLeadCount > 99 ? '99+' : newLeadCount}</span>}
           </NavLink>)}
         </nav>
         <button onClick={() => setCollapsed((value) => !value)} className="hidden border-t border-white/10 p-4 text-slate-400 transition hover:text-white lg:flex lg:items-center lg:justify-center" aria-label="Ubah ukuran sidebar"><ChevronLeft className={`h-5 w-5 transition-transform ${collapsed ? 'rotate-180' : ''}`} /></button>

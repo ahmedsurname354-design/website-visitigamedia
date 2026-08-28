@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
-import type { NewsInput, NewsRecord, Portfolio, PortfolioInput, Product, ProductCatalogue, ProductInput } from '@/types/admin';
+import type { ContactLead, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, Product, ProductCatalogue, ProductInput } from '@/types/admin';
 
 function client(): SupabaseClient {
   if (!supabase) throw new Error('Supabase belum dikonfigurasi.');
@@ -87,4 +87,26 @@ export async function getProductCatalogue(): Promise<ProductCatalogue | null> {
 export async function saveProductCatalogue(title: string, fileUrl: string): Promise<void> {
   const { error } = await client().from('product_catalogue').upsert({ id: 1, title, file_url: fileUrl });
   if (error) throw error;
+}
+
+export async function listContactLeads(): Promise<ContactLead[]> {
+  const { data, error } = await client().from('contact_messages').select('*').order('created_at', { ascending: false });
+  if (error) throw error;
+  return data as ContactLead[];
+}
+
+export async function updateContactLead(id: number, input: { status: LeadStatus; notes: string }): Promise<void> {
+  const { error } = await client().from('contact_messages').update(input).eq('id', id);
+  if (error) throw error;
+}
+
+export async function deleteContactLead(id: number): Promise<void> {
+  const { error } = await client().from('contact_messages').delete().eq('id', id);
+  if (error) throw error;
+}
+
+export async function countNewContactLeads(): Promise<number> {
+  const { count, error } = await client().from('contact_messages').select('id', { count: 'exact', head: true }).eq('status', 'new');
+  if (error) throw error;
+  return count ?? 0;
 }
