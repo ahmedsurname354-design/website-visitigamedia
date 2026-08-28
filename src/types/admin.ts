@@ -44,3 +44,10 @@ export interface Product {
 }
 
 export type ProductInput = Pick<Product, 'name' | 'image_url' | 'category' | 'description' | 'label' | 'color' | 'accent' | 'sort_order'>;
+
+export interface ProductCatalogue {
+  id: number;
+  title: string;
+  file_url: string;
+  updated_at: string;
+}

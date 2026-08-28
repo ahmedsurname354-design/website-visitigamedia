@@ -1,12 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ComponentProps } from 'react';
 import { Edit3, LoaderCircle, Trash2 } from 'lucide-react';
 import { deleteProduct, listProducts, saveProduct } from '@/lib/adminApi';
 import { ContentModal, InputField } from '@/components/admin/ContentModal';
 import { ImageUploadField } from '@/components/admin/ImageUploadField';
-import { Alert, Header } from '@/pages/admin/PortfoliosPage';
+import { CatalogueUploadCard } from '@/components/admin/CatalogueUploadCard';
+import { Alert, Header as BaseHeader } from '@/pages/admin/PortfoliosPage';
 import type { Product } from '@/types/admin';
 
 const defaults = { color: '#2a1a12', accent: '#fb923c' };
+
+function Header(props: ComponentProps<typeof BaseHeader>) {
+  return <><BaseHeader {...props} /><CatalogueUploadCard /></>;
+}
 
 export default function ProductsManagerPage() {
   const [items, setItems] = useState<Product[]>([]);

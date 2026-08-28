@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
-import type { NewsInput, NewsRecord, Portfolio, PortfolioInput, Product, ProductInput } from '@/types/admin';
+import type { NewsInput, NewsRecord, Portfolio, PortfolioInput, Product, ProductCatalogue, ProductInput } from '@/types/admin';
 
 function client(): SupabaseClient {
   if (!supabase) throw new Error('Supabase belum dikonfigurasi.');
@@ -75,5 +75,16 @@ export async function saveProduct(input: ProductInput, id?: string): Promise<voi
 
 export async function deleteProduct(id: string): Promise<void> {
   const { error } = await client().from('products').delete().eq('id', id);
+  if (error) throw error;
+}
+
+export async function getProductCatalogue(): Promise<ProductCatalogue | null> {
+  const { data, error } = await client().from('product_catalogue').select('*').eq('id', 1).maybeSingle();
+  if (error) throw error;
+  return data as ProductCatalogue | null;
+}
+
+export async function saveProductCatalogue(title: string, fileUrl: string): Promise<void> {
+  const { error } = await client().from('product_catalogue').upsert({ id: 1, title, file_url: fileUrl });
   if (error) throw error;
 }
