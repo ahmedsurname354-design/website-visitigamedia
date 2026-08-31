@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "convert-catalogue": "python scripts/convert-pdf-to-images.py",
+    "compress-catalogue": "node scripts/compress-catalogue.mjs",
     "optimize-images": "node scripts/optimize-images.mjs",
     "dev": "vite",
     "build": "vite build",
+    "deploy:cloudflare": "npm run build && wrangler pages deploy --project-name visitiga-media --branch main",
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.app.json"
@@ -38,6 +40,7 @@
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.11",
     "globals": "^15.9.0",
+    "pdf-lib": "^1.17.1",
     "pdf-parse": "^2.4.5",
     "pdf2pic": "^3.2.0",
     "postcss": "^8.4.35",
@@ -45,6 +48,7 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.3.0",
-    "vite": "^5.4.2"
+    "vite": "^5.4.2",
+    "wrangler": "^4.127.1"
   }
 }
