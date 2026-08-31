@@ -124,7 +124,7 @@ img, video { max-width: 100%; }
   background-image: linear-gradient(90deg, transparent calc(33.333% - 1px), rgba(74, 82, 84, .16) calc(33.333% - 1px), rgba(255,255,255,.36) 33.333%, transparent calc(33.333% + 1px)), linear-gradient(0deg, transparent calc(51% - 1px), rgba(74, 82, 84, .14) calc(51% - 1px), rgba(255,255,255,.35) 51%, transparent calc(51% + 1px));
   pointer-events: none;
 }
-.client-wall__inner { position: relative; max-width: 1240px; margin: 0 auto; }
+.client-wall__inner { position: relative; max-width: 1440px; margin: 0 auto; }
 .client-wall__heading { max-width: 850px; margin: 0 auto 3.5rem; text-align: center; }
 .client-wall__eyebrow { margin: 0 0 1rem; color: #7a8080; font-size: .63rem; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; }
 .client-wall__heading h2 { margin: 0; color: #303538; font-size: clamp(1.2rem, 2.6vw, 2.15rem); font-weight: 600; letter-spacing: .18em; line-height: 1.4; }
@@ -306,7 +306,7 @@ img, video { max-width: 100%; }
 .client-wall__heading { max-width: 760px; margin-bottom: 2.5rem; }
 .client-wall__heading h2 { margin: 0; color: #2f3537; font-size: clamp(1.35rem, 2.35vw, 2.05rem); font-weight: 650; letter-spacing: .135em; }
 .client-wall__heading > p:last-child { margin-top: .7rem; color: #596263; font-size: clamp(.9rem, 1.4vw, 1rem); }
-.client-wall__gallery { display: block; max-width: 1170px; margin: 0 auto; min-height: 0; padding: 0; border: 0; background: transparent; box-shadow: none; }
+.client-wall__gallery { display: block; max-width: 1280px; margin: 0 auto; min-height: 0; padding: 0; border: 0; background: transparent; box-shadow: none; }
 .client-wall__logos-grid { display: flex; flex-wrap: wrap; border-top: 1px solid #dfe2e2; border-left: 1px solid #dfe2e2; }
 .client-logo-slot { box-sizing: border-box; width: 25%; height: clamp(128px, 15vw, 178px); border-right: 1px solid #dfe2e2; border-bottom: 1px solid #dfe2e2; background: #fff; }
 @media (max-width: 800px) { .client-logo-slot { width: 50%; height: 150px; } }
@@ -314,7 +314,7 @@ img, video { max-width: 100%; }
 
 /* Two-column client layout inspired by the supplied reference. */
 .client-wall { padding: 5.5rem 1.5rem; background: var(--theme-bg); }
-.client-wall__layout { display: grid; grid-template-columns: minmax(180px, .9fr) minmax(0, 2.1fr); align-items: center; max-width: 1100px; }
+.client-wall__layout { display: grid; grid-template-columns: minmax(200px, .8fr) minmax(0, 2.4fr); align-items: center; max-width: 1440px; }
 .client-wall__heading { max-width: none; margin: 0; padding: 1.5rem 3.75rem 1.5rem 0; text-align: left; }
 .client-wall__heading h2 { margin: 0; color: #20252b; font-size: clamp(1.65rem, 2.4vw, 2.25rem); font-weight: 700; letter-spacing: -.035em; line-height: 1.25; }
 .client-wall__gallery { display: block; min-height: 0; margin: 0; padding: 0; border: 0; background: transparent; box-shadow: none; }

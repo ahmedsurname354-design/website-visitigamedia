@@ -52,7 +52,7 @@ export default function Navbar() {
         scrolled || mobileOpen ? 'theme-navbar backdrop-blur-md py-2.5 shadow-sm' : 'bg-transparent py-3 sm:py-4'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
+      <div className="mx-auto flex max-w-[1536px] items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <NavLink to="/" aria-label={t('navbar.home')} className="flex items-center gap-3 group">
           <Logo className="h-11 sm:h-12 lg:h-14" />

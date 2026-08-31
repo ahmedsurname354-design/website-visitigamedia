@@ -46,7 +46,7 @@ export default function AboutSection() {
 
   return (
     <section id="about" className="relative theme-section overflow-hidden">
-      <div className="py-16 sm:py-24 md:py-32 max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-10 sm:gap-16 items-center">
+      <div className="mx-auto grid max-w-[1536px] items-center gap-10 px-4 py-16 sm:gap-16 sm:px-6 sm:py-24 md:py-32 lg:grid-cols-2 lg:px-8 xl:gap-24">
         {/* Image */}
         <motion.div
           ref={ref}

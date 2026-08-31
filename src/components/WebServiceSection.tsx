@@ -7,7 +7,7 @@ export default function WebServiceSection() {
 
   return (
     <section className="relative theme-section py-24 md:py-32">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="mx-auto max-w-[1536px] px-4 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[0.95fr,1.05fr] items-center">
           <motion.div
             ref={ref}

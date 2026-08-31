@@ -9,7 +9,7 @@ export default function VideoSection() {
 
   return (
     <section className="relative theme-section py-24 md:py-32">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="mx-auto max-w-[1536px] px-4 sm:px-6 lg:px-8">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, scale: 0.95 }}

@@ -644,7 +644,7 @@ export default function PortfolioSection() {
 
   return (
     <section id="portfolio" className="relative theme-section-alt py-24 md:py-32">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="mx-auto max-w-[1536px] px-4 sm:px-6 lg:px-8">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 30 }}
@@ -679,7 +679,7 @@ export default function PortfolioSection() {
           ))}
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
           {filteredProjects.map((proj, i) => (
             <motion.button
               type="button"

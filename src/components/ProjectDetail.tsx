@@ -54,7 +54,7 @@ export default function ProjectDetail({
   return (
     <article className="min-h-screen bg-white pt-20 text-neutral-900 sm:pt-24">
       {/* Header navigation */}
-      <div className="mx-auto flex w-full max-w-7xl justify-between px-5 pb-8 pt-8 sm:px-8 lg:px-12 lg:pt-12">
+      <div className="mx-auto flex w-full max-w-[1536px] justify-between px-5 pb-8 pt-8 sm:px-8 lg:px-12 lg:pt-12">
         <BackControl backHref={backHref} backLabel={resolvedBackLabel} onBack={onBack} className="group inline-flex items-center gap-2 text-sm font-medium text-neutral-600 transition-colors hover:text-orange-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white">
           <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" aria-hidden="true" />
           {backLabel}
@@ -66,7 +66,7 @@ export default function ProjectDetail({
         )}
       </div>
 
-      <div className="mx-auto w-full max-w-7xl px-5 pb-20 sm:px-8 lg:px-12 lg:pb-28">
+      <div className="mx-auto w-full max-w-[1536px] px-5 pb-20 sm:px-8 lg:px-12 lg:pb-28">
         {/* Hero section */}
         <section>
           <div className="relative isolate aspect-[4/3] overflow-hidden rounded-2xl border border-neutral-300 bg-neutral-100 sm:aspect-[16/8] lg:rounded-3xl">

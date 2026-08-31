@@ -13,7 +13,7 @@ export default function StatsSection() {
 
   return (
     <section ref={ref} className="relative theme-section border-y border-white/5 py-12 sm:py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-8 sm:gap-8">
+      <div className="mx-auto grid max-w-[1536px] grid-cols-2 gap-x-4 gap-y-8 px-4 sm:gap-8 sm:px-6 lg:grid-cols-4 lg:px-8">
         {stats.map((stat, i) => (
           <motion.div
             key={stat.label}
