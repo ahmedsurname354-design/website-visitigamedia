@@ -6,7 +6,7 @@ import { useTranslation } from '@/i18n';
 import { listPublicPortfolios } from '@/lib/adminApi';
 import type { Portfolio } from '@/types/admin';
 
-const categories = ['View all', 'Audio Visual', 'Conventional Media', 'Indoor Media', 'Outdoor Media', 'Rental LED'];
+const categories = ['Lihat semua', 'Audio Visual', 'Media Konvensional', 'Media Dalam Ruang', 'Media Luar Ruang', 'Sewa LED'];
 
 type ProjectDetailCopy = {
   subtitle: string;
@@ -563,7 +563,7 @@ const projectDetailsByImage: Partial<Record<string, ProjectDetailCopy>> = {
 };
 
 export default function PortfolioSection() {
-  const [selectedCategory, setSelectedCategory] = useState('View all');
+  const [selectedCategory, setSelectedCategory] = useState('Lihat semua');
   // null means Supabase is unavailable; an empty array means the admin has
   // intentionally removed every project, so do not resurrect static content.
   const [remoteProjects, setRemoteProjects] = useState<Portfolio[] | null>(null);
@@ -576,7 +576,7 @@ export default function PortfolioSection() {
     ? remoteProjects.map((project) => ({ img: project.image_url, title: project.title, category: project.category, client: project.client, description: project.description, overview: project.overview, challenge: project.challenge, solution: project.solution }))
     : projects;
   const displayedCategories = remoteProjects !== null
-    ? ['View all', ...Array.from(new Set(displayedProjects.map((project) => project.category)))]
+    ? ['Lihat semua', ...Array.from(new Set(displayedProjects.map((project) => project.category)))]
     : categories;
 
   const handleBackToProjects = () => {
@@ -585,12 +585,12 @@ export default function PortfolioSection() {
   };
 
   const filteredProjects = useMemo(
-    () => (selectedCategory === 'View all' ? displayedProjects : displayedProjects.filter((project) => project.category === selectedCategory)),
+    () => (selectedCategory === 'Lihat semua' ? displayedProjects : displayedProjects.filter((project) => project.category === selectedCategory)),
     [displayedProjects, selectedCategory]
   );
 
   if (selectedProject) {
-    const galleryPool = selectedCategory === 'View all'
+    const galleryPool = selectedCategory === 'Lihat semua'
       ? displayedProjects
       : displayedProjects.filter((project) => project.category === selectedCategory);
     const selectedIndex = galleryPool.findIndex((project) => project.img === selectedProject.img);
@@ -654,10 +654,10 @@ export default function PortfolioSection() {
         >
           <div className="max-w-2xl">
             <p className="text-orange-500 text-sm font-semibold tracking-[0.3em] uppercase mb-4">
-              Our Work
+              Karya Kami
             </p>
             <h2 className="text-white font-bold text-4xl md:text-5xl leading-tight tracking-tight">
-              Featured <span className="text-orange-500">Projects</span>
+              Proyek <span className="text-orange-500">Unggulan</span>
             </h2>
           </div>
         </motion.div>

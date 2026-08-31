@@ -4,24 +4,24 @@ import { Link } from 'react-router-dom';
 import { MouseEvent } from 'react';
 
 const footerLinks = {
-  Company: ['About Us', 'Our Team', 'Careers', 'Contact'],
-  Services: ['Outdoor LED', 'Indoor Screen', 'Neon Signage', 'Maintenance'],
-  Resources: ['Portfolio', 'Blog', 'FAQ', 'Support'],
+  Perusahaan: ['Tentang Kami', 'Tim Kami', 'Karier', 'Kontak'],
+  Layanan: ['LED Luar Ruang', 'Layar Dalam Ruang', 'Papan Neon', 'Pemeliharaan'],
+  Informasi: ['Portofolio', 'Berita', 'Tanya Jawab', 'Dukungan'],
 };
 
 const linkMap: Record<string, string> = {
-  'About Us': '/about',
-  'Our Team': '/about',
-  Careers: '/about',
-  Contact: 'https://bit.ly/49NclAE',
-  'Outdoor LED': '/services',
-  'Indoor Screen': '/services',
-  'Neon Signage': '/services',
-  Maintenance: '/services',
-  Portfolio: '/portfolio',
-  Blog: '/news',
-  FAQ: '/faq',
-  Support: 'mailto:marcomm@visitiga.com?subject=Konsultasi%20Visitiga%20Media',
+  'Tentang Kami': '/about',
+  'Tim Kami': '/about',
+  Karier: '/about',
+  Kontak: 'https://bit.ly/49NclAE',
+  'LED Luar Ruang': '/services',
+  'Layar Dalam Ruang': '/services',
+  'Papan Neon': '/services',
+  Pemeliharaan: '/services',
+  Portofolio: '/portfolio',
+  Berita: '/news',
+  'Tanya Jawab': '/faq',
+  Dukungan: 'mailto:marcomm@visitiga.com?subject=Konsultasi%20Visitiga%20Media',
 };
 
 const socials = [
@@ -40,7 +40,7 @@ export default function Footer() {
             <Logo className="h-24 mb-5" />
             <p className="text-white/50 text-sm leading-relaxed max-w-sm mb-6">
               Solusi LED display profesional untuk bisnis Anda di seluruh Indonesia.
-              Premium quality, creative design, exceptional service.
+              Kualitas premium, desain kreatif, dan layanan terbaik.
             </p>
             <div className="flex gap-3">
               {socials.map(({ Icon, href }, i) => (
@@ -94,7 +94,7 @@ export default function Footer() {
 
         <div className="border-t border-white/5 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-white/40 text-xs">
-            © 2026 Visitiga LED Solutions. All rights reserved.
+            © 2026 Visitiga LED Solutions. Seluruh hak cipta dilindungi.
           </p>
           <a
             href="#home"
@@ -104,7 +104,7 @@ export default function Footer() {
             }}
             className="flex items-center gap-2 text-white/50 hover:text-orange-500 text-xs transition-colors duration-300"
           >
-            Back to top
+            Kembali ke atas
             <span className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center">
               <ArrowUp className="w-3.5 h-3.5" />
             </span>

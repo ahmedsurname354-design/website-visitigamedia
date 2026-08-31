@@ -20,11 +20,11 @@ function getContactErrorMessage(error: { code?: string; message?: string }) {
   }
 
   if (error.code === '401' || error.message?.toLowerCase().includes('unauthorized')) {
-    return 'Layanan formulir menolak kredensial website. Periksa kembali publishable key Supabase di Vercel.';
+    return 'Layanan formulir menolak kredensial situs. Periksa kembali kunci publik Supabase pada layanan hosting.';
   }
 
   if (error.code === '42501') {
-    return 'Pengiriman ditolak oleh konfigurasi keamanan form. Pastikan migration security terbaru sudah dijalankan di Supabase.';
+    return 'Pengiriman ditolak oleh konfigurasi keamanan formulir. Pastikan migrasi keamanan terbaru sudah dijalankan di Supabase.';
   }
 
   if (error.code === '23514') {
@@ -32,7 +32,7 @@ function getContactErrorMessage(error: { code?: string; message?: string }) {
   }
 
   if (error.message?.toLowerCase().includes('fetch')) {
-    return 'Tidak dapat terhubung ke layanan formulir. Periksa VITE_SUPABASE_URL dan VITE_SUPABASE_PUBLISHABLE_KEY di Vercel.';
+    return 'Tidak dapat terhubung ke layanan formulir. Periksa konfigurasi Supabase pada layanan hosting.';
   }
 
   return 'Pesan belum terkirim. Periksa koneksi, lalu coba lagi.';
@@ -104,10 +104,10 @@ export default function CTASection() {
 
           <div className="relative">
             <h2 className="text-white font-bold text-3xl md:text-5xl leading-tight tracking-tight max-w-2xl mx-auto">
-              Ready to Light Up Your Brand?
+              Siap Membuat Merek Anda Lebih Bersinar?
             </h2>
             <p className="text-white/80 text-lg mt-4 max-w-xl mx-auto">
-              Get a free consultation and quote today. Our team is ready to bring your vision to life.
+              Dapatkan konsultasi dan penawaran gratis. Tim kami siap mewujudkan kebutuhan visual Anda.
             </p>
 
             <div className="flex flex-col items-stretch justify-center gap-3 mt-8 min-[440px]:flex-row min-[440px]:items-center sm:mt-10">
@@ -118,14 +118,14 @@ export default function CTASection() {
                 className="group flex min-h-12 items-center justify-center gap-2 bg-black hover:bg-orange-950 text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
               >
                 <Phone className="w-4 h-4" />
-                Call Us Now
+                Hubungi Kami
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
               </a>
               <a
                 href="mailto:marcomm@visitiga.com?subject=Konsultasi%20Visitiga%20Media"
                 className="flex min-h-12 items-center justify-center bg-white/20 hover:bg-white/30 text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 hover:-translate-y-0.5"
               >
-                Email Us
+                Kirim Email
               </a>
             </div>
 
@@ -233,16 +233,16 @@ export default function CTASection() {
                 <div className="relative h-44 bg-black">
                   <iframe
                     src="https://www.google.com/maps?q=Jl.+Setra+Dago+Barat+No.9+Antapani+Bandung&output=embed"
-                    title="Office location map"
+                    title="Peta lokasi kantor"
                     className="absolute inset-0 h-full w-full border-0"
                     loading="lazy"
                   />
                 </div>
                 <div className="bg-black/90 p-4">
-                  <p className="text-[11px] uppercase tracking-[0.3em] text-white/60">Head Office Location</p>
+                  <p className="text-[11px] uppercase tracking-[0.3em] text-white/60">Lokasi Kantor Pusat</p>
                   <p className="mt-3 text-white font-semibold text-sm">Jl. Setra Dago Barat No.9 Antapani, Bandung</p>
                   <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-orange-500 px-3 py-2 text-sm font-semibold text-black transition-colors duration-300 group-hover:bg-orange-400">
-                    Open in Maps
+                    Buka di Peta
                   </p>
                 </div>
               </a>

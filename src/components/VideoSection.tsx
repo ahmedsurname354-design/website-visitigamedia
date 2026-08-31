@@ -19,7 +19,7 @@ export default function VideoSection() {
         >
           <img
             src={videoImg}
-            alt="LED showreel"
+            alt="Cuplikan proyek LED Visitiga"
             className="w-full h-[400px] md:h-[560px] object-cover transition-transform duration-700 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-colors duration-300" />
@@ -32,8 +32,8 @@ export default function VideoSection() {
             >
               <Play className="w-8 h-8 text-white fill-white ml-1" />
             </motion.div>
-            <p className="text-white font-semibold text-lg mt-6 tracking-wide">Watch Our Showreel</p>
-            <p className="text-white/50 text-sm mt-1">2:34 min — See our work in action</p>
+            <p className="text-white font-semibold text-lg mt-6 tracking-wide">Saksikan Cuplikan Kami</p>
+            <p className="text-white/50 text-sm mt-1">2:34 menit — Lihat hasil kerja kami</p>
           </div>
 
           {/* Quote overlay */}
@@ -42,7 +42,7 @@ export default function VideoSection() {
             <p className="text-white text-lg md:text-xl font-medium max-w-2xl leading-relaxed">
               "LED yang mereka pasang benar-benar mengubah cara orang melihat toko kami. Penjualan naik 40% dalam tiga bulan."
             </p>
-            <p className="text-white/50 text-sm mt-3">— Budi Santoso, Retail Client</p>
+            <p className="text-white/50 text-sm mt-3">— Budi Santoso, Klien Ritel</p>
           </div>
         </motion.div>
       </div>

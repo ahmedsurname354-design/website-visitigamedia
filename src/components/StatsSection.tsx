@@ -2,10 +2,10 @@ import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 const stats = [
-  { value: '500+', label: 'Projects Completed', suffix: '+' },
-  { value: '12', label: 'Years Experience', suffix: 'th' },
-  { value: '98%', label: 'Client Satisfaction', suffix: '' },
-  { value: '24/7', label: 'Support Service', suffix: '' },
+  { value: '500+', label: 'Proyek Diselesaikan' },
+  { value: '12', label: 'Tahun Pengalaman' },
+  { value: '98%', label: 'Kepuasan Klien' },
+  { value: '24/7', label: 'Layanan Dukungan' },
 ];
 
 export default function StatsSection() {
