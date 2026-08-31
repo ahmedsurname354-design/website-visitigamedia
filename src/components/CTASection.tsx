@@ -110,12 +110,12 @@ export default function CTASection() {
               Get a free consultation and quote today. Our team is ready to bring your vision to life.
             </p>
 
-            <div className="flex flex-wrap items-center justify-center gap-4 mt-10">
+            <div className="flex flex-col items-stretch justify-center gap-3 mt-8 min-[440px]:flex-row min-[440px]:items-center sm:mt-10">
               <a
                 href="https://bit.ly/49NclAE"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center gap-2 bg-black hover:bg-orange-950 text-white px-7 py-4 rounded-full font-semibold transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
+                className="group flex min-h-12 items-center justify-center gap-2 bg-black hover:bg-orange-950 text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
               >
                 <Phone className="w-4 h-4" />
                 Call Us Now
@@ -123,7 +123,7 @@ export default function CTASection() {
               </a>
               <a
                 href="mailto:marcomm@visitiga.com?subject=Konsultasi%20Visitiga%20Media"
-                className="bg-white/20 hover:bg-white/30 text-white px-7 py-4 rounded-full font-semibold transition-all duration-300 hover:-translate-y-0.5"
+                className="flex min-h-12 items-center justify-center bg-white/20 hover:bg-white/30 text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 hover:-translate-y-0.5"
               >
                 Email Us
               </a>
@@ -131,7 +131,7 @@ export default function CTASection() {
 
             <form
               onSubmit={handleSubmit}
-              className="mt-10 grid gap-4 rounded-3xl border border-white/15 bg-black/10 p-5 text-left sm:grid-cols-2 sm:p-6 max-w-3xl mx-auto"
+              className="mt-8 grid gap-4 rounded-2xl border border-white/15 bg-black/10 p-4 text-left sm:mt-10 sm:grid-cols-2 sm:rounded-3xl sm:p-6 max-w-3xl mx-auto"
             >
               <div className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
                 <label htmlFor="contact-company">Perusahaan<input id="contact-company" name="company" type="text" tabIndex={-1} autoComplete="off" /></label>
@@ -188,11 +188,11 @@ export default function CTASection() {
                   className="contact-field w-full resize-y rounded-xl px-4 py-3 outline-none transition"
                 />
               </div>
-              <div className="sm:col-span-2 flex flex-wrap items-center gap-4">
+              <div className="sm:col-span-2 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="rounded-full bg-white px-6 py-3 font-semibold text-orange-600 transition hover:bg-orange-50 disabled:cursor-not-allowed disabled:opacity-70"
+                  className="min-h-12 rounded-full bg-white px-6 py-3 font-semibold text-orange-600 transition hover:bg-orange-50 disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {isSubmitting ? 'Mengirim...' : 'Kirim Permintaan'}
                 </button>
@@ -202,7 +202,7 @@ export default function CTASection() {
             </form>
 
             {/* Contact info */}
-            <div className="grid lg:grid-cols-[1fr,320px] gap-6 mt-14 max-w-4xl mx-auto items-start">
+            <div className="grid lg:grid-cols-[1fr,320px] gap-6 mt-10 sm:mt-14 max-w-4xl mx-auto items-start">
               <div className="grid gap-4">
                 <div className="contact-info-card rounded-3xl p-4">
                   <div className="flex items-center gap-3 text-sm">

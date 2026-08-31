@@ -47,11 +47,11 @@ export default function WebServiceSection() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.7 }}
-            className="relative rounded-3xl overflow-hidden border border-white/10 shadow-[0_40px_120px_rgba(0,0,0,0.25)]"
+            className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 shadow-[0_40px_120px_rgba(0,0,0,0.25)]"
           >
             <video
               aria-label="Service showreel"
-              className="block h-[520px] w-full object-cover"
+              className="block aspect-[4/3] w-full object-cover sm:aspect-video lg:aspect-auto lg:h-[520px]"
               playsInline
               controls
               preload="none"

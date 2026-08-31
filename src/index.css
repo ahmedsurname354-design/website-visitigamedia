@@ -14,7 +14,18 @@ body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background-color: #fffaf3;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
+
+button, a, input, textarea, select { -webkit-tap-highlight-color: transparent; }
+button, a { touch-action: manipulation; }
+img, video { max-width: 100%; }
+:where(a, button, input, textarea, select):focus-visible {
+  outline: 2px solid #f97316;
+  outline-offset: 3px;
+}
+::selection { color: #fff; background: #ea580c; }
 
 .app-shell {
   --theme-bg: #0d0b09;
@@ -462,6 +473,7 @@ body {
   background: #fffaf5;
   color: #2b2521;
 }
+.public-site main { min-height: 60svh; }
 .public-site .theme-section,
 .public-site .theme-section-alt {
   padding-top: clamp(4.5rem, 8vw, 6.5rem);
@@ -582,6 +594,14 @@ body {
   .product-page .accordion-cards {
     margin-bottom: 3rem;
   }
+
+  .public-site .theme-navbar { box-shadow: 0 8px 24px rgb(52 32 18 / .08); }
+  .public-site .theme-mobile-menu { box-shadow: 0 24px 40px rgb(52 32 18 / .12); }
+  .site-footer { padding-top: 3rem; }
+}
+
+@media (hover: none) {
+  .public-site a:hover, .public-site button:hover { transform: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

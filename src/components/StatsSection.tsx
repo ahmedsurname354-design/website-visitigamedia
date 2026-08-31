@@ -12,17 +12,17 @@ export default function StatsSection() {
   const { ref, isInView } = useScrollReveal();
 
   return (
-    <section ref={ref} className="relative theme-section border-y border-white/5 py-16">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 lg:grid-cols-4 gap-8">
+    <section ref={ref} className="relative theme-section border-y border-white/5 py-12 sm:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-8 sm:gap-8">
         {stats.map((stat, i) => (
           <motion.div
             key={stat.label}
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: i * 0.12 }}
-            className="text-center lg:text-left"
+            className="text-center lg:text-left rounded-2xl border border-black/5 bg-white/40 px-2 py-5 sm:border-0 sm:bg-transparent sm:p-0"
           >
-            <p className="text-4xl md:text-5xl font-bold text-orange-500 tracking-tight">
+            <p className="text-3xl sm:text-4xl md:text-5xl font-bold text-orange-500 tracking-tight">
               {stat.value}
             </p>
             <p className="text-white/50 text-sm mt-2 tracking-wide">{stat.label}</p>

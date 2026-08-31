@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import Logo from '@/components/Logo';
@@ -19,6 +19,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { lang, setLang, t } = useTranslation();
+  const location = useLocation();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
@@ -26,13 +27,29 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  useEffect(() => setMobileOpen(false), [location.pathname]);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMobileOpen(false);
+    };
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [mobileOpen]);
+
   return (
     <motion.nav
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, delay: 0.2 }}
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        scrolled ? 'theme-navbar backdrop-blur-md py-2.5 shadow-sm' : 'bg-transparent py-3 sm:py-4'
+        scrolled || mobileOpen ? 'theme-navbar backdrop-blur-md py-2.5 shadow-sm' : 'bg-transparent py-3 sm:py-4'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
@@ -73,8 +90,10 @@ export default function Navbar() {
         {/* Mobile toggle */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="lg:hidden theme-nav-text"
+          className="lg:hidden theme-nav-text inline-grid size-11 place-items-center rounded-full border border-current/10 transition-colors hover:bg-orange-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
           aria-label={mobileOpen ? t('navbar.closeMenu') : t('navbar.openMenu')}
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-navigation"
         >
           {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -88,24 +107,37 @@ export default function Navbar() {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="lg:hidden overflow-hidden theme-mobile-menu backdrop-blur-md"
+            id="mobile-navigation"
+            className="lg:hidden overflow-hidden theme-mobile-menu backdrop-blur-md border-t border-black/5"
           >
-            <ul className="flex flex-col px-6 py-4 gap-4">
+            <div className="flex h-[calc(100svh-4.5rem)] flex-col px-4 pb-6 pt-3 sm:px-6">
+            <ul className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 <li key={link.labelKey}>
                   <NavLink
                     to={link.href}
                     end={link.href === '/'}
                     onClick={() => setMobileOpen(false)}
-                    className={({ isActive }) => `text-sm font-medium block py-2 transition-colors ${
-                      isActive ? 'text-orange-500' : 'text-white/80 hover:text-orange-500'
+                    className={({ isActive }) => `flex min-h-12 items-center justify-between rounded-xl px-4 text-base font-semibold transition-colors ${
+                      isActive ? 'bg-orange-500/10 text-orange-600' : 'text-white/80 hover:bg-black/5 hover:text-orange-500'
                     }`}
                   >
                     {t(link.labelKey)}
+                    <span aria-hidden="true" className="text-lg font-normal">→</span>
                   </NavLink>
                 </li>
               ))}
             </ul>
+            <div className="mt-auto border-t border-black/10 pt-5">
+              <button
+                onClick={() => setLang(lang === 'id' ? 'en' : 'id')}
+                className="flex min-h-12 w-full items-center justify-between rounded-xl border border-black/10 px-4 text-sm font-semibold theme-nav-text"
+                aria-label={t('navbar.languageToggle')}
+              >
+                <span>{t('navbar.languageToggle')}</span><span className="text-orange-600">{lang.toUpperCase()}</span>
+              </button>
+            </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
