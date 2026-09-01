@@ -59,7 +59,6 @@ export default function AboutSection() {
             <img
               src={aboutImg}
               alt="Tim kami sedang bekerja"
-              loading="lazy"
               decoding="async"
               className="w-full h-[360px] sm:h-[500px] object-cover"
             />
@@ -157,7 +156,7 @@ export default function AboutSection() {
             <div className="client-wall__logos-grid" aria-label="Daftar klien">
               {clientLogos.map((client) => (
                 <div key={client.src} className="client-logo-slot">
-                  <img src={client.src} alt={client.alt} loading="lazy" />
+                  <img src={client.src} alt={client.alt} />
                 </div>
               ))}
             </div>

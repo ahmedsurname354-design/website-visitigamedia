@@ -97,7 +97,7 @@ export default function HorizontalAccordionCards() {
             <span className="accordion-card__content">
               <span className="accordion-card__label">{item.label}</span>
               <span className="accordion-card__image-wrap">
-                <img className="accordion-card__image" src={item.image} alt="" loading="lazy" decoding="async" />
+                <img className="accordion-card__image" src={item.image} alt="" decoding="async" />
               </span>
               <span className="accordion-card__copy">
                 <span className="accordion-card__title">{item.title}</span>

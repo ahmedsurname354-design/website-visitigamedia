@@ -144,7 +144,7 @@ export default function ProjectDetail({
                   aria-label={image.onClick ? `${t('projectDetail.viewProject')} ${image.alt}` : undefined}
                 >
                   <div className="aspect-[4/3] overflow-hidden">
-                    <img src={image.src} alt={image.alt} loading="lazy" className="h-full w-full object-cover transition duration-500 ease-out group-hover:scale-[1.03]" />
+                    <img src={image.src} alt={image.alt} className="h-full w-full object-cover transition duration-500 ease-out group-hover:scale-[1.03]" />
                   </div>
                   {image.caption && <span className="block px-4 py-3 text-sm text-neutral-600">{image.caption}</span>}
                 </button>

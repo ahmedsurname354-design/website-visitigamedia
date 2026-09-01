@@ -161,7 +161,7 @@ export default function NewsDetailPage() {
                 <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
                   {relatedArticles.map((related) => (
                     <Link key={related.id} to={`/news/${related.id}`} className="group grid grid-cols-[6.5rem_minmax(0,1fr)] gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500">
-                      <img src={related.cover_image} alt="" loading="lazy" className="aspect-[4/3] w-full rounded-xl bg-[#f3e5d7] object-cover" />
+                      <img src={related.cover_image} alt="" className="aspect-[4/3] w-full rounded-xl bg-[#f3e5d7] object-cover" />
                       <div className="min-w-0 py-0.5"><h3 className="line-clamp-3 text-sm font-bold leading-5 transition group-hover:text-orange-600">{related.title}</h3><p className="mt-2 truncate text-xs text-[#8b7161]">{related.category}</p></div>
                     </Link>
                   ))}

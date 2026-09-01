@@ -695,7 +695,6 @@ export default function PortfolioSection() {
               <img
                 src={proj.img}
                 alt={proj.title}
-                loading="lazy"
                 decoding="async"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
