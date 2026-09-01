@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { Check, ArrowRight } from 'lucide-react';
 import { useTranslation } from '@/i18n';
-import teamPhoto from '@/assets/team-visitiga.png';
+import teamPhoto from '@/assets/team-visitiga.webp';
 import wonderfulIndonesia from '@/assets/clients/wonderful-indonesia.png';
 import pertamina from '@/assets/clients/pertamina.png';
 import viataViraJati from '@/assets/clients/viata-vira-jati.png';
@@ -59,7 +59,7 @@ export default function AboutSection() {
             <img
               src={aboutImg}
               alt="Tim kami sedang bekerja"
-              loading="lazy"
+              fetchPriority="high"
               decoding="async"
               className="w-full h-[360px] sm:h-[500px] object-cover"
             />
