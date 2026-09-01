@@ -4,6 +4,7 @@ import { useScrollReveal } from '@/hooks/useScrollReveal';
 import ProjectDetail, { type ProjectDetailData } from '@/components/ProjectDetail';
 import { useTranslation } from '@/i18n';
 import { listPublicPortfolios } from '@/lib/adminApi';
+import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
 import type { Portfolio } from '@/types/admin';
 
 const categories = ['Lihat semua', 'Audio Visual', 'Media Konvensional', 'Media Dalam Ruang', 'Media Luar Ruang', 'Sewa LED'];
@@ -693,8 +694,10 @@ export default function PortfolioSection() {
               onClick={() => setSelectedProject(proj)}
             >
               <img
-                src={proj.img}
+                src={optimizedImageUrl(proj.img, 900)}
+                onError={({ currentTarget }) => restoreOriginalImage(currentTarget, proj.img)}
                 alt={proj.title}
+                loading="lazy"
                 decoding="async"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />

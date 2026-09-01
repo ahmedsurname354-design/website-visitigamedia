@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Check, Facebook, Link as LinkIcon, Linkedin, LoaderCircle, Mail } from 'lucide-react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
+import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
 import { getPublicNews, listPublicNews } from '@/lib/adminApi';
 import type { NewsRecord } from '@/types/admin';
 
@@ -132,7 +133,7 @@ export default function NewsDetailPage() {
               {article.excerpt && <p className="mt-6 max-w-4xl text-base leading-7 text-[#735c4d] sm:text-lg sm:leading-8">{article.excerpt}</p>}
             </header>
 
-            <img src={article.cover_image} alt={article.title} className="mt-8 aspect-[16/9] w-full rounded-2xl bg-[#f3e5d7] object-cover shadow-sm" />
+            <img src={optimizedImageUrl(article.cover_image, 1400)} onError={({ currentTarget }) => restoreOriginalImage(currentTarget, article.cover_image)} alt={article.title} decoding="async" className="mt-8 aspect-[16/9] w-full rounded-2xl bg-[#f3e5d7] object-cover shadow-sm" />
             <div
               className="mt-9 max-w-4xl text-base leading-8 text-[#5d4030] sm:text-[1.05rem] [&_a]:font-semibold [&_a]:text-orange-700 [&_a]:underline [&_a]:decoration-orange-300 [&_a]:underline-offset-4 [&_blockquote]:my-8 [&_blockquote]:border-l-4 [&_blockquote]:border-orange-400 [&_blockquote]:bg-[#fff2e5] [&_blockquote]:px-5 [&_blockquote]:py-4 [&_blockquote]:italic [&_h1]:mb-4 [&_h1]:mt-9 [&_h1]:text-3xl [&_h1]:font-black [&_h2]:mb-4 [&_h2]:mt-9 [&_h2]:text-2xl [&_h2]:font-black [&_h3]:mb-3 [&_h3]:mt-7 [&_h3]:text-xl [&_h3]:font-bold [&_img]:my-8 [&_img]:h-auto [&_img]:max-w-full [&_img]:rounded-xl [&_li]:mb-2 [&_ol]:my-5 [&_ol]:list-decimal [&_ol]:pl-6 [&_p]:mb-5 [&_strong]:font-bold [&_strong]:text-[#35231a] [&_ul]:my-5 [&_ul]:list-disc [&_ul]:pl-6"
               dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content) }}
@@ -161,7 +162,7 @@ export default function NewsDetailPage() {
                 <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
                   {relatedArticles.map((related) => (
                     <Link key={related.id} to={`/news/${related.id}`} className="group grid grid-cols-[6.5rem_minmax(0,1fr)] gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500">
-                      <img src={related.cover_image} alt="" className="aspect-[4/3] w-full rounded-xl bg-[#f3e5d7] object-cover" />
+                      <img src={optimizedImageUrl(related.cover_image, 600)} onError={({ currentTarget }) => restoreOriginalImage(currentTarget, related.cover_image)} alt="" loading="lazy" decoding="async" className="aspect-[4/3] w-full rounded-xl bg-[#f3e5d7] object-cover" />
                       <div className="min-w-0 py-0.5"><h3 className="line-clamp-3 text-sm font-bold leading-5 transition group-hover:text-orange-600">{related.title}</h3><p className="mt-2 truncate text-xs text-[#8b7161]">{related.category}</p></div>
                     </Link>
                   ))}

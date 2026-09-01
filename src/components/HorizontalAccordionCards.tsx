@@ -1,5 +1,6 @@
 import { useEffect, useState, type CSSProperties } from 'react';
 import { listPublicProducts } from '@/lib/adminApi';
+import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
 
 type AccordionItem = {
   title: string;
@@ -97,7 +98,7 @@ export default function HorizontalAccordionCards() {
             <span className="accordion-card__content">
               <span className="accordion-card__label">{item.label}</span>
               <span className="accordion-card__image-wrap">
-                <img className="accordion-card__image" src={item.image} alt="" decoding="async" />
+                <img className="accordion-card__image" src={optimizedImageUrl(item.image, 900)} onError={({ currentTarget }) => restoreOriginalImage(currentTarget, item.image)} alt="" loading="lazy" decoding="async" />
               </span>
               <span className="accordion-card__copy">
                 <span className="accordion-card__title">{item.title}</span>
