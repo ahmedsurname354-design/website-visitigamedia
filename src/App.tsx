@@ -1,12 +1,8 @@
-import { lazy, Suspense, useState, useEffect, type ReactNode } from 'react';
+import { lazy, Suspense, useEffect, type ReactNode } from 'react';
 import { BrowserRouter as Router, Navigate, Outlet, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
-import LoadingScreen from '@/components/LoadingScreen';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import ProtectedRoute from '@/components/admin/ProtectedRoute';
-import AdminLayout from '@/components/admin/AdminLayout';
-import { recordPageView } from '@/lib/analytics';
 const HomePage = lazy(() => import('@/pages/HomePage'));
 const AboutPage = lazy(() => import('@/pages/AboutPage'));
 const ServicesPage = lazy(() => import('@/pages/ServicesPage'));
@@ -22,6 +18,9 @@ const PortfoliosPage = lazy(() => import('@/pages/admin/PortfoliosPage'));
 const NewsManagerPage = lazy(() => import('@/pages/admin/NewsManagerPage'));
 const ProductsManagerPage = lazy(() => import('@/pages/admin/ProductsManagerPage'));
 const LeadsPage = lazy(() => import('@/pages/admin/LeadsPage'));
+const AdminAuthBoundary = lazy(() => import('@/components/admin/AdminAuthBoundary'));
+const ProtectedRoute = lazy(() => import('@/components/admin/ProtectedRoute'));
+const AdminLayout = lazy(() => import('@/components/admin/AdminLayout'));
 
 function PublicLayout() {
   return <div className="public-site"><Navbar /><main><Outlet /></main><Footer /></div>;
@@ -37,7 +36,8 @@ function AnimatedRoutes() {
   }, [location.pathname]);
 
   useEffect(() => {
-    void recordPageView(location.pathname);
+    // Analytics must not pull the Supabase SDK into the critical render path.
+    void import('@/lib/analytics').then(({ recordPageView }) => recordPageView(location.pathname));
   }, [location.pathname]);
 
   return (
@@ -56,14 +56,16 @@ function AnimatedRoutes() {
               <Route path="/news" element={<NewsPage />} />
               <Route path="/news/:id" element={<NewsDetailPage />} />
             </Route>
-            <Route path="/admin/login" element={<LoginPage />} />
-            <Route element={<ProtectedRoute />}>
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<DashboardPage />} />
-                <Route path="products" element={<ProductsManagerPage />} />
-                <Route path="portfolios" element={<PortfoliosPage />} />
-                <Route path="news" element={<NewsManagerPage />} />
-                <Route path="leads" element={<LeadsPage />} />
+            <Route path="/admin" element={<AdminAuthBoundary />}>
+              <Route path="login" element={<LoginPage />} />
+              <Route element={<ProtectedRoute />}>
+                <Route element={<AdminLayout />}>
+                  <Route index element={<DashboardPage />} />
+                  <Route path="products" element={<ProductsManagerPage />} />
+                  <Route path="portfolios" element={<PortfoliosPage />} />
+                  <Route path="news" element={<NewsManagerPage />} />
+                  <Route path="leads" element={<LeadsPage />} />
+                </Route>
               </Route>
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
@@ -89,21 +91,8 @@ function PageTransition({ children }: { children: ReactNode }) {
 }
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 640px)').matches);
+  const isMobile = window.matchMedia('(max-width: 640px)').matches;
   const theme: 'light' | 'dark' = 'light';
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), isMobile ? 450 : 1200);
-    return () => clearTimeout(timer);
-  }, [isMobile]);
-
-  useEffect(() => {
-    const media = window.matchMedia('(max-width: 640px)');
-    const sync = () => setIsMobile(media.matches);
-    media.addEventListener('change', sync);
-    return () => media.removeEventListener('change', sync);
-  }, []);
 
   useEffect(() => {
     localStorage.setItem('theme', theme);
@@ -112,7 +101,6 @@ function App() {
 
   return (
     <MotionConfig reducedMotion={isMobile ? 'always' : 'user'}>
-      <LoadingScreen isLoading={isLoading} />
       <div className={`app-shell theme-${theme} overflow-x-hidden`}>
         <Router>
           <AnimatedRoutes />

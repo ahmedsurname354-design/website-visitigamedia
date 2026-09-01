@@ -6,6 +6,7 @@ type PageFlipInstance = { loadFromHTML: (items: HTMLElement[]) => void; flipNext
 const FALLBACK_PDF = '/products/product-catalogue-2026.pdf';
 
 export default function ProductFlipbook() {
+  const sectionRef = useRef<HTMLElement>(null);
   const hostRef = useRef<HTMLDivElement>(null);
   const flipRef = useRef<PageFlipInstance | null>(null);
   const fullscreenRef = useRef<HTMLDivElement>(null);
@@ -15,6 +16,7 @@ export default function ProductFlipbook() {
   const [title, setTitle] = useState('Katalog Produk');
   const [renderedPages, setRenderedPages] = useState<Record<number, string>>({});
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [shouldLoad, setShouldLoad] = useState(false);
   const [status, setStatus] = useState('Memuat katalog produk…');
 
   const changePage = (direction: 'next' | 'previous') => {
@@ -30,6 +32,19 @@ export default function ProductFlipbook() {
   }, []);
 
   useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      setShouldLoad(true);
+      observer.disconnect();
+    }, { rootMargin: '500px 0px' });
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!shouldLoad) return;
     let cancelled = false;
     let pageFlip: PageFlipInstance | null = null;
     const objectUrls = new Set<string>();
@@ -81,10 +96,10 @@ export default function ProductFlipbook() {
     }
     void initialise();
     return () => { cancelled = true; flipRef.current = null; hydrateRef.current = () => undefined; pageFlip?.destroy(); objectUrls.forEach(URL.revokeObjectURL); };
-  }, []);
+  }, [shouldLoad]);
 
   const total = pageCount || 1;
-  return <section className="mt-20 border-t border-current/10 pt-16 md:mt-24 md:pt-20" aria-labelledby="catalogue-title">
+  return <section ref={sectionRef} className="mt-20 border-t border-current/10 pt-16 md:mt-24 md:pt-20" aria-labelledby="catalogue-title">
     <div className="mx-auto mb-10 flex max-w-3xl flex-col items-center text-center"><p className="text-sm font-semibold uppercase tracking-[0.28em] text-orange-500">Katalog Interaktif</p><h2 id="catalogue-title" className="product-page__title mt-3 text-3xl font-bold tracking-tight sm:text-4xl">{title}</h2><p className="product-page__description mt-3 max-w-xl leading-7">{status}</p></div>
     <div className="mx-auto w-full max-w-[1000px] rounded-2xl bg-black/20 p-2 shadow-[0_25px_65px_rgba(36,24,17,0.28)] sm:rounded-[2rem] sm:p-5"><div ref={hostRef} className="flex min-h-[360px] items-center justify-center sm:min-h-[380px]"><div className="h-10 w-10 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" /></div></div>
     <div className="mt-8 flex items-center justify-center gap-3 sm:gap-4"><Control label="Sebelumnya" onClick={() => changePage('previous')}><ChevronLeft className="h-4 w-4" /></Control><span className="min-w-12 text-center text-sm font-semibold text-orange-500">{currentPage + 1} / {total}</span><Control label="Berikutnya" primary onClick={() => changePage('next')}><ChevronRight className="h-4 w-4" /></Control><Control label="Layar penuh" onClick={openFullscreen}><Maximize2 className="h-4 w-4" /></Control></div>

@@ -59,6 +59,8 @@ export default function AboutSection() {
             <img
               src={aboutImg}
               alt="Tim kami sedang bekerja"
+              loading="lazy"
+              decoding="async"
               className="w-full h-[360px] sm:h-[500px] object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />

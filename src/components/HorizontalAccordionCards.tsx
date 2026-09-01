@@ -16,7 +16,7 @@ const fallbackItems: AccordionItem[] = [
     title: 'LED OUTDOOR',
     label: '01 / Experience',
     description: 'High definition LED display dengan fine pixel pitch, high refresh rate, dan desain slim/lightweight yang hemat energi. Menghasilkan visual tajam flicker-free serta mudah diinstal. Ideal untuk roadside billboard hingga commercial venue.',
-    image: '/products/outdoor.png',
+    image: '/products/outdoor.webp',
     color: '#2a1a12',
     accent: '#fb923c',
   },
@@ -24,7 +24,7 @@ const fallbackItems: AccordionItem[] = [
     title: 'LED INDOOR',
     label: '02 / Campaign',
     description: 'Layar dengan piksel rapat dan refresh rate tinggi untuk visual mulus dan cerah dari jarak dekat. Berdesain tipis, ringan, dan efisien daya, memudahkan setup serta perawatan di conference room, lobi hotel, hingga storefront.',
-    image: '/products/indoor.png',
+    image: '/products/indoor.webp',
     color: '#3b2013',
     accent: '#fed7aa',
   },
@@ -32,7 +32,7 @@ const fallbackItems: AccordionItem[] = [
     title: 'LED RENTAL',
     label: '03 / Retail',
     description: 'Display LED portabel untuk acara indoor/outdoor seperti konser, pameran, dan wedding. Menampilkan visual mulus flicker-free dengan modul slim dan hemat energi yang cepat dipasang maupun dibongkar.',
-    image: '/products/rental.png',
+    image: '/products/rental.webp',
     color: '#1c1511',
     accent: '#fdba74',
   },
@@ -40,7 +40,7 @@ const fallbackItems: AccordionItem[] = [
     title: 'LED TRANSPARENT',
     label: '04 / Impact',
     description: 'Layar transparan berteknologi tinggi yang menampilkan visual cerah tanpa menghalangi pandangan di baliknya. Ringan dan efisien energi, sangat cocok untuk storefront, fasad, dan arsitektur modern (indoor/outdoor).',
-    image: '/products/transparent.png',
+    image: '/products/transparent.webp',
     color: '#331b10',
     accent: '#ffedd5',
   },
@@ -48,7 +48,7 @@ const fallbackItems: AccordionItem[] = [
     title: 'LED CREATIVE',
     label: '05 / Event',
     description: 'Display fleksibel yang dapat dikustomisasi ke berbagai bentuk unik (lengkung, silinder, dll.) untuk pengalaman visual imersif. Pilihan tepat untuk retail dan pameran yang ingin tampil beda dan eye-catching.',
-    image: '/products/creative.png',
+    image: '/products/creative.webp',
     color: '#452516',
     accent: '#fb923c',
   },
@@ -56,7 +56,7 @@ const fallbackItems: AccordionItem[] = [
     title: 'LED ALL IN ONE',
     label: '06 / Motion',
     description: 'Solusi plug-and-play praktis yang menggabungkan layar dan sistem dalam satu unit slim dan portabel. Menghadirkan performa visual profesional tanpa instalasi rumit, ideal untuk meeting room dan presentasi.',
-    image: '/products/all%20in%20one.png',
+    image: '/products/all%20in%20one.webp',
     color: '#21150f',
     accent: '#fed7aa',
   },
@@ -97,7 +97,7 @@ export default function HorizontalAccordionCards() {
             <span className="accordion-card__content">
               <span className="accordion-card__label">{item.label}</span>
               <span className="accordion-card__image-wrap">
-                <img className="accordion-card__image" src={item.image} alt="" loading="lazy" />
+                <img className="accordion-card__image" src={item.image} alt="" loading="lazy" decoding="async" />
               </span>
               <span className="accordion-card__copy">
                 <span className="accordion-card__title">{item.title}</span>
