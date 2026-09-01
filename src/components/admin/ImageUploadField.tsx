@@ -23,7 +23,7 @@ async function compressForUpload(file: File): Promise<File> {
   return new File([blob], `${file.name.replace(/\.[^.]+$/, '')}.webp`, { type: 'image/webp' });
 }
 
-export function ImageUploadField({ name, label = 'Gambar', initial = '', folder }: { name: string; label?: string; initial?: string; folder: 'products' | 'portfolios' | 'news' }) {
+export function ImageUploadField({ name, label = 'Gambar', initial = '', folder }: { name: string; label?: string; initial?: string; folder: 'products' | 'portfolios' | 'news' | 'services' }) {
   const inputId = useId();
   const [url, setUrl] = useState(initial);
   const [uploading, setUploading] = useState(false);

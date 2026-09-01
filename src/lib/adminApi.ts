@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
-import type { ContactLead, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, Product, ProductCatalogue, ProductInput } from '@/types/admin';
+import type { ContactLead, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, Product, ProductCatalogue, ProductInput, ServiceContent, ServiceContentInput } from '@/types/admin';
 
 function client(): SupabaseClient {
   if (!supabase) throw new Error('Supabase belum dikonfigurasi.');
@@ -16,6 +16,17 @@ function assertSafeMediaUrl(value: string, label: string) {
     // Fall through to the user-facing validation error.
   }
   throw new Error(`${label} harus berupa path website atau URL HTTPS yang valid.`);
+}
+
+function assertSafeLink(value: string, label: string) {
+  if (value.length > 2048) throw new Error(`${label} terlalu panjang.`);
+  if (value.startsWith('/') && !value.startsWith('//')) return;
+  try {
+    if (['https:', 'mailto:', 'tel:'].includes(new URL(value).protocol)) return;
+  } catch {
+    // Fall through to the user-facing validation error.
+  }
+  throw new Error(`${label} tidak valid.`);
 }
 
 export async function listPortfolios(): Promise<Portfolio[]> {
@@ -101,6 +112,22 @@ export async function getProductCatalogue(): Promise<ProductCatalogue | null> {
 export async function saveProductCatalogue(title: string, fileUrl: string): Promise<void> {
   assertSafeMediaUrl(fileUrl, 'URL katalog');
   const { error } = await client().from('product_catalogue').upsert({ id: 1, title, file_url: fileUrl });
+  if (error) throw error;
+}
+
+export async function getServiceContent(): Promise<ServiceContent | null> {
+  const { data, error } = await client().from('service_content').select('*').eq('id', 1).maybeSingle();
+  if (error) throw error;
+  return data as ServiceContent | null;
+}
+
+export async function saveServiceContent(input: ServiceContentInput): Promise<void> {
+  assertSafeLink(input.primary_button_url, 'URL tombol utama');
+  assertSafeLink(input.secondary_button_url, 'URL tombol kedua');
+  assertSafeMediaUrl(input.video_webm_url, 'URL video WebM');
+  assertSafeMediaUrl(input.video_mp4_url, 'URL video MP4');
+  assertSafeMediaUrl(input.video_poster_url, 'URL poster video');
+  const { error } = await client().from('service_content').upsert({ id: 1, ...input });
   if (error) throw error;
 }
 

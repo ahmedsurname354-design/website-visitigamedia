@@ -52,6 +52,35 @@ export interface ProductCatalogue {
   updated_at: string;
 }
 
+export interface ServiceCard {
+  title: string;
+  description: string;
+  tags: string[];
+  action: string;
+}
+
+export interface ServiceContent {
+  id: number;
+  eyebrow: string;
+  heading: string;
+  heading_accent: string;
+  cards: ServiceCard[];
+  showreel_eyebrow: string;
+  showreel_heading: string;
+  showreel_accent: string;
+  showreel_description: string;
+  primary_button_text: string;
+  primary_button_url: string;
+  secondary_button_text: string;
+  secondary_button_url: string;
+  video_webm_url: string;
+  video_mp4_url: string;
+  video_poster_url: string;
+  updated_at: string;
+}
+
+export type ServiceContentInput = Omit<ServiceContent, 'id' | 'updated_at'>;
+
 export type LeadStatus = 'new' | 'contacted' | 'completed' | 'spam';
 
 export interface ContactLead {

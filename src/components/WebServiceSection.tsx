@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { Play, ArrowUpRight } from 'lucide-react';
+import type { ServiceContent } from '@/types/admin';
 
-export default function WebServiceSection() {
+export default function WebServiceSection({ content }: { content?: ServiceContent | null }) {
   const { ref, isInView } = useScrollReveal();
 
   return (
@@ -16,28 +17,28 @@ export default function WebServiceSection() {
             transition={{ duration: 0.7 }}
             className="max-w-xl"
           >
-            <p className="text-orange-500 text-sm font-semibold tracking-[0.3em] uppercase mb-4">Layanan Kami</p>
+            <p className="text-orange-500 text-sm font-semibold tracking-[0.3em] uppercase mb-4">{content?.showreel_eyebrow ?? 'Layanan Kami'}</p>
             <h2 className="text-white font-bold text-4xl md:text-5xl leading-tight tracking-tight">
-              Visual Memukau, <span className="text-orange-500">Kesan Luar Biasa</span>
+              {content?.showreel_heading ?? 'Visual Memukau,'} <span className="text-orange-500">{content?.showreel_accent ?? 'Kesan Luar Biasa'}</span>
             </h2>
             <p className="text-white/70 mt-6 text-lg leading-relaxed">
-              Menampilkan hasil pemasangan dan konten videotron kami kombinasi warna tajam, pencahayaan presisi, dan performa optimal untuk hasil visual maksimal.
+              {content?.showreel_description ?? 'Menampilkan hasil pemasangan dan konten videotron kami kombinasi warna tajam, pencahayaan presisi, dan performa optimal untuk hasil visual maksimal.'}
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <a
-                href="https://bit.ly/49NclAE"
+                href={content?.primary_button_url ?? 'https://bit.ly/49NclAE'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-orange-500 text-black px-7 py-4 rounded-full font-semibold transition-all duration-300 hover:bg-orange-400"
               >
-                Konsultasi Sekarang
+                {content?.primary_button_text ?? 'Konsultasi Sekarang'}
                 <ArrowUpRight className="w-4 h-4" />
               </a>
               <a
-                href="mailto:marcomm@visitiga.com?subject=Konsultasi%20Visitiga%20Media"
+                href={content?.secondary_button_url ?? 'mailto:marcomm@visitiga.com?subject=Konsultasi%20Visitiga%20Media'}
                 className="inline-flex items-center gap-2 border border-white/10 bg-white/5 text-white px-7 py-4 rounded-full font-semibold transition-all duration-300 hover:bg-white/10"
               >
-                Email Marketing
+                {content?.secondary_button_text ?? 'Email Marketing'}
                 <Play className="w-4 h-4" />
               </a>
             </div>
@@ -55,10 +56,10 @@ export default function WebServiceSection() {
               playsInline
               controls
               preload="none"
-              poster="/videos/service-showreel-poster.webp"
+              poster={content?.video_poster_url ?? '/videos/service-showreel-poster.webp'}
             >
-              <source src="/videos/service-showreel.webm" type="video/webm" />
-              <source src="/videos/service-showreel.mp4" type="video/mp4" />
+              <source src={content?.video_webm_url ?? '/videos/service-showreel.webm'} type="video/webm" />
+              <source src={content?.video_mp4_url ?? '/videos/service-showreel.mp4'} type="video/mp4" />
               Browser Anda tidak mendukung pemutaran video.
             </video>
           </motion.div>

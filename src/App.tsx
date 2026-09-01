@@ -17,6 +17,7 @@ const DashboardPage = lazy(() => import('@/pages/admin/DashboardPage'));
 const PortfoliosPage = lazy(() => import('@/pages/admin/PortfoliosPage'));
 const NewsManagerPage = lazy(() => import('@/pages/admin/NewsManagerPage'));
 const ProductsManagerPage = lazy(() => import('@/pages/admin/ProductsManagerPage'));
+const ServicesManagerPage = lazy(() => import('@/pages/admin/ServicesManagerPage'));
 const LeadsPage = lazy(() => import('@/pages/admin/LeadsPage'));
 const AdminAuthBoundary = lazy(() => import('@/components/admin/AdminAuthBoundary'));
 const ProtectedRoute = lazy(() => import('@/components/admin/ProtectedRoute'));
@@ -62,6 +63,7 @@ function AnimatedRoutes() {
                 <Route element={<AdminLayout />}>
                   <Route index element={<DashboardPage />} />
                   <Route path="products" element={<ProductsManagerPage />} />
+                  <Route path="services" element={<ServicesManagerPage />} />
                   <Route path="portfolios" element={<PortfoliosPage />} />
                   <Route path="news" element={<NewsManagerPage />} />
                   <Route path="leads" element={<LeadsPage />} />

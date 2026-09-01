@@ -2,12 +2,14 @@ import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { Monitor, PanelsTopLeft, Layers3, Grid2x2Plus, ArrowUpRight } from 'lucide-react';
 import { useTranslation } from '@/i18n';
+import type { ServiceContent } from '@/types/admin';
 
-export default function ServicesSection() {
+export default function ServicesSection({ content }: { content?: ServiceContent | null }) {
   const { ref, isInView } = useScrollReveal();
   const { dict } = useTranslation();
-  const services = dict.services.cards.map((card, index) => ({
+  const services = (content?.cards ?? dict.services.cards).map((card, index) => ({
     ...card,
+    desc: 'desc' in card ? card.desc : card.description,
     icon: [Monitor, PanelsTopLeft, Layers3, Grid2x2Plus][index],
   }));
 
@@ -21,10 +23,10 @@ export default function ServicesSection() {
           transition={{ duration: 0.6 }}
           className="max-w-2xl mb-10 sm:mb-16"
         >
-          <p className="text-orange-500 text-sm font-semibold tracking-[0.3em] uppercase mb-4">Layanan Kami</p>
+          <p className="text-orange-500 text-sm font-semibold tracking-[0.3em] uppercase mb-4">{content?.eyebrow ?? 'Layanan Kami'}</p>
           <h2 className="text-white font-bold text-4xl md:text-5xl leading-tight tracking-tight">
-            Solusi LED <span className="text-orange-500">Terbaik</span> <br />
-            untuk Setiap Kebutuhan
+            {content?.heading ?? 'Solusi LED Terbaik'} <br />
+            <span className="text-orange-500">{content?.heading_accent ?? 'untuk Setiap Kebutuhan'}</span>
           </h2>
         </motion.div>
 
