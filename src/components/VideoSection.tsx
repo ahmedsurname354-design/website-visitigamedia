@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { Play, Quote } from 'lucide-react';
 
-const videoImg = 'https://images.pexels.com/photos/18335917/pexels-photo-18335917.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&dpr=2';
+const videoImg = '/video-cover.webp';
 
 export default function VideoSection() {
   const { ref, isInView } = useScrollReveal();
@@ -20,6 +20,8 @@ export default function VideoSection() {
           <img
             src={videoImg}
             alt="Cuplikan proyek LED Visitiga"
+            loading="lazy"
+            decoding="async"
             className="w-full h-[400px] md:h-[560px] object-cover transition-transform duration-700 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-colors duration-300" />

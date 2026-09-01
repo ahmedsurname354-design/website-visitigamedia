@@ -19,9 +19,9 @@ const document = await PDFDocument.create();
 
 for (const pageFile of pageFiles) {
   const source = path.join(pagesDirectory, pageFile);
-  const image = sharp(source).rotate().resize({ width: 1400, withoutEnlargement: true });
+  const image = sharp(source).rotate().resize({ width: 1200, withoutEnlargement: true });
   const metadata = await image.metadata();
-  const jpeg = await image.jpeg({ quality: 78, mozjpeg: true }).toBuffer();
+  const jpeg = await image.jpeg({ quality: 70, mozjpeg: true, progressive: true }).toBuffer();
   const embedded = await document.embedJpg(jpeg);
   const width = metadata.width ?? embedded.width;
   const height = metadata.height ?? embedded.height;

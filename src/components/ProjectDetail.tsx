@@ -1,6 +1,7 @@
 import { ArrowLeft, ArrowUpRight, ExternalLink } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useTranslation } from '@/i18n';
+import { optimizedImageUrl } from '@/lib/imageUrl';
 
 export type ProjectDetailData = {
   title: string;
@@ -71,7 +72,7 @@ export default function ProjectDetail({
         <section>
           <div className="relative isolate aspect-[4/3] overflow-hidden rounded-2xl border border-neutral-300 bg-neutral-100 sm:aspect-[16/8] lg:rounded-3xl">
             <img
-              src={project.coverImage}
+              src={optimizedImageUrl(project.coverImage, 1600)}
               alt={project.coverImageAlt ?? project.title}
               className="h-full w-full object-cover"
             />
@@ -144,7 +145,7 @@ export default function ProjectDetail({
                   aria-label={image.onClick ? `${t('projectDetail.viewProject')} ${image.alt}` : undefined}
                 >
                   <div className="aspect-[4/3] overflow-hidden">
-                    <img src={image.src} alt={image.alt} loading="lazy" decoding="async" className="h-full w-full object-cover transition duration-500 ease-out group-hover:scale-[1.03]" />
+                    <img src={optimizedImageUrl(image.src, 1000)} alt={image.alt} loading="lazy" decoding="async" className="h-full w-full object-cover transition duration-500 ease-out group-hover:scale-[1.03]" />
                   </div>
                   {image.caption && <span className="block px-4 py-3 text-sm text-neutral-600">{image.caption}</span>}
                 </button>

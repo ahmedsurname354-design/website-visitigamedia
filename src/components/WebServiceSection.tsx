@@ -55,7 +55,7 @@ export default function WebServiceSection() {
               playsInline
               controls
               preload="none"
-              poster="/videos/service-showreel-poster.jpg"
+              poster="/videos/service-showreel-poster.webp"
             >
               <source src="/videos/service-showreel.webm" type="video/webm" />
               <source src="/videos/service-showreel.mp4" type="video/mp4" />
