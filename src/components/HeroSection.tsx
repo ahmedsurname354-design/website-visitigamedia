@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Play } from 'lucide-react';
 import { useTranslation } from '@/i18n';
 
-const heroImg = 'https://images.pexels.com/photos/38833542/pexels-photo-38833542.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
+const heroImg = '/hero-1600.webp';
 
 export default function HeroSection() {
   const { t } = useTranslation();
@@ -14,10 +14,11 @@ export default function HeroSection() {
       <div className="absolute inset-0">
         <img
           src={heroImg}
-          srcSet={`${heroImg}&w=768&dpr=1 768w, ${heroImg} 1260w`}
+          srcSet="/hero-640.webp 640w, /hero-960.webp 960w, /hero-1600.webp 1600w"
           sizes="100vw"
           alt="Tampilan LED di kota pada malam hari"
           fetchPriority="high"
+          decoding="async"
           className="w-full h-full object-cover object-[62%_center] opacity-60 sm:object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/30" />
