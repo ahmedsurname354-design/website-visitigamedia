@@ -11,7 +11,7 @@ body {
 }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
   background-color: #fffaf3;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -269,7 +269,7 @@ img, video { max-width: 100%; }
   padding: 1.5rem;
   color: #323a3b;
   background: linear-gradient(135deg, #f7f8f6 0%, #e8ebea 100%);
-  font-family: Inter, system-ui, sans-serif;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
   font-size: 1.22rem;
   font-weight: 700;
   letter-spacing: -.035em;

@@ -42,7 +42,7 @@ export default function HeroSection() {
           <motion.h1
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.45 }}
+            transition={{ duration: 0.38, delay: 0.05 }}
             className="text-white font-bold text-[clamp(2.5rem,11vw,4.5rem)] leading-[1.03] tracking-[-0.045em]"
           >
             {t('hero.titleLine1')} <span className="text-orange-500">{t('hero.titleLine2')}</span> <br />
@@ -52,7 +52,7 @@ export default function HeroSection() {
           <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.6 }}
+            transition={{ duration: 0.38, delay: 0.1 }}
             className="text-white/70 text-base sm:text-lg md:text-xl mt-5 sm:mt-6 max-w-xl leading-relaxed"
           >
             {t('hero.subtitle')}
@@ -61,7 +61,7 @@ export default function HeroSection() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.75 }}
+            transition={{ duration: 0.38, delay: 0.15 }}
             className="flex flex-col items-stretch gap-3 mt-8 min-[420px]:flex-row min-[420px]:items-center sm:mt-10"
           >
             <Link

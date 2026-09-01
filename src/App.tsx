@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Navigate, Outlet, Routes, Route, useLocation }
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-const HomePage = lazy(() => import('@/pages/HomePage'));
+import HomePage from '@/pages/HomePage';
 const AboutPage = lazy(() => import('@/pages/AboutPage'));
 const ServicesPage = lazy(() => import('@/pages/ServicesPage'));
 const PortfolioPage = lazy(() => import('@/pages/PortfolioPage'));
@@ -41,7 +41,7 @@ function AnimatedRoutes() {
   }, [location.pathname]);
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="sync" initial={false}>
       <PageTransition key={location.pathname}>
         <Suspense fallback={<div className="min-h-[calc(100vh-5rem)]" />}>
           <Routes location={location}>
@@ -82,7 +82,7 @@ function PageTransition({ children }: { children: ReactNode }) {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
-      transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
       className="min-h-[calc(100vh-5rem)]"
     >
       {children}
