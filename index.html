@@ -4,14 +4,18 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/social-preview.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="preload"
-      as="image"
-      href="/hero-960.webp"
-      imagesrcset="/hero-640.webp 640w, /hero-960.webp 960w, /hero-1600.webp 1600w"
-      imagesizes="100vw"
-      fetchpriority="high"
-    />
+    <script>
+      if (location.pathname === '/') {
+        const preload = document.createElement('link');
+        preload.rel = 'preload';
+        preload.as = 'image';
+        preload.href = '/hero-960.webp';
+        preload.imageSrcset = '/hero-640.webp 640w, /hero-960.webp 960w, /hero-1600.webp 1600w';
+        preload.imageSizes = '100vw';
+        preload.fetchPriority = 'high';
+        document.head.appendChild(preload);
+      }
+    </script>
     <link rel="canonical" href="https://visitiga-media.pages.dev/" />
     <meta name="robots" content="index, follow" />
     <title>Visitiga — Solusi LED Premium</title>
