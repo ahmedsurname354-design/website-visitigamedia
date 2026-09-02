@@ -58,8 +58,8 @@ export default function WebServiceSection({ content }: { content?: ServiceConten
               preload="none"
               poster={content?.video_poster_url ?? '/videos/service-showreel-poster.webp'}
             >
-              <source src={content?.video_webm_url ?? '/videos/service-showreel.webm'} type="video/webm" />
               <source src={content?.video_mp4_url ?? '/videos/service-showreel.mp4'} type="video/mp4" />
+              {!content && <source src="/videos/service-showreel.webm" type="video/webm" />}
               Browser Anda tidak mendukung pemutaran video.
             </video>
           </motion.div>

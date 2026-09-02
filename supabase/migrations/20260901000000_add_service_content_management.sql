@@ -49,5 +49,5 @@ insert into public.service_content (
 
 update storage.buckets
 set file_size_limit = 31457280,
-    allowed_mime_types = array['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'video/mp4', 'video/webm']
+    allowed_mime_types = array['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'video/mp4']
 where id = 'website-media';
