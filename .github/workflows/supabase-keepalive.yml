@@ -1,0 +1,49 @@
+name: Supabase keepalive
+
+on:
+  schedule:
+    # GitHub cron uses UTC. 01:00 UTC is 08:00 in Jakarta (WIB).
+    - cron: '0 1 * * 1,4'
+  workflow_dispatch:
+
+concurrency:
+  group: supabase-keepalive
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ping-database:
+    name: Run lightweight public query
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: production
+    env:
+      SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+    steps:
+      - name: Validate required secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_URL" || { echo "VITE_SUPABASE_URL is not configured" >&2; exit 1; }
+          test -n "$SUPABASE_PUBLISHABLE_KEY" || { echo "VITE_SUPABASE_PUBLISHABLE_KEY is not configured" >&2; exit 1; }
+
+      - name: Query one public row
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl \
+            --fail-with-body \
+            --silent \
+            --show-error \
+            --retry 3 \
+            --retry-all-errors \
+            --connect-timeout 10 \
+            --max-time 30 \
+            --header "apikey: $SUPABASE_PUBLISHABLE_KEY" \
+            --header "Accept: application/json" \
+            "${SUPABASE_URL%/}/rest/v1/products?select=id&limit=1" \
+            > /dev/null
+          echo "Supabase keepalive query completed successfully."
