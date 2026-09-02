@@ -4,6 +4,7 @@ import { getProductCatalogue } from '@/lib/adminApi';
 
 type PageFlipInstance = { loadFromHTML: (items: HTMLElement[]) => void; flipNext: () => void; flipPrev: () => void; destroy: () => void; on: (event: 'flip', handler: (event: { data: number }) => void) => void };
 const FALLBACK_PDF = '/products/product-catalogue-2026.pdf';
+const FALLBACK_COVER = '/products/catalogue-cover.webp';
 
 export default function ProductFlipbook() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -38,7 +39,7 @@ export default function ProductFlipbook() {
       if (!entry.isIntersecting) return;
       setShouldLoad(true);
       observer.disconnect();
-    }, { rootMargin: '400px 0px' });
+    }, { rootMargin: '100px 0px' });
     observer.observe(section);
     return () => observer.disconnect();
   }, []);
@@ -101,7 +102,7 @@ export default function ProductFlipbook() {
   const total = pageCount || 1;
   return <section ref={sectionRef} className="mt-20 border-t border-current/10 pt-16 md:mt-24 md:pt-20" aria-labelledby="catalogue-title">
     <div className="mx-auto mb-10 flex max-w-3xl flex-col items-center text-center"><p className="text-sm font-semibold uppercase tracking-[0.28em] text-orange-500">Katalog Interaktif</p><h2 id="catalogue-title" className="product-page__title mt-3 text-3xl font-bold tracking-tight sm:text-4xl">{title}</h2><p className="product-page__description mt-3 max-w-xl leading-7">{status}</p></div>
-    <div className="mx-auto w-full max-w-[1000px] rounded-2xl bg-black/20 p-2 shadow-[0_25px_65px_rgba(36,24,17,0.28)] sm:rounded-[2rem] sm:p-5"><div ref={hostRef} className="flex min-h-[360px] items-center justify-center sm:min-h-[380px]"><div className="h-10 w-10 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" /></div></div>
+    <div className="mx-auto w-full max-w-[1000px] rounded-2xl bg-black/20 p-2 shadow-[0_25px_65px_rgba(36,24,17,0.28)] sm:rounded-[2rem] sm:p-5"><div ref={hostRef} className="relative flex min-h-[360px] items-center justify-center overflow-hidden sm:min-h-[380px]"><img src={FALLBACK_COVER} alt="Cover katalog produk" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-contain" /><div className="absolute bottom-4 right-4 h-9 w-9 animate-spin rounded-full border-2 border-orange-500 border-t-transparent bg-black/30" /></div></div>
     <div className="mt-8 flex items-center justify-center gap-3 sm:gap-4"><Control label="Sebelumnya" onClick={() => changePage('previous')}><ChevronLeft className="h-4 w-4" /></Control><span className="min-w-12 text-center text-sm font-semibold text-orange-500">{currentPage + 1} / {total}</span><Control label="Berikutnya" primary onClick={() => changePage('next')}><ChevronRight className="h-4 w-4" /></Control><Control label="Layar penuh" onClick={openFullscreen}><Maximize2 className="h-4 w-4" /></Control></div>
     <div ref={fullscreenRef} className={isFullscreen ? 'fixed inset-0 z-50 flex min-h-screen flex-col bg-[#120d09] p-3 text-white sm:p-6' : 'pointer-events-none fixed inset-0 -z-10 flex min-h-screen flex-col bg-[#120d09] p-3 text-white opacity-0 sm:p-6'} aria-hidden={!isFullscreen}><div className="flex items-center justify-between pb-3"><p className="text-sm font-semibold text-orange-400">{title} · {currentPage + 1} / {total}</p><button type="button" onClick={() => void closeFullscreen()} className="inline-flex items-center gap-2 rounded-full border border-white/25 px-4 py-2 text-sm font-semibold"><Minimize2 className="h-4 w-4" /><span className="hidden sm:inline">Keluar dari layar penuh</span><X className="h-4 w-4 sm:hidden" /></button></div>{renderedPages[currentPage] ? <img src={renderedPages[currentPage]} alt={`Halaman katalog ${currentPage + 1}`} className="min-h-0 flex-1 object-contain" /> : <div className="min-h-0 flex-1" />}<div className="flex justify-center gap-3 pt-3"><button type="button" onClick={() => changePage('previous')} className="rounded-full border border-white/25 p-3"><ChevronLeft /></button><button type="button" onClick={() => changePage('next')} className="rounded-full bg-orange-500 p-3"><ChevronRight /></button></div></div>
   </section>;

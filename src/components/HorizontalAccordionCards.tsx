@@ -66,6 +66,12 @@ const fallbackItems: AccordionItem[] = [
 export default function HorizontalAccordionCards() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [items, setItems] = useState<AccordionItem[]>(fallbackItems);
+  const [requestedImages, setRequestedImages] = useState(() => new Set([0]));
+
+  const activate = (index: number) => {
+    setActiveIndex(index);
+    setRequestedImages((current) => current.has(index) ? current : new Set(current).add(index));
+  };
 
   useEffect(() => {
     let active = true;
@@ -79,6 +85,13 @@ export default function HorizontalAccordionCards() {
     return () => { active = false; };
   }, []);
 
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setRequestedImages(new Set(items.map((_, index) => index)));
+    }, 2500);
+    return () => window.clearTimeout(timer);
+  }, [items]);
+
   return (
     <div className="accordion-cards" aria-label="Layanan media kami">
       {items.map((item, index) => {
@@ -90,15 +103,15 @@ export default function HorizontalAccordionCards() {
             key={item.title}
             className={`accordion-card ${isActive ? 'is-active' : ''}`}
             style={{ '--card-color': item.color, '--card-accent': item.accent } as CSSProperties}
-            onClick={() => setActiveIndex(index)}
-            onMouseEnter={() => setActiveIndex(index)}
-            onFocus={() => setActiveIndex(index)}
+            onClick={() => activate(index)}
+            onMouseEnter={() => activate(index)}
+            onFocus={() => activate(index)}
             aria-expanded={isActive}
           >
             <span className="accordion-card__content">
               <span className="accordion-card__label">{item.label}</span>
               <span className="accordion-card__image-wrap">
-                <img className="accordion-card__image" src={optimizedImageUrl(item.image, 900)} onError={({ currentTarget }) => restoreOriginalImage(currentTarget, item.image)} alt="" loading="lazy" decoding="async" />
+                {requestedImages.has(index) && <img className="accordion-card__image" src={optimizedImageUrl(item.image, 900)} onError={({ currentTarget }) => restoreOriginalImage(currentTarget, item.image)} alt="" loading={index === 0 ? 'eager' : 'lazy'} fetchPriority={index === 0 ? 'high' : 'auto'} decoding="async" />}
               </span>
               <span className="accordion-card__copy">
                 <span className="accordion-card__title">{item.title}</span>

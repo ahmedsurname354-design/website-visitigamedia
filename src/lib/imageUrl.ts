@@ -4,7 +4,7 @@
  * fallback if the URL is not from Supabase Storage.
  */
 export function optimizedImageUrl(source: string, width: number, quality = 75): string {
-  if (/^\/(portfolio|news)\/.+\.(png|jpe?g)$/i.test(source)) {
+  if (/^\/(portfolio|news|products)\/.+\.(png|jpe?g)$/i.test(source)) {
     return source.replace(/\.(png|jpe?g)$/i, '.webp');
   }
   if (!source.includes('/storage/v1/object/public/')) return source;
