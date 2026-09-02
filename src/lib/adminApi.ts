@@ -121,14 +121,15 @@ export async function getServiceContent(): Promise<ServiceContent | null> {
   return data as ServiceContent | null;
 }
 
-export async function saveServiceContent(input: ServiceContentInput): Promise<void> {
+export async function saveServiceContent(input: ServiceContentInput): Promise<ServiceContent> {
   assertSafeLink(input.primary_button_url, 'URL tombol utama');
   assertSafeLink(input.secondary_button_url, 'URL tombol kedua');
   assertSafeMediaUrl(input.video_webm_url, 'URL video WebM');
   assertSafeMediaUrl(input.video_mp4_url, 'URL video MP4');
   assertSafeMediaUrl(input.video_poster_url, 'URL poster video');
-  const { error } = await client().from('service_content').upsert({ id: 1, ...input });
+  const { data, error } = await client().from('service_content').upsert({ id: 1, ...input }).select('*').single();
   if (error) throw error;
+  return data as ServiceContent;
 }
 
 export async function listContactLeads(): Promise<ContactLead[]> {

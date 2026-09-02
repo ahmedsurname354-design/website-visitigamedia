@@ -5,6 +5,8 @@ import type { ServiceContent } from '@/types/admin';
 
 export default function WebServiceSection({ content }: { content?: ServiceContent | null }) {
   const { ref, isInView } = useScrollReveal();
+  const videoUrl = content?.video_mp4_url ?? '/videos/service-showreel.mp4';
+  const videoVersion = content?.updated_at ?? 'default';
 
   return (
     <section className="relative theme-section py-24 md:py-32">
@@ -51,6 +53,7 @@ export default function WebServiceSection({ content }: { content?: ServiceConten
             className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 shadow-[0_40px_120px_rgba(0,0,0,0.25)]"
           >
             <video
+              key={`${videoUrl}-${videoVersion}`}
               aria-label="Service showreel"
               className="block aspect-[4/3] w-full object-cover sm:aspect-video lg:aspect-auto lg:h-[520px]"
               playsInline
@@ -58,7 +61,7 @@ export default function WebServiceSection({ content }: { content?: ServiceConten
               preload="none"
               poster={content?.video_poster_url ?? '/videos/service-showreel-poster.webp'}
             >
-              <source src={content?.video_mp4_url ?? '/videos/service-showreel.mp4'} type="video/mp4" />
+              <source src={videoUrl} type="video/mp4" />
               {!content && <source src="/videos/service-showreel.webm" type="video/webm" />}
               Browser Anda tidak mendukung pemutaran video.
             </video>

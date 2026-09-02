@@ -16,7 +16,9 @@ const fetchWithoutPublishableKeyBearer: typeof fetch = (input, init) => {
     headers.delete('Authorization');
   }
 
-  return fetch(input, { ...init, headers });
+  // CMS reads must reflect admin changes immediately instead of reusing an
+  // older PostgREST response cached by a browser or an intermediary.
+  return fetch(input, { ...init, headers, cache: init?.cache ?? 'no-store' });
 };
 
 // Keep the public site available when contact-form configuration has not yet
