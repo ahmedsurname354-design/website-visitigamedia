@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { Play, Quote } from 'lucide-react';
@@ -6,6 +7,7 @@ const videoImg = '/video-cover.webp';
 
 export default function VideoSection() {
   const { ref, isInView } = useScrollReveal();
+  const [playing, setPlaying] = useState(false);
 
   return (
     <section className="relative theme-section py-24 md:py-32">
@@ -15,19 +17,20 @@ export default function VideoSection() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={isInView ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.7 }}
-          className="relative rounded-3xl overflow-hidden group cursor-pointer"
+          className="relative min-h-[400px] overflow-hidden rounded-3xl md:min-h-[560px]"
         >
-          <img
-            src={videoImg}
-            alt="Cuplikan proyek LED Visitiga"
-            loading="lazy"
-            decoding="async"
-            className="w-full h-[400px] md:h-[560px] object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-colors duration-300" />
+          {playing ? (
+            <video className="absolute inset-0 h-full w-full bg-black object-contain" controls autoPlay playsInline preload="metadata" poster={videoImg}>
+              <source src="/videos/service-showreel.webm" type="video/webm" />
+              <source src="/videos/service-showreel.mp4" type="video/mp4" />
+              Browser Anda tidak mendukung pemutar video.
+            </video>
+          ) : <>
+          <img src={videoImg} alt="Cuplikan proyek LED Visitiga" loading="lazy" decoding="async" className="h-[400px] w-full object-cover transition-transform duration-700 group-hover:scale-105 md:h-[560px]" />
+          <div className="absolute inset-0 bg-black/50 transition-colors duration-300 group-hover:bg-black/40" />
 
           {/* Play button */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <button type="button" onClick={() => setPlaying(true)} className="absolute inset-0 flex w-full flex-col items-center justify-center text-left" aria-label="Putar cuplikan Visitiga">
             <motion.div
               whileHover={{ scale: 1.1 }}
               className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-orange-500 flex items-center justify-center shadow-2xl shadow-orange-500/40 group-hover:scale-110 transition-transform duration-300"
@@ -36,7 +39,7 @@ export default function VideoSection() {
             </motion.div>
             <p className="text-white font-semibold text-lg mt-6 tracking-wide">Saksikan Cuplikan Kami</p>
             <p className="text-white/50 text-sm mt-1">2:34 menit — Lihat hasil kerja kami</p>
-          </div>
+          </button>
 
           {/* Quote overlay */}
           <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 bg-gradient-to-t from-black to-transparent">
@@ -46,6 +49,7 @@ export default function VideoSection() {
             </p>
             <p className="text-white/50 text-sm mt-3">— Budi Santoso, Klien Ritel</p>
           </div>
+          </>}
         </motion.div>
       </div>
     </section>

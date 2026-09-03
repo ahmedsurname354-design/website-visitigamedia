@@ -2,7 +2,6 @@ import { type FormEvent, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { ArrowRight, Phone, Mail, MapPin } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 
 const submissionKeyName = 'visitiga_contact_submission_key';
 
@@ -48,18 +47,18 @@ export default function CTASection() {
     event.preventDefault();
     const formElement = event.currentTarget;
 
-    if (!supabase) {
-      setFormError('Konfigurasi formulir belum tersedia. Hubungi administrator website.');
-      setFormStatus('error');
-      return;
-    }
-
     setIsSubmitting(true);
     setFormStatus('idle');
     setFormError('');
 
     const form = new FormData(formElement);
     try {
+      const { supabase } = await import('@/lib/supabase');
+      if (!supabase) {
+        setFormError('Konfigurasi formulir belum tersedia. Hubungi administrator website.');
+        setFormStatus('error');
+        return;
+      }
       const { error } = await supabase.rpc('submit_contact_message', {
         p_name: String(form.get('name') ?? '').trim(),
         p_email: String(form.get('email') ?? '').trim(),

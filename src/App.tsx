@@ -4,14 +4,15 @@ import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import HomePage from '@/pages/HomePage';
-const AboutPage = lazy(() => import('@/pages/AboutPage'));
-const ServicesPage = lazy(() => import('@/pages/ServicesPage'));
-const PortfolioPage = lazy(() => import('@/pages/PortfolioPage'));
-const VideoPage = lazy(() => import('@/pages/VideoPage'));
-const ContactPage = lazy(() => import('@/pages/ContactPage'));
-const ProductPage = lazy(() => import('@/pages/ProductPage'));
-const NewsPage = lazy(() => import('@/pages/NewsPage'));
-const NewsDetailPage = lazy(() => import('@/pages/NewsDetailPage'));
+import { preloadPublicRoutesWhenIdle, publicPageLoaders } from '@/lib/publicRoutes';
+const AboutPage = lazy(publicPageLoaders.about);
+const ServicesPage = lazy(publicPageLoaders.services);
+const PortfolioPage = lazy(publicPageLoaders.portfolio);
+const VideoPage = lazy(publicPageLoaders.video);
+const ContactPage = lazy(publicPageLoaders.contact);
+const ProductPage = lazy(publicPageLoaders.product);
+const NewsPage = lazy(publicPageLoaders.news);
+const NewsDetailPage = lazy(publicPageLoaders.newsDetail);
 const LoginPage = lazy(() => import('@/pages/admin/LoginPage'));
 const DashboardPage = lazy(() => import('@/pages/admin/DashboardPage'));
 const PortfoliosPage = lazy(() => import('@/pages/admin/PortfoliosPage'));
@@ -44,7 +45,7 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="sync" initial={false}>
       <PageTransition key={location.pathname}>
-        <Suspense fallback={<div className="min-h-[calc(100vh-5rem)]" />}>
+        <Suspense fallback={<RouteLoadingFallback />}>
           <Routes location={location}>
             <Route element={<PublicLayout />}>
               <Route path="/" element={<HomePage />} />
@@ -78,6 +79,17 @@ function AnimatedRoutes() {
   );
 }
 
+function RouteLoadingFallback() {
+  return (
+    <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center px-6" role="status" aria-live="polite">
+      <div className="flex items-center gap-3 rounded-full border border-current/10 px-5 py-3 text-sm opacity-70 shadow-sm">
+        <span className="size-4 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" aria-hidden="true" />
+        <span>Memuat halaman…</span>
+      </div>
+    </div>
+  );
+}
+
 function PageTransition({ children }: { children: ReactNode }) {
   return (
     <motion.div
@@ -100,6 +112,8 @@ function App() {
     localStorage.setItem('theme', theme);
     document.documentElement.style.colorScheme = theme;
   }, []);
+
+  useEffect(() => preloadPublicRoutesWhenIdle(), []);
 
   return (
     <MotionConfig reducedMotion={isMobile ? 'always' : 'user'}>

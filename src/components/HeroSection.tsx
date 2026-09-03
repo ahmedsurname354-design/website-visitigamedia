@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Play } from 'lucide-react';
 import { useTranslation } from '@/i18n';
+import { preloadPublicRoute } from '@/lib/publicRoutes';
 
 const heroImg = '/hero-1600.webp';
 
@@ -66,6 +67,9 @@ export default function HeroSection() {
           >
             <Link
               to="/services"
+              onPointerEnter={() => void preloadPublicRoute('/services')}
+              onFocus={() => void preloadPublicRoute('/services')}
+              onTouchStart={() => void preloadPublicRoute('/services')}
               className="group flex min-h-12 items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 hover:shadow-xl hover:shadow-orange-500/40 hover:-translate-y-0.5"
             >
               {t('hero.viewServices')}
@@ -73,6 +77,9 @@ export default function HeroSection() {
             </Link>
             <Link
               to="/portfolio"
+              onPointerEnter={() => void preloadPublicRoute('/portfolio')}
+              onFocus={() => void preloadPublicRoute('/portfolio')}
+              onTouchStart={() => void preloadPublicRoute('/portfolio')}
               className="group flex min-h-12 items-center justify-center gap-3 text-white hover:text-orange-500 px-4 py-2 font-medium transition-colors duration-300"
             >
               <span className="w-12 h-12 rounded-full border border-white/30 group-hover:border-orange-500 flex items-center justify-center transition-colors duration-300">

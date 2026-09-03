@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import Logo from '@/components/Logo';
 import { useTranslation } from '@/i18n';
+import { preloadPublicRoute } from '@/lib/publicRoutes';
 
 const navLinks = [
   { labelKey: 'navbar.home', href: '/' },
@@ -66,6 +67,9 @@ export default function Navbar() {
                 <NavLink
                   to={link.href}
                   end={link.href === '/'}
+                  onPointerEnter={() => void preloadPublicRoute(link.href)}
+                  onFocus={() => void preloadPublicRoute(link.href)}
+                  onTouchStart={() => void preloadPublicRoute(link.href)}
                   className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 relative group ${
                     isActive ? 'text-orange-500' : 'text-white/80 hover:text-orange-500'
                   }`}
@@ -117,6 +121,9 @@ export default function Navbar() {
                   <NavLink
                     to={link.href}
                     end={link.href === '/'}
+                    onPointerEnter={() => void preloadPublicRoute(link.href)}
+                    onFocus={() => void preloadPublicRoute(link.href)}
+                    onTouchStart={() => void preloadPublicRoute(link.href)}
                     onClick={() => setMobileOpen(false)}
                     className={({ isActive }) => `flex min-h-12 items-center justify-between rounded-xl px-4 text-base font-semibold transition-colors ${
                       isActive ? 'bg-orange-500/10 text-orange-600' : 'text-white/80 hover:bg-black/5 hover:text-orange-500'
