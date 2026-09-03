@@ -20,7 +20,7 @@ const linkMap: Record<string, string> = {
   Pemeliharaan: '/services',
   Portofolio: '/portfolio',
   Berita: '/news',
-  'Tanya Jawab': '/faq',
+  'Tanya Jawab': '/contact',
   Dukungan: 'mailto:marcomm@visitiga.com?subject=Konsultasi%20Visitiga%20Media',
 };
 
@@ -32,12 +32,12 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="site-footer border-t border-slate-800 pt-14 pb-8">
+    <footer className="site-footer border-t border-slate-800 pt-16 pb-8 sm:pt-20">
       <div className="mx-auto max-w-[1536px] px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-5 gap-12 mb-12">
+        <div className="site-footer__top grid lg:grid-cols-5 gap-12 mb-14">
           {/* Brand */}
             <div className="lg:col-span-2">
-            <Logo className="h-24 mb-5" />
+            <Logo className="h-20 mb-6" />
             <p className="text-white/50 text-sm leading-relaxed max-w-sm mb-6">
               Solusi LED display profesional untuk bisnis Anda di seluruh Indonesia.
               Kualitas premium, desain kreatif, dan layanan terbaik.
@@ -49,7 +49,7 @@ export default function Footer() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-white/5 hover:bg-orange-500 flex items-center justify-center transition-colors duration-300"
+                    className="site-footer__social w-11 h-11 rounded-full bg-white/5 hover:bg-orange-500 flex items-center justify-center transition-colors duration-300"
                 >
                   <Icon className="w-4 h-4 text-white/70 hover:text-white" />
                 </a>
@@ -60,7 +60,7 @@ export default function Footer() {
           {/* Links */}
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
-              <p className="text-white font-semibold text-sm mb-4">{title}</p>
+              <p className="site-footer__heading text-white font-semibold text-sm mb-5">{title}</p>
               <ul className="space-y-3">
                 {links.map((link) => {
                   const path = linkMap[link] ?? '/';

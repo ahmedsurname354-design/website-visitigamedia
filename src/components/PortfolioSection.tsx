@@ -657,9 +657,9 @@ export default function PortfolioSection() {
             <p className="text-orange-500 text-sm font-semibold tracking-[0.3em] uppercase mb-4">
               Karya Kami
             </p>
-            <h2 className="text-white font-bold text-4xl md:text-5xl leading-tight tracking-tight">
+            <h1 className="text-white font-bold text-4xl md:text-5xl leading-tight tracking-tight">
               Proyek <span className="text-orange-500">Unggulan</span>
-            </h2>
+            </h1>
           </div>
         </motion.div>
 

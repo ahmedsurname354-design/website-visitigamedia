@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { ArrowUpRight, Menu, X } from 'lucide-react';
 import Logo from '@/components/Logo';
 import { useTranslation } from '@/i18n';
 import { preloadPublicRoute } from '@/lib/publicRoutes';
@@ -49,8 +49,8 @@ export default function Navbar() {
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, delay: 0.2 }}
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        scrolled || mobileOpen ? 'theme-navbar backdrop-blur-md py-2.5 shadow-sm' : 'bg-transparent py-3 sm:py-4'
+      className={`site-navbar fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+        scrolled || mobileOpen ? 'site-navbar--solid theme-navbar backdrop-blur-md py-2.5' : 'site-navbar--transparent bg-transparent py-3 sm:py-4'
       }`}
     >
       <div className="mx-auto flex max-w-[1536px] items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -59,10 +59,10 @@ export default function Navbar() {
           <Logo className="h-11 sm:h-12 lg:h-14" />
         </NavLink>
 
-        <div className="hidden lg:flex ml-auto items-center gap-6">
+        <div className="hidden lg:flex ml-auto items-center gap-7">
           {/* Desktop nav */}
-          <ul className="flex items-center gap-6">
-            {navLinks.map((link) => (
+          <ul className="flex items-center gap-7">
+            {navLinks.slice(0, -1).map((link) => (
               <li key={link.labelKey}>
                 <NavLink
                   to={link.href}
@@ -70,8 +70,8 @@ export default function Navbar() {
                   onPointerEnter={() => void preloadPublicRoute(link.href)}
                   onFocus={() => void preloadPublicRoute(link.href)}
                   onTouchStart={() => void preloadPublicRoute(link.href)}
-                  className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 relative group ${
-                    isActive ? 'text-orange-500' : 'text-white/80 hover:text-orange-500'
+                  className={({ isActive }) => `site-nav-link text-[13px] font-semibold tracking-wide transition-colors duration-300 relative group ${
+                    isActive ? 'is-active text-orange-500' : 'text-white/80 hover:text-orange-500'
                   }`}
                 >
                   {t(link.labelKey)}
@@ -81,6 +81,7 @@ export default function Navbar() {
             ))}
           </ul>
 
+          <span className="site-navbar__divider" />
           <button
             onClick={() => setLang(lang === 'id' ? 'en' : 'id')}
             className="theme-toggle px-3 py-2 border rounded-full text-sm border-white/10 text-white/80 hover:text-white hover:border-orange-500 transition-all duration-300"
@@ -89,6 +90,7 @@ export default function Navbar() {
           >
             {lang.toUpperCase()}
           </button>
+          <NavLink to="/contact" className="site-navbar__cta">{t('navbar.contact')} <ArrowUpRight /></NavLink>
         </div>
 
         {/* Mobile toggle */}
@@ -112,9 +114,9 @@ export default function Navbar() {
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
             id="mobile-navigation"
-            className="lg:hidden overflow-hidden theme-mobile-menu backdrop-blur-md border-t border-black/5"
+            className="site-mobile-menu lg:hidden overflow-hidden theme-mobile-menu backdrop-blur-md border-t border-black/5"
           >
-            <div className="flex h-[calc(100svh-4.5rem)] flex-col px-4 pb-6 pt-3 sm:px-6">
+            <div className="flex h-[calc(100svh-4.5rem)] flex-col px-5 pb-6 pt-4 sm:px-8">
             <ul className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 <li key={link.labelKey}>
@@ -125,7 +127,7 @@ export default function Navbar() {
                     onFocus={() => void preloadPublicRoute(link.href)}
                     onTouchStart={() => void preloadPublicRoute(link.href)}
                     onClick={() => setMobileOpen(false)}
-                    className={({ isActive }) => `flex min-h-12 items-center justify-between rounded-xl px-4 text-base font-semibold transition-colors ${
+                    className={({ isActive }) => `flex min-h-14 items-center justify-between border-b border-black/10 px-1 text-lg font-semibold transition-colors ${
                       isActive ? 'bg-orange-500/10 text-orange-600' : 'text-white/80 hover:bg-black/5 hover:text-orange-500'
                     }`}
                   >

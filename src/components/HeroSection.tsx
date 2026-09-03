@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Play } from 'lucide-react';
+import { ArrowRight, Play, ShieldCheck } from 'lucide-react';
 import { useTranslation } from '@/i18n';
 import { preloadPublicRoute } from '@/lib/publicRoutes';
 
@@ -10,7 +10,7 @@ export default function HeroSection() {
   const { t } = useTranslation();
 
   return (
-    <section id="home" className="theme-keep-light relative flex min-h-[100svh] items-center overflow-hidden bg-white sm:min-h-[88svh]">
+    <section id="home" className="hero-editorial theme-keep-light relative flex min-h-[100svh] items-end overflow-hidden bg-black sm:min-h-[92svh]">
       {/* Background image */}
       <div className="absolute inset-0">
         <img
@@ -20,10 +20,9 @@ export default function HeroSection() {
           alt="Tampilan LED di kota pada malam hari"
           fetchPriority="high"
           decoding="async"
-          className="w-full h-full object-cover object-[62%_center] opacity-60 sm:object-center"
+          className="w-full h-full object-cover object-[68%_center] sm:object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40" />
+        <div className="hero-editorial__scrim absolute inset-0" />
       </div>
 
       {/* Floating glow orbs */}
@@ -38,13 +37,14 @@ export default function HeroSection() {
         transition={{ duration: 8, repeat: Infinity, delay: 1 }}
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-[1536px] px-4 pb-12 pt-28 sm:px-6 sm:pb-8 sm:pt-24 lg:px-8">
-        <div className="max-w-3xl">
+      <div className="relative z-10 mx-auto w-full max-w-[1440px] px-5 pb-12 pt-32 sm:px-8 sm:pb-16 lg:px-12 lg:pb-20">
+        <div className="max-w-4xl">
+          <motion.p initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="hero-editorial__eyebrow"><span /> VISUAL TECHNOLOGY · INDONESIA</motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.38, delay: 0.05 }}
-            className="text-white font-bold text-[clamp(2.5rem,11vw,4.5rem)] leading-[1.03] tracking-[-0.045em]"
+            className="hero-editorial__title text-white font-semibold text-[clamp(2.75rem,8vw,6.75rem)] leading-[.94] tracking-[-0.06em]"
           >
             {t('hero.titleLine1')} <span className="text-orange-500">{t('hero.titleLine2')}</span> <br />
             {t('hero.titleLine3')}
@@ -54,7 +54,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.38, delay: 0.1 }}
-            className="text-white/70 text-base sm:text-lg md:text-xl mt-5 sm:mt-6 max-w-xl leading-relaxed"
+            className="text-white/70 text-base sm:text-lg mt-6 sm:mt-8 max-w-2xl leading-relaxed"
           >
             {t('hero.subtitle')}
           </motion.p>
@@ -70,7 +70,7 @@ export default function HeroSection() {
               onPointerEnter={() => void preloadPublicRoute('/services')}
               onFocus={() => void preloadPublicRoute('/services')}
               onTouchStart={() => void preloadPublicRoute('/services')}
-              className="group flex min-h-12 items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 hover:shadow-xl hover:shadow-orange-500/40 hover:-translate-y-0.5"
+              className="editorial-button editorial-button--primary"
             >
               {t('hero.viewServices')}
               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -80,7 +80,7 @@ export default function HeroSection() {
               onPointerEnter={() => void preloadPublicRoute('/portfolio')}
               onFocus={() => void preloadPublicRoute('/portfolio')}
               onTouchStart={() => void preloadPublicRoute('/portfolio')}
-              className="group flex min-h-12 items-center justify-center gap-3 text-white hover:text-orange-500 px-4 py-2 font-medium transition-colors duration-300"
+              className="editorial-button editorial-button--ghost"
             >
               <span className="w-12 h-12 rounded-full border border-white/30 group-hover:border-orange-500 flex items-center justify-center transition-colors duration-300">
                 <Play className="w-4 h-4 fill-current" />
@@ -88,6 +88,7 @@ export default function HeroSection() {
               {t('hero.viewPortfolio')}
             </Link>
           </motion.div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .35 }} className="hero-editorial__trust"><ShieldCheck /><span>{t('hero.trustNotice')}</span></motion.div>
         </div>
       </div>
 

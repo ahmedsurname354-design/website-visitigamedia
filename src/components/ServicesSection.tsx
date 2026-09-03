@@ -24,10 +24,10 @@ export default function ServicesSection({ content }: { content?: ServiceContent 
           className="max-w-2xl mb-10 sm:mb-16"
         >
           <p className="text-orange-500 text-sm font-semibold tracking-[0.3em] uppercase mb-4">{content?.eyebrow ?? 'Layanan Kami'}</p>
-          <h2 className="text-white font-bold text-4xl md:text-5xl leading-tight tracking-tight">
+          <h1 className="text-white font-bold text-4xl md:text-5xl leading-tight tracking-tight">
             {content?.heading ?? 'Solusi LED Terbaik'} <br />
             <span className="text-orange-500">{content?.heading_accent ?? 'untuk Setiap Kebutuhan'}</span>
-          </h2>
+          </h1>
         </motion.div>
 
         <div className="grid gap-6 md:grid-cols-2">

@@ -88,14 +88,14 @@ export default function AboutSection() {
           >
             Tentang Visitiga
           </motion.p>
-          <motion.h2
+          <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-white font-bold text-4xl md:text-5xl leading-tight tracking-tight mb-6"
           >
             Mitra Tepercaya untuk <span className="text-orange-500">Inovasi LED</span>
-          </motion.h2>
+          </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -123,7 +123,7 @@ export default function AboutSection() {
           </div>
 
           <motion.a
-            href="#contact"
+            href="/contact"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.7 }}

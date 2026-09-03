@@ -37,11 +37,12 @@ function getContactErrorMessage(error: { code?: string; message?: string }) {
   return 'Pesan belum terkirim. Periksa koneksi, lalu coba lagi.';
 }
 
-export default function CTASection() {
+export default function CTASection({ variant = 'full' }: { variant?: 'compact' | 'full' }) {
   const { ref, isInView } = useScrollReveal();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [formError, setFormError] = useState('');
+  const compact = variant === 'compact';
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -87,7 +88,7 @@ export default function CTASection() {
   };
 
   return (
-    <section id="contact" className="relative theme-section py-24 md:py-32 overflow-hidden">
+    <section id="contact" className={`relative theme-section overflow-hidden ${compact ? 'editorial-cta-section' : 'contact-page-section py-24 md:py-32'}`}>
       {/* Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-orange-500/10 rounded-full blur-3xl" />
 
@@ -102,9 +103,11 @@ export default function CTASection() {
           <div className="absolute -bottom-16 -left-10 w-56 h-56 bg-white/5 rounded-full" />
 
           <div className="relative">
-            <h2 className="text-white font-bold text-3xl md:text-5xl leading-tight tracking-tight max-w-2xl mx-auto">
-              Siap Membuat Merek Anda Lebih Bersinar?
-            </h2>
+            {compact ? (
+              <h2 className="text-white font-bold text-3xl md:text-5xl leading-tight tracking-tight max-w-2xl mx-auto">Siap Membuat Merek Anda Lebih Bersinar?</h2>
+            ) : (
+              <h1 className="text-white font-bold text-3xl md:text-5xl leading-tight tracking-tight max-w-2xl mx-auto">Siap Membuat Merek Anda Lebih Bersinar?</h1>
+            )}
             <p className="text-white/80 text-lg mt-4 max-w-xl mx-auto">
               Dapatkan konsultasi dan penawaran gratis. Tim kami siap mewujudkan kebutuhan visual Anda.
             </p>
@@ -128,7 +131,7 @@ export default function CTASection() {
               </a>
             </div>
 
-            <form
+            {!compact && <form
               onSubmit={handleSubmit}
               className="mt-8 grid gap-4 rounded-2xl border border-white/15 bg-black/10 p-4 text-left sm:mt-10 sm:grid-cols-2 sm:rounded-3xl sm:p-6 max-w-3xl mx-auto"
             >
@@ -198,10 +201,10 @@ export default function CTASection() {
                 {formStatus === 'success' && <p role="status" className="text-sm text-white">Pesan berhasil dikirim. Terima kasih!</p>}
                 {formStatus === 'error' && <p role="alert" className="text-sm text-white">{formError}</p>}
               </div>
-            </form>
+            </form>}
 
             {/* Contact info */}
-            <div className="grid lg:grid-cols-[1fr,320px] gap-6 mt-10 sm:mt-14 max-w-4xl mx-auto items-start">
+            {!compact && <div className="grid lg:grid-cols-[1fr,320px] gap-6 mt-10 sm:mt-14 max-w-4xl mx-auto items-start">
               <div className="grid gap-4">
                 <div className="contact-info-card rounded-3xl p-4">
                   <div className="flex items-center gap-3 text-sm">
@@ -245,7 +248,7 @@ export default function CTASection() {
                   </p>
                 </div>
               </a>
-            </div>
+            </div>}
           </div>
         </motion.div>
       </div>

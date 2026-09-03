@@ -2,16 +2,24 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { Play, Quote } from 'lucide-react';
+import { useTranslation } from '@/i18n';
 
 const videoImg = '/video-cover.webp';
 
 export default function VideoSection() {
   const { ref, isInView } = useScrollReveal();
   const [playing, setPlaying] = useState(false);
+  const { lang } = useTranslation();
 
   return (
     <section className="relative theme-section py-24 md:py-32">
       <div className="mx-auto max-w-[1536px] px-4 sm:px-6 lg:px-8">
+        <header className="mb-10 max-w-3xl sm:mb-14">
+          <p className="editorial-eyebrow">SHOWREEL</p>
+          <h1 className="text-white text-4xl font-semibold leading-tight tracking-tight md:text-6xl">
+            {lang === 'id' ? 'Lihat bagaimana ide menjadi pengalaman visual.' : 'See how ideas become visual experiences.'}
+          </h1>
+        </header>
         <motion.div
           ref={ref}
           initial={{ opacity: 0, scale: 0.95 }}

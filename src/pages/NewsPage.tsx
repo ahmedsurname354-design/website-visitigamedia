@@ -18,10 +18,10 @@ export default function NewsPage() {
   }, []);
 
   return (
-    <section className="min-h-screen bg-[#fffaf3] px-4 pb-20 pt-32 text-[#241811] sm:px-6 sm:pt-40 lg:px-8">
-      <div className="mx-auto max-w-[1536px]">
-        <p className="text-xs font-bold uppercase tracking-[.26em] text-orange-600">Visitiga Journal</p>
-        <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-6xl">
+    <section className="journal-page min-h-screen px-4 pb-24 pt-32 text-[#241811] sm:px-6 sm:pt-40 lg:px-8">
+      <div className="mx-auto max-w-[1344px]">
+        <p className="editorial-eyebrow">Visitiga Journal</p>
+        <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight sm:text-6xl">
           Berita <span className="text-orange-500">terbaru.</span>
         </h1>
         <p className="mt-4 max-w-2xl text-[#735c4d]">Artikel dan kabar terbaru dari Visitiga Media.</p>
@@ -35,9 +35,9 @@ export default function NewsPage() {
         ) : articles.length === 0 ? (
           <p className="mt-16 text-[#735c4d]">Belum ada berita yang dipublikasikan.</p>
         ) : (
-          <div className="mt-12 grid gap-7 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+          <div className="journal-grid mt-12 grid gap-7 md:grid-cols-2 lg:grid-cols-3">
             {articles.map((article, index) => (
-              <article key={article.id} className="overflow-hidden rounded-2xl border border-[#ead5c1] bg-white shadow-sm">
+              <article key={article.id} className="journal-card overflow-hidden border border-[#ead5c1] bg-white shadow-sm">
                 <img
                   src={optimizedImageUrl(article.cover_image, 800)}
                   onError={({ currentTarget }) => restoreOriginalImage(currentTarget, article.cover_image)}
