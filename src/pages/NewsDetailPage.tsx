@@ -1,3 +1,4 @@
+import NewsComments from '@/components/NewsComments';
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Check, Facebook, Link as LinkIcon, Linkedin, LoaderCircle, Mail } from 'lucide-react';
 import { Link, Navigate, useParams } from 'react-router-dom';
@@ -138,6 +139,7 @@ export default function NewsDetailPage() {
               className="mt-9 max-w-4xl text-base leading-8 text-[#5d4030] sm:text-[1.05rem] [&_a]:font-semibold [&_a]:text-orange-700 [&_a]:underline [&_a]:decoration-orange-300 [&_a]:underline-offset-4 [&_blockquote]:my-8 [&_blockquote]:border-l-4 [&_blockquote]:border-orange-400 [&_blockquote]:bg-[#fff2e5] [&_blockquote]:px-5 [&_blockquote]:py-4 [&_blockquote]:italic [&_h1]:mb-4 [&_h1]:mt-9 [&_h1]:text-3xl [&_h1]:font-black [&_h2]:mb-4 [&_h2]:mt-9 [&_h2]:text-2xl [&_h2]:font-black [&_h3]:mb-3 [&_h3]:mt-7 [&_h3]:text-xl [&_h3]:font-bold [&_img]:my-8 [&_img]:h-auto [&_img]:max-w-full [&_img]:rounded-xl [&_li]:mb-2 [&_ol]:my-5 [&_ol]:list-decimal [&_ol]:pl-6 [&_p]:mb-5 [&_strong]:font-bold [&_strong]:text-[#35231a] [&_ul]:my-5 [&_ul]:list-disc [&_ul]:pl-6"
               dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content) }}
             />
+            <div className="mt-12 border-t border-[#ead5c1] pt-8"><NewsComments key={article.id} newsId={article.id} /></div>
           </main>
 
           <aside className="min-w-0 border-t border-[#ead5c1] pt-8 lg:sticky lg:top-28 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
