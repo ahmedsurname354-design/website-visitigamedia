@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
 import Logo from '@/components/Logo';
 import { useTranslation } from '@/i18n';
@@ -17,24 +17,38 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(() => window.scrollY > 30);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { lang, setLang, t } = useTranslation();
   const location = useLocation();
+  const reducedMotion = useReducedMotion();
+  const mobileToggle = useRef<HTMLButtonElement>(null);
+  const solid = location.pathname !== '/' || scrolled || mobileOpen;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
-    window.addEventListener('scroll', onScroll);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   useEffect(() => setMobileOpen(false), [location.pathname]);
 
   useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    const closeOnDesktop = () => { if (desktop.matches) setMobileOpen(false); };
+    desktop.addEventListener('change', closeOnDesktop);
+    return () => desktop.removeEventListener('change', closeOnDesktop);
+  }, []);
+
+  useEffect(() => {
     if (!mobileOpen) return;
     const previousOverflow = document.body.style.overflow;
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setMobileOpen(false);
+      if (event.key === 'Escape') {
+        setMobileOpen(false);
+        mobileToggle.current?.focus();
+      }
     };
     document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', closeOnEscape);
@@ -46,11 +60,11 @@ export default function Navbar() {
 
   return (
     <motion.nav
-      initial={{ y: -80, opacity: 0 }}
+      initial={reducedMotion ? false : { y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, delay: 0.2 }}
+      transition={{ duration: reducedMotion ? 0 : 0.6, delay: reducedMotion ? 0 : 0.2 }}
       className={`site-navbar fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        scrolled || mobileOpen ? 'site-navbar--solid theme-navbar backdrop-blur-md py-2.5' : 'site-navbar--transparent bg-transparent py-3 sm:py-4'
+        solid ? 'site-navbar--solid theme-navbar backdrop-blur-md py-2.5' : 'site-navbar--transparent bg-transparent py-3 sm:py-4'
       }`}
     >
       <div className="mx-auto flex max-w-[1536px] items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -70,12 +84,9 @@ export default function Navbar() {
                   onPointerEnter={() => void preloadPublicRoute(link.href)}
                   onFocus={() => void preloadPublicRoute(link.href)}
                   onTouchStart={() => void preloadPublicRoute(link.href)}
-                  className={({ isActive }) => `site-nav-link text-[13px] font-semibold tracking-wide transition-colors duration-300 relative group ${
-                    isActive ? 'is-active text-orange-500' : 'text-white/80 hover:text-orange-500'
-                  }`}
+                  className={({ isActive }) => `site-nav-link text-[13px] font-semibold tracking-wide ${isActive ? 'is-active' : ''}`}
                 >
                   {t(link.labelKey)}
-                  <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-orange-500 transition-all duration-300 group-hover:w-full group-[.active]:w-full" />
                 </NavLink>
               </li>
             ))}
@@ -95,6 +106,7 @@ export default function Navbar() {
 
         {/* Mobile toggle */}
         <button
+          ref={mobileToggle}
           onClick={() => setMobileOpen(!mobileOpen)}
           className="lg:hidden theme-nav-text inline-grid size-11 place-items-center rounded-full border border-current/10 transition-colors hover:bg-orange-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
           aria-label={mobileOpen ? t('navbar.closeMenu') : t('navbar.openMenu')}
@@ -109,15 +121,15 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
+            initial={reducedMotion ? false : { height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: reducedMotion ? 0 : 0.18 }}
             id="mobile-navigation"
             className="site-mobile-menu lg:hidden overflow-hidden theme-mobile-menu backdrop-blur-md border-t border-black/5"
           >
-            <div className="flex h-[calc(100svh-4.5rem)] flex-col px-5 pb-6 pt-4 sm:px-8">
-            <ul className="flex flex-col gap-1">
+            <div className="site-mobile-menu__content flex flex-col px-5 pb-6 pt-4 sm:px-8">
+            <ul className="flex shrink-0 flex-col gap-1">
               {navLinks.map((link) => (
                 <li key={link.labelKey}>
                   <NavLink
@@ -127,17 +139,15 @@ export default function Navbar() {
                     onFocus={() => void preloadPublicRoute(link.href)}
                     onTouchStart={() => void preloadPublicRoute(link.href)}
                     onClick={() => setMobileOpen(false)}
-                    className={({ isActive }) => `flex min-h-14 items-center justify-between border-b border-black/10 px-1 text-lg font-semibold transition-colors ${
-                      isActive ? 'bg-orange-500/10 text-orange-600' : 'text-white/80 hover:bg-black/5 hover:text-orange-500'
-                    }`}
+                    className={({ isActive }) => `site-mobile-link flex min-h-14 items-center justify-between border-b border-black/10 px-1 text-lg font-semibold ${isActive ? 'is-active' : ''}`}
                   >
-                    {t(link.labelKey)}
+                    <span className="site-mobile-link__label">{t(link.labelKey)}</span>
                     <span aria-hidden="true" className="text-lg font-normal">→</span>
                   </NavLink>
                 </li>
               ))}
             </ul>
-            <div className="mt-auto border-t border-black/10 pt-5">
+            <div className="mt-auto shrink-0 border-t border-black/10 pt-5">
               <button
                 onClick={() => setLang(lang === 'id' ? 'en' : 'id')}
                 className="flex min-h-12 w-full items-center justify-between rounded-xl border border-black/10 px-4 text-sm font-semibold theme-nav-text"

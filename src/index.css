@@ -63,13 +63,29 @@ body {
 .site-navbar::after { position: absolute; right: 0; bottom: 0; left: 0; height: 1px; content: ''; background: rgb(255 255 255 / .12); opacity: 0; transition: opacity .2s ease; }
 .site-navbar--solid::after { opacity: 1; background: rgb(45 34 26 / .1); }
 .site-navbar--transparent .site-nav-link, .site-navbar--transparent .theme-toggle, .site-navbar--transparent .theme-nav-text { color: #fff; }
-.site-nav-link::after { position: absolute; right: 0; bottom: -.7rem; left: 0; height: 2px; content: ''; background: var(--editorial-accent); transform: scaleX(0); transition: transform .2s ease; }
+.site-nav-link { position: relative; display: inline-block; transition: color 180ms ease; }
+.site-navbar--solid .site-nav-link { color: #4c3d33; }
+.site-navbar--solid .site-nav-link:is(.is-active, :hover) { color: #b94716; }
+.site-nav-link.is-active { text-shadow: 0 0 .35px currentColor; }
+.site-nav-link::after { position: absolute; right: 0; bottom: -8px; left: 0; height: 2px; border-radius: 999px; content: ''; background: var(--editorial-accent); transform: scaleX(0); transform-origin: left; transition: transform 180ms ease; }
 .site-nav-link:hover::after, .site-nav-link.is-active::after { transform: scaleX(1); }
-.site-nav-link > span { display: none; }
+.site-navbar :is(a, button):focus-visible { outline: 2px solid currentColor; outline-offset: 4px; border-radius: 4px; }
+.site-mobile-link { color: #4c3d33; transition: color 180ms ease; }
+.site-mobile-link:is(.is-active, :hover) { color: #b94716; }
+.site-mobile-link__label { position: relative; }
+.site-mobile-link__label::after { position: absolute; left: 0; bottom: -6px; width: 28px; height: 2px; border-radius: 999px; content: ''; background: var(--editorial-accent); transform: scaleX(0); transform-origin: left; transition: transform 180ms ease; }
+.site-mobile-link.is-active .site-mobile-link__label::after { transform: scaleX(1); }
 .site-navbar__divider { width: 1px; height: 1.5rem; background: currentColor; opacity: .15; }
 .site-navbar__cta { display: inline-flex; align-items: center; gap: .45rem; min-height: 2.65rem; border-radius: 999px; padding: .65rem 1.1rem; color: #fff; background: var(--editorial-accent); font-size: .78rem; font-weight: 750; }
 .site-navbar__cta svg { width: .9rem; }
 .site-mobile-menu { overscroll-behavior: contain; }
+.site-mobile-menu__content { height: calc(100svh - 65px); overflow-y: auto; overscroll-behavior: contain; }
+@media (min-width: 640px) {
+  .site-mobile-menu__content { height: calc(100svh - 69px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-navbar, .site-navbar *, .site-navbar *::after { transition: none !important; animation: none !important; }
+}
 
 /* Homepage previews */
 .service-preview-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--editorial-line); border-bottom: 1px solid var(--editorial-line); }
@@ -140,7 +156,14 @@ body {
   .service-preview-card > svg { margin-top: 2.5rem; }
   .service-preview-card p { padding-right: 2.5rem; }
   .service-preview-card a { right: 1rem; bottom: 1.5rem; }
-  .featured-work-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; margin-right: -1rem; padding-right: 1rem; }
+  .featured-work-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; margin-right: -1rem; padding-right: 1rem; padding-bottom: 16px; }
+  .featured-work-grid::-webkit-scrollbar { height: 3px; }
+  .featured-work-grid::-webkit-scrollbar-track { background: rgb(255 255 255 / .12); border-radius: 999px; }
+  .featured-work-grid::-webkit-scrollbar-thumb { background: var(--editorial-accent); border-radius: 999px; }
+  .featured-work-grid::-webkit-scrollbar-thumb:hover { background: #fb923c; }
+  @supports not selector(::-webkit-scrollbar) {
+    .featured-work-grid { scrollbar-width: thin; scrollbar-color: var(--editorial-accent) rgb(255 255 255 / .12); }
+  }
   .featured-work-card { flex: 0 0 86%; height: 27rem; scroll-snap-align: start; }
   .editorial-story-image img { min-height: 25rem; }
   .editorial-story-image > span { right: .75rem; bottom: -.75rem; }
