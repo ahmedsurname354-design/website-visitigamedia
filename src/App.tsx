@@ -117,7 +117,7 @@ function App() {
 
   return (
     <MotionConfig reducedMotion={isMobile ? 'always' : 'user'}>
-      <div className={`app-shell theme-${theme} overflow-x-hidden`}>
+      <div className={`app-shell theme-${theme} overflow-x-clip`}>
         <Router>
           <AnimatedRoutes />
         </Router>
