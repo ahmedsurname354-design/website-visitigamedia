@@ -4,16 +4,13 @@ import { Check, ArrowRight } from 'lucide-react';
 import { useTranslation } from '@/i18n';
 import teamPhoto from '@/assets/team-visitiga.webp';
 import wonderfulIndonesia from '@/assets/clients/wonderful-indonesia.webp';
-import pertamina from '@/assets/clients/pertamina.webp';
-import viataViraJati from '@/assets/clients/viata-vira-jati.webp';
-import dynamix from '@/assets/clients/dynamix.webp';
-import motogp from '@/assets/clients/motogp.webp';
+// These legacy filenames do not match the artwork; map by the actual logo.
+import pertamina from '@/assets/clients/viata-vira-jati.webp';
+import dynamix from '@/assets/clients/motogp.webp';
+import motogp from '@/assets/clients/dynamix.webp';
 import emc from '@/assets/clients/emc.webp';
-import ugm from '@/assets/clients/ugm.webp';
 import mandalika from '@/assets/clients/mandalika.webp';
-import bankBpdDiy from '@/assets/clients/bank-bpd-diy.webp';
 import iims from '@/assets/clients/iims.webp';
-import diskominfoKarawang from '@/assets/clients/diskominfo-karawang.webp';
 import wonderfulIndonesiaRed from '@/assets/clients/wonderful-indonesia-red.webp';
 
 const aboutImg = teamPhoto;
@@ -28,15 +25,11 @@ const features = [
 const clientLogos = [
   { src: wonderfulIndonesia, alt: 'Wonderful Indonesia' },
   { src: pertamina, alt: 'Pertamina' },
-  { src: viataViraJati, alt: 'Viata Vira Jati' },
   { src: dynamix, alt: 'Dynamix' },
-  { src: motogp, alt: 'MotoGP Universitas Gadjah Mada' },
+  { src: motogp, alt: 'MotoGP' },
   { src: emc, alt: 'EMC Healthcare' },
-  { src: ugm, alt: 'Universitas Gadjah Mada' },
   { src: mandalika, alt: 'Mandalika International Street Circuit' },
-  { src: bankBpdDiy, alt: 'Bank BPD DIY' },
   { src: iims, alt: 'Indonesia International Motor Show' },
-  { src: diskominfoKarawang, alt: 'Diskominfo Kabupaten Karawang' },
   { src: wonderfulIndonesiaRed, alt: 'Wonderful Indonesia' },
 ];
 
@@ -136,32 +129,17 @@ export default function AboutSection() {
       </div>
 
       <section className="client-wall" aria-labelledby="client-wall-title">
-        <div className="client-wall__inner client-wall__layout">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.25 }}
-            transition={{ duration: 0.7 }}
-            className="client-wall__heading"
-          >
-            <h2 id="client-wall-title">KLIEN KAMI</h2>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="client-wall__gallery"
-          >
-            <div className="client-wall__logos-grid" aria-label="Daftar klien">
-              {clientLogos.map((client) => (
-                <div key={client.src} className="client-logo-slot">
-                  <img src={client.src} alt={client.alt} loading="lazy" decoding="async" />
-                </div>
-              ))}
-            </div>
-          </motion.div>
+        <div className="client-wall__heading">
+          <h2 id="client-wall-title">Klien Kami</h2>
+        </div>
+        <div className="client-wall__gallery">
+          <ul className="client-wall__logos-grid" aria-label="Daftar klien">
+            {clientLogos.map((client) => (
+              <li key={client.src} className="client-logo-slot">
+                <img src={client.src} alt={client.alt} loading="lazy" decoding="async" />
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
     </section>
