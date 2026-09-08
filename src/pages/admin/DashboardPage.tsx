@@ -147,20 +147,78 @@ export default function DashboardPage() {
     { label: 'Tayangan halaman', value: summary.views, previous: summary.previousViews, icon: Eye, color: 'bg-violet-500' },
     { label: 'Leads kontak', value: summary.leads, previous: summary.previousLeads, icon: MousePointerClick, color: 'bg-orange-500' },
   ];
-  const max = Math.max(...summary.chart.map((item) => item.value), 1);
 
-  return <div className="mx-auto max-w-7xl space-y-8">
+  return <div className="mx-auto min-w-0 max-w-7xl space-y-8 text-slate-900">
     <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
-      <div><h2 className="text-2xl font-black tracking-tight sm:text-3xl">Ringkasan aktivitas</h2><p className="mt-2 text-sm text-slate-500">{periodLabel}. Data diperbarui otomatis.</p></div>
-      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">{PRESETS.map(([value, label]) => <button key={value} type="button" onClick={() => setPreset(value)} className={`rounded-xl px-4 py-2 text-sm font-bold transition ${preset === value ? 'bg-orange-500 text-white' : 'text-slate-600 hover:bg-slate-100'}`}>{label}</button>)}</div>
+      <div><h2 className="text-2xl font-black tracking-tight sm:text-3xl">Ringkasan aktivitas</h2><p className="mt-2 text-base leading-relaxed text-slate-600">{periodLabel}. Data diperbarui otomatis.</p></div>
+      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">{PRESETS.map(([value, label]) => <button key={value} type="button" onClick={() => setPreset(value)} aria-pressed={preset === value} className={`min-h-11 rounded-xl px-4 py-2 text-base font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-700 ${preset === value ? 'bg-orange-700 text-white' : 'text-slate-600 hover:bg-slate-100'}`}>{label}</button>)}</div>
     </div>
     {preset === 'custom' && <section className="flex flex-wrap items-end gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><CalendarDays className="mb-2.5 h-5 w-5 text-orange-500" /><DateInput label="Dari tanggal" value={customStart} max={customEnd} onChange={setCustomStart} /><DateInput label="Sampai tanggal" value={customEnd} min={customStart} max={localDateValue(today)} onChange={setCustomEnd} /></section>}
     {error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
-    <section className="grid gap-4 md:grid-cols-3">{stats.map(({ label, value, previous, icon: Icon, color }) => { const trend = change(value, previous); const positive = value >= previous; return <article key={label} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"><div className="flex items-start justify-between"><div className={`grid h-11 w-11 place-items-center rounded-xl ${color} text-white`}><Icon className="h-5 w-5" /></div><span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-bold ${positive ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>{positive ? <ArrowUpRight className="h-3.5 w-3.5" /> : <ArrowDownRight className="h-3.5 w-3.5" />}{trend}</span></div><p className="mt-6 text-sm font-medium text-slate-500">{label}</p><p className="mt-1 text-3xl font-black tracking-tight">{loading ? <LoaderCircle className="h-7 w-7 animate-spin" /> : value.toLocaleString('id-ID')}</p><p className="mt-1 text-xs text-slate-400">dibanding periode sebelumnya</p></article>; })}</section>
-    <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"><div className="flex items-center justify-between"><div><h3 className="font-bold">Tayangan per {summary.chart.length > 90 ? 'bulan' : 'periode'}</h3><p className="mt-1 text-sm text-slate-500">Distribusi page view dalam rentang terpilih.</p></div><span className="rounded-lg bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700">Live</span></div><div className="mt-8 flex h-56 items-end gap-1 sm:gap-2">{summary.chart.map((item, index) => <div key={`${item.title}-${index}`} title={`${item.title}: ${item.value}`} className="group flex h-full min-w-0 flex-1 flex-col justify-end"><div className="relative min-h-1 rounded-t-lg bg-orange-500/85 transition hover:bg-orange-600" style={{ height: `${(item.value / max) * 100}%` }}><span className="absolute -top-7 left-1/2 z-10 hidden -translate-x-1/2 whitespace-nowrap rounded bg-slate-900 px-2 py-1 text-xs text-white group-hover:block">{item.value}</span></div><span className="mt-2 truncate text-center text-[9px] text-slate-400">{summary.chart.length <= 31 || index % Math.ceil(summary.chart.length / 16) === 0 ? item.label : ''}</span></div>)}</div></section>
+    <section className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,18rem),1fr))] gap-4">{stats.map(({ label, value, previous, icon: Icon, color }) => { const trend = change(value, previous); const positive = value >= previous; return <article key={label} className="min-w-0 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"><div className="flex flex-wrap items-start justify-between gap-3"><div className={`grid h-11 w-11 place-items-center rounded-xl ${color} text-white`}><Icon className="h-5 w-5" /></div><span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm font-bold ${positive ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>{positive ? <ArrowUpRight className="h-3.5 w-3.5" /> : <ArrowDownRight className="h-3.5 w-3.5" />}{trend}</span></div><p className="mt-6 text-base font-semibold text-slate-700">{label}</p><p className="mt-2 break-words text-4xl font-black leading-tight tracking-tight text-slate-900 tabular-nums sm:text-5xl">{loading ? <><LoaderCircle aria-hidden="true" className="h-9 w-9 animate-spin" /><span className="sr-only">Memuat ringkasan</span></> : value.toLocaleString('id-ID')}</p><p className="mt-3 text-sm leading-relaxed text-slate-600">dibanding periode sebelumnya</p></article>; })}</section>
+    <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+      <div className="flex items-center justify-between gap-4">
+        <div><h3 className="text-lg font-bold text-slate-900">Tayangan per {Math.ceil((range.end.getTime() - range.start.getTime()) / DAY_MS) > 90 ? 'bulan' : 'hari'}</h3><p className="mt-1 text-sm text-slate-600">Tren tayangan halaman dalam rentang terpilih.</p></div>
+        <span className="shrink-0 rounded-lg bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700">Live</span>
+      </div>
+      {summary.chart.length > 0 ? <ViewsLineChart items={summary.chart} /> : <div className="grid h-72 place-items-center text-sm text-slate-600">{loading ? 'Memuat grafik...' : 'Data grafik belum tersedia.'}</div>}
+    </section>
+  </div>;
+}
+
+function ViewsLineChart({ items }: { items: ChartItem[] }) {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const width = Math.max(640, items.length * 24);
+  const height = 280;
+  const left = 80;
+  const right = width - 48;
+  const top = 24;
+  const bottom = 232;
+  const maximum = Math.max(...items.map((item) => item.value), 1);
+  const magnitude = 10 ** Math.floor(Math.log10(maximum / 4));
+  const step = Math.max(1, Math.ceil(maximum / 4 / magnitude) * magnitude);
+  const ceiling = step * 4;
+  const points = items.map((item, index) => ({
+    x: items.length === 1 ? (left + right) / 2 : left + index * (right - left) / (items.length - 1),
+    y: bottom - item.value / ceiling * (bottom - top),
+  }));
+  const labelEvery = Math.max(1, Math.ceil(items.length / Math.floor((right - left) / 100)));
+  const activeItem = activeIndex === null ? undefined : items[activeIndex];
+
+  return <div className="mt-5">
+    <div className="flex min-h-12 flex-wrap items-center justify-between gap-2 text-base leading-relaxed" aria-live="polite">
+      <span className="inline-flex items-center gap-2 font-semibold text-slate-600"><span className="h-0.5 w-6 rounded bg-orange-600" />Tayangan halaman</span>
+      <span className="text-slate-600">{activeItem ? <>{activeItem.title}: <strong className="text-slate-900">{activeItem.value.toLocaleString('id-ID')} tayangan</strong></> : 'Sorot atau pilih titik untuk melihat detail'}</span>
+    </div>
+    <div className="overflow-x-auto pb-2">
+      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="w-full min-w-[640px]" style={{ minWidth: width }} role="group" aria-label="Grafik garis tayangan halaman. Pilih titik untuk melihat tanggal dan jumlah tayangan.">
+        {Array.from({ length: 5 }, (_, index) => {
+          const y = bottom - index / 4 * (bottom - top);
+          return <g key={index}>
+            <line x1={left} x2={right} y1={y} y2={y} stroke="#e2e8f0" strokeDasharray={index === 0 ? undefined : '4 4'} />
+            <text x={left - 12} y={y + 4} textAnchor="end" fill="#475569" fontSize="14" fontWeight="500">{(step * index).toLocaleString('id-ID', { notation: 'compact' })}</text>
+          </g>;
+        })}
+        <polyline points={points.map(({ x, y }) => `${x},${y}`).join(' ')} fill="none" stroke="#ea580c" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round" />
+        {items.map((item, index) => {
+          const { x, y } = points[index];
+          const selected = activeIndex === index;
+          return <g key={item.title}>
+            {selected && <line x1={x} x2={x} y1={top} y2={bottom} stroke="#fdba74" strokeDasharray="4 4" />}
+            <circle cx={x} cy={y} r={selected ? 6 : 4} fill="white" stroke="#ea580c" strokeWidth="2.5" />
+            <circle cx={x} cy={y} r="12" fill="transparent" tabIndex={0} role="button" aria-label={`${item.title}: ${item.value.toLocaleString('id-ID')} tayangan`} className="cursor-pointer focus:outline-none focus:stroke-orange-600" onMouseEnter={() => setActiveIndex(index)} onMouseLeave={() => setActiveIndex(null)} onFocus={() => setActiveIndex(index)} onBlur={() => setActiveIndex(null)} onClick={() => setActiveIndex(index)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setActiveIndex(index); } }}>
+              <title>{item.title}: {item.value.toLocaleString('id-ID')} tayangan</title>
+            </circle>
+            {(index === items.length - 1 || (index % labelEvery === 0 && items.length - 1 - index >= labelEvery)) && <text x={x} y={bottom + 28} textAnchor="middle" fill="#475569" fontSize="14" fontWeight="500">{item.label}</text>}
+          </g>;
+        })}
+      </svg>
+    </div>
+    {items.every((item) => item.value === 0) && <p className="mt-2 text-sm text-slate-600">Belum ada tayangan halaman pada periode ini.</p>}
+    <p className="mt-2 text-sm text-slate-600">Geser grafik ke samping jika seluruh tanggal belum terlihat.</p>
   </div>;
 }
 
 function DateInput({ label, value, min, max, onChange }: { label: string; value: string; min?: string; max?: string; onChange: (value: string) => void }) {
-  return <label className="text-xs font-bold text-slate-500">{label}<input required type="date" value={value} min={min} max={max} onChange={(event) => { if (event.target.value) onChange(event.target.value); }} className="mt-1 block rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 outline-none focus:border-orange-500" /></label>;
+  return <label className="min-w-0 text-sm font-bold text-slate-700">{label}<input required type="date" value={value} min={min} max={max} onChange={(event) => { if (event.target.value) onChange(event.target.value); }} className="mt-2 block min-h-11 max-w-full rounded-xl border border-slate-300 px-3 py-2 text-base font-medium text-slate-700 outline-none focus:border-orange-500" /></label>;
 }
