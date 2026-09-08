@@ -26,8 +26,8 @@ const linkMap: Record<string, string> = {
 
 const socials = [
   { Icon: Instagram, href: 'https://www.instagram.com/visitigamedia?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==' },
-  { Icon: Facebook, href: 'https://www.facebook.com/visitiga' },
-  { Icon: Youtube, href: 'https://www.youtube.com/visitiga' },
+  { Icon: Facebook, href: 'https://www.facebook.com/share/1F286rZHBz/' },
+  { Icon: Youtube, href: 'https://youtube.com/shorts/Su5HT7g-GNk?si=epsEldCO89YpUtBd' },
 ];
 
 export default function Footer() {
