@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { m as motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
+import { useMotionPolicy } from '@/hooks/useMotionPolicy';
 import Logo from '@/components/Logo';
 import { useTranslation } from '@/i18n';
 import { preloadPublicRoute } from '@/lib/publicRoutes';
@@ -21,7 +22,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { lang, setLang, t } = useTranslation();
   const location = useLocation();
-  const reducedMotion = useReducedMotion();
+  const { reducedMotion } = useMotionPolicy();
   const mobileToggle = useRef<HTMLButtonElement>(null);
   const solid = location.pathname !== '/' || scrolled || mobileOpen;
 
@@ -60,10 +61,10 @@ export default function Navbar() {
 
   return (
     <motion.nav
-      initial={reducedMotion ? false : { y: -80, opacity: 0 }}
+      initial={reducedMotion ? false : { y: -12, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: reducedMotion ? 0 : 0.6, delay: reducedMotion ? 0 : 0.2 }}
-      className={`site-navbar fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+      transition={{ duration: reducedMotion ? 0 : 0.32 }}
+      className={`site-navbar fixed top-0 left-0 right-0 z-40 transition-colors duration-200 ${
         solid ? 'site-navbar--solid theme-navbar backdrop-blur-md py-2.5' : 'site-navbar--transparent bg-transparent py-3 sm:py-4'
       }`}
     >

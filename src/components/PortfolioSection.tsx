@@ -569,7 +569,7 @@ export default function PortfolioSection() {
   // intentionally removed every project, so do not resurrect static content.
   const [remoteProjects, setRemoteProjects] = useState<Portfolio[] | null>(null);
   const [selectedProject, setSelectedProject] = useState<{ img: string; title: string; category: string; client?: string; description?: string; overview?: string; challenge?: string; solution?: string } | null>(null);
-  const { ref, isInView } = useScrollReveal();
+  const { ref, isInView, reducedMotion } = useScrollReveal();
   const { lang } = useTranslation();
 
   useEffect(() => { void listPublicPortfolios().then(setRemoteProjects).catch(() => setRemoteProjects([])); }, []);
@@ -648,9 +648,9 @@ export default function PortfolioSection() {
       <div className="mx-auto max-w-[1536px] px-4 sm:px-6 lg:px-8">
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 30 }}
+          initial={reducedMotion ? false : { opacity: 0, y: 12 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: reducedMotion ? 0 : 0.32 }}
           className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10 sm:mb-16"
         >
           <div className="max-w-2xl">
@@ -686,9 +686,9 @@ export default function PortfolioSection() {
               type="button"
               key={proj.img}
               layout="position"
-              initial={{ opacity: 0, y: 40 }}
+              initial={reducedMotion ? false : { opacity: 0, y: 12 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: Math.min(i, 6) * 0.08, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : Math.min(i, 3) * 0.06, ease: [0.22, 1, 0.36, 1] }}
               whileHover={{ y: -4 }}
               className="group relative block rounded-2xl overflow-hidden cursor-pointer aspect-[4/3] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-4 focus-visible:ring-offset-[#fff1df]"
               onClick={() => setSelectedProject(proj)}

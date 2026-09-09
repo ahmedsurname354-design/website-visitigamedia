@@ -5,7 +5,7 @@ import { useTranslation } from '@/i18n';
 import type { ServiceContent } from '@/types/admin';
 
 export default function ServicesSection({ content }: { content?: ServiceContent | null }) {
-  const { ref, isInView } = useScrollReveal();
+  const { ref, isInView, reducedMotion } = useScrollReveal();
   const { dict } = useTranslation();
   const services = (content?.cards ?? dict.services.cards).map((card, index) => ({
     ...card,
@@ -18,9 +18,9 @@ export default function ServicesSection({ content }: { content?: ServiceContent 
       <div className="mx-auto max-w-[1536px] px-4 sm:px-6 lg:px-8">
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 30 }}
+          initial={reducedMotion ? false : { opacity: 0, y: 12 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: reducedMotion ? 0 : 0.32 }}
           className="max-w-2xl mb-10 sm:mb-16"
         >
           <p className="text-orange-500 text-sm font-semibold tracking-[0.3em] uppercase mb-4">{content?.eyebrow ?? 'Layanan Kami'}</p>
@@ -34,9 +34,9 @@ export default function ServicesSection({ content }: { content?: ServiceContent 
           {services.map((service, i) => (
             <motion.div
               key={service.title}
-              initial={{ opacity: 0, y: 40 }}
+              initial={reducedMotion ? false : { opacity: 0, y: 12 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
+              transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : i * 0.06 }}
               className="group relative overflow-hidden rounded-[1.5rem] sm:rounded-[2rem] border border-white/10 bg-white/5 p-6 sm:p-8 shadow-[0_20px_70px_rgba(0,0,0,0.12)] transition-all duration-300 hover:-translate-y-1 hover:border-orange-500/40 hover:bg-white/10"
             >
               <div className="absolute -top-12 -right-12 w-44 h-44 rounded-full bg-orange-500/0 transition-all duration-500 group-hover:bg-orange-500/10 blur-3xl" />

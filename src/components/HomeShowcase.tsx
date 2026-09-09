@@ -1,6 +1,7 @@
 import { ArrowRight, Check, Monitor, PanelsTopLeft, Layers3, Grid2x2Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { useMotionPolicy } from '@/hooks/useMotionPolicy';
+import { m as motion } from 'framer-motion';
 import { useTranslation } from '@/i18n';
 import teamPhoto from '@/assets/team-visitiga.webp';
 import wonderfulIndonesia from '@/assets/clients/wonderful-indonesia.webp';
@@ -19,6 +20,7 @@ const projects = [
 const clients = [wonderfulIndonesia, pertamina, motogp, ugm, mandalika, iims];
 
 export default function HomeShowcase() {
+  const { reducedMotion } = useMotionPolicy();
   const { dict, lang } = useTranslation();
   const id = lang === 'id';
 
@@ -37,7 +39,7 @@ export default function HomeShowcase() {
             {dict.services.cards.map((service, index) => {
               const Icon = serviceIcons[index];
               return (
-                <motion.article key={service.title} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: .2 }} transition={{ delay: index * .06 }} className="service-preview-card">
+                <motion.article key={service.title} initial={reducedMotion ? false : { opacity: 0, y: 12 }} animate={reducedMotion ? { opacity: 1, y: 0 } : undefined} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px 80px 0px", amount: "some" }} transition={{ duration: reducedMotion ? 0 : .32, delay: reducedMotion ? 0 : index * .06 }} className="service-preview-card">
                   <span className="service-preview-number">0{index + 1}</span>
                   <Icon aria-hidden="true" />
                   <h3>{service.title}</h3>

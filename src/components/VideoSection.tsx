@@ -7,7 +7,7 @@ import { useTranslation } from '@/i18n';
 const videoImg = '/video-cover.webp';
 
 export default function VideoSection() {
-  const { ref, isInView } = useScrollReveal();
+  const { ref, isInView, reducedMotion } = useScrollReveal();
   const [playing, setPlaying] = useState(false);
   const { lang } = useTranslation();
 
@@ -22,9 +22,9 @@ export default function VideoSection() {
         </header>
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={isInView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.7 }}
+          initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: reducedMotion ? 0 : 0.32 }}
           className="relative min-h-[400px] overflow-hidden rounded-3xl md:min-h-[560px]"
         >
           {playing ? (

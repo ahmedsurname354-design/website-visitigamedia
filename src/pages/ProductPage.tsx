@@ -1,17 +1,19 @@
+import { useMotionPolicy } from '@/hooks/useMotionPolicy';
 import { motion } from 'framer-motion';
 import HorizontalAccordionCards from '@/components/HorizontalAccordionCards';
 import ProductFlipbook from '@/components/ProductFlipbook';
 import { useTranslation } from '@/i18n';
 
 export default function ProductPage() {
+  const { reducedMotion } = useMotionPolicy();
   const { lang } = useTranslation();
   return (
     <section className="product-page min-h-screen py-32 md:py-40">
       <div className="mx-auto max-w-[1536px] px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={reducedMotion ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55 }}
+          transition={{ duration: reducedMotion ? 0 : 0.32 }}
           className="mb-14 max-w-2xl"
         >
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-orange-500">

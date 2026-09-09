@@ -1,10 +1,10 @@
 import { lazy, Suspense, useEffect, type ReactNode } from 'react';
 import { BrowserRouter as Router, Navigate, Outlet, Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
+import { LazyMotion, domAnimation, MotionConfig } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import HomePage from '@/pages/HomePage';
-import { preloadPublicRoutesWhenIdle, publicPageLoaders } from '@/lib/publicRoutes';
+import { publicPageLoaders } from '@/lib/publicRoutes';
 const AboutPage = lazy(publicPageLoaders.about);
 const ServicesPage = lazy(publicPageLoaders.services);
 const PortfolioPage = lazy(publicPageLoaders.portfolio);
@@ -25,7 +25,16 @@ const ProtectedRoute = lazy(() => import('@/components/admin/ProtectedRoute'));
 const AdminLayout = lazy(() => import('@/components/admin/AdminLayout'));
 
 function PublicLayout() {
-  return <div className="public-site"><Navbar /><main><Outlet /></main><Footer /></div>;
+  const location = useLocation();
+  return <div className="public-site">
+    <Navbar />
+    <main>
+      <Suspense key={location.pathname} fallback={<RouteLoadingFallback />}>
+        <PageTransition animate={location.pathname !== '/'}><Outlet /></PageTransition>
+      </Suspense>
+    </main>
+    <Footer />
+  </div>;
 }
 
 function AnimatedRoutes() {
@@ -34,7 +43,7 @@ function AnimatedRoutes() {
   useEffect(() => {
     // A route already fades in; instant scroll positioning prevents two
     // competing animations and keeps the new page stable.
-    window.scrollTo({ top: 0, behavior: 'auto' });
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }, [location.pathname]);
 
   useEffect(() => {
@@ -43,9 +52,7 @@ function AnimatedRoutes() {
   }, [location.pathname]);
 
   return (
-    <AnimatePresence mode="sync" initial={false}>
-      <PageTransition key={location.pathname}>
-        <Suspense fallback={<RouteLoadingFallback />}>
+    <Suspense fallback={<RouteLoadingFallback />}>
           <Routes location={location}>
             <Route element={<PublicLayout />}>
               <Route path="/" element={<HomePage />} />
@@ -73,9 +80,7 @@ function AnimatedRoutes() {
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-        </Suspense>
-      </PageTransition>
-    </AnimatePresence>
+    </Suspense>
   );
 }
 
@@ -90,22 +95,11 @@ function RouteLoadingFallback() {
   );
 }
 
-function PageTransition({ children }: { children: ReactNode }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
-      transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-      className="min-h-[calc(100vh-5rem)]"
-    >
-      {children}
-    </motion.div>
-  );
+function PageTransition({ children, animate }: { children: ReactNode; animate: boolean }) {
+  return <div className={`min-h-[calc(100vh-5rem)]${animate ? ' page-content-enter' : ''}`}>{children}</div>;
 }
 
 function App() {
-  const isMobile = window.matchMedia('(max-width: 640px)').matches;
   const theme: 'light' | 'dark' = 'light';
 
   useEffect(() => {
@@ -113,16 +107,17 @@ function App() {
     document.documentElement.style.colorScheme = theme;
   }, []);
 
-  useEffect(() => preloadPublicRoutesWhenIdle(), []);
 
   return (
-    <MotionConfig reducedMotion={isMobile ? 'always' : 'user'}>
+    <LazyMotion features={domAnimation}>
+    <MotionConfig reducedMotion="user" transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}>
       <div className={`app-shell theme-${theme} overflow-x-clip`}>
         <Router>
           <AnimatedRoutes />
         </Router>
       </div>
     </MotionConfig>
+    </LazyMotion>
   );
 }
 

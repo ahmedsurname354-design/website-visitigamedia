@@ -4,7 +4,7 @@ import { Play, ArrowUpRight } from 'lucide-react';
 import type { ServiceContent } from '@/types/admin';
 
 export default function WebServiceSection({ content }: { content?: ServiceContent | null }) {
-  const { ref, isInView } = useScrollReveal();
+  const { ref, isInView, reducedMotion } = useScrollReveal();
   const videoUrl = content?.video_mp4_url ?? '/videos/service-showreel.mp4';
   const videoVersion = content?.updated_at ?? 'default';
 
@@ -14,9 +14,9 @@ export default function WebServiceSection({ content }: { content?: ServiceConten
         <div className="grid gap-12 lg:grid-cols-[0.95fr,1.05fr] items-center">
           <motion.div
             ref={ref}
-            initial={{ opacity: 0, y: 40 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 12 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7 }}
+            transition={{ duration: reducedMotion ? 0 : 0.32 }}
             className="max-w-xl"
           >
             <p className="text-orange-500 text-sm font-semibold tracking-[0.3em] uppercase mb-4">{content?.showreel_eyebrow ?? 'Layanan Kami'}</p>
@@ -47,9 +47,9 @@ export default function WebServiceSection({ content }: { content?: ServiceConten
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.7 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: reducedMotion ? 0 : 0.32 }}
             className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 shadow-[0_40px_120px_rgba(0,0,0,0.25)]"
           >
             <video

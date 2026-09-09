@@ -24,42 +24,11 @@ const routeLoaders: Record<string, PageLoader> = {
   '/news': publicPageLoaders.news,
 };
 
-export function preloadPublicRoute(path: string): Promise<PageModule> | undefined {
+export function preloadPublicRoute(path: string): Promise<PageModule | undefined> | undefined {
   const normalizedPath = path.split(/[?#]/, 1)[0].replace(/\/$/, '') || '/';
   const loader = normalizedPath.startsWith('/news/')
     ? publicPageLoaders.newsDetail
     : routeLoaders[normalizedPath];
-  return loader?.();
-}
-
-export function preloadPublicRoutesWhenIdle(): () => void {
-  const idleWindow = window as Window & {
-    requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number;
-    cancelIdleCallback?: (id: number) => void;
-  };
-  const paths = ['/services', '/portfolio', '/about', '/product', '/news', '/contact', '/video'];
-  let cancelled = false;
-  let timeoutId: number | undefined;
-  let idleId: number | undefined;
-  let index = 0;
-
-  const loadNext = () => {
-    if (cancelled || index >= paths.length) return;
-    void preloadPublicRoute(paths[index++]);
-    schedule();
-  };
-  const schedule = () => {
-    if (typeof idleWindow.requestIdleCallback === 'function') {
-      idleId = idleWindow.requestIdleCallback(loadNext, { timeout: 2500 });
-    } else {
-      timeoutId = window.setTimeout(loadNext, 400);
-    }
-  };
-
-  schedule();
-  return () => {
-    cancelled = true;
-    if (idleId !== undefined) idleWindow.cancelIdleCallback?.(idleId);
-    if (timeoutId !== undefined) window.clearTimeout(timeoutId);
-  };
+  // Speculative loading must never surface an unhandled rejection.
+  return loader?.().catch(() => undefined);
 }

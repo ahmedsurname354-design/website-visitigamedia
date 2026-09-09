@@ -1,5 +1,5 @@
 import { type FormEvent, useState } from 'react';
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { ArrowRight, Phone, Mail, MapPin } from 'lucide-react';
 
@@ -38,7 +38,7 @@ function getContactErrorMessage(error: { code?: string; message?: string }) {
 }
 
 export default function CTASection({ variant = 'full' }: { variant?: 'compact' | 'full' }) {
-  const { ref, isInView } = useScrollReveal();
+  const { ref, isInView, reducedMotion } = useScrollReveal();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [formError, setFormError] = useState('');
@@ -95,9 +95,9 @@ export default function CTASection({ variant = 'full' }: { variant?: 'compact' |
       <div className="relative mx-auto max-w-[1536px] px-4 sm:px-6 lg:px-8">
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 40 }}
+          initial={reducedMotion ? false : { opacity: 0, y: 12 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: reducedMotion ? 0 : 0.32 }}
           className="theme-keep-light bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-16 text-center relative overflow-hidden"
         >
           <div className="absolute -bottom-16 -left-10 w-56 h-56 bg-white/5 rounded-full" />

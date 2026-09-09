@@ -34,7 +34,7 @@ const clientLogos = [
 ];
 
 export default function AboutSection() {
-  const { ref, isInView } = useScrollReveal();
+  const { ref, isInView, reducedMotion } = useScrollReveal();
   const { t } = useTranslation();
 
   return (
@@ -43,9 +43,9 @@ export default function AboutSection() {
         {/* Image */}
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, x: -40 }}
-          animate={isInView ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 0.7 }}
+          initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: reducedMotion ? 0 : 0.32 }}
           className="relative"
         >
           <div className="relative rounded-2xl overflow-hidden">
@@ -61,9 +61,9 @@ export default function AboutSection() {
 
           {/* Floating card */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 12 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.06 }}
             className="absolute -bottom-4 right-3 sm:-bottom-6 sm:-right-6 bg-orange-500 rounded-2xl p-4 sm:p-6 max-w-[180px] sm:max-w-[200px] shadow-2xl shadow-orange-500/30"
           >
             <p className="text-white font-bold text-3xl">12+</p>
@@ -74,25 +74,25 @@ export default function AboutSection() {
         {/* Content */}
         <div>
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 12 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.06 }}
             className="text-orange-500 text-sm font-semibold tracking-[0.3em] uppercase mb-4"
           >
             Tentang Visitiga
           </motion.p>
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 12 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.06 }}
             className="text-white font-bold text-4xl md:text-5xl leading-tight tracking-tight mb-6"
           >
             Mitra Tepercaya untuk <span className="text-orange-500">Inovasi LED</span>
           </motion.h1>
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 12 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.06 }}
             className="text-white/60 text-lg leading-relaxed mb-8"
           >
             {t('about.subtitle')}
@@ -102,9 +102,9 @@ export default function AboutSection() {
             {features.map((feat, i) => (
               <motion.div
                 key={feat}
-                initial={{ opacity: 0, y: 20 }}
+                initial={reducedMotion ? false : { opacity: 0, y: 12 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: 0.5 + i * 0.1 }}
+                transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : i * 0.06 }}
                 className="flex items-center gap-3"
               >
                 <span className="w-6 h-6 rounded-full bg-orange-500/20 flex items-center justify-center flex-shrink-0">
@@ -117,9 +117,9 @@ export default function AboutSection() {
 
           <motion.a
             href="/contact"
-            initial={{ opacity: 0, y: 20 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 12 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.7 }}
+            transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.06 }}
             className="group inline-flex items-center gap-2 bg-white/10 hover:bg-orange-500 text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/30"
           >
             {t('about.contactButton')}

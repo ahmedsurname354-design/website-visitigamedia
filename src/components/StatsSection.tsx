@@ -1,9 +1,9 @@
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useTranslation } from '@/i18n';
 
 export default function StatsSection() {
-  const { ref, isInView } = useScrollReveal();
+  const { ref, isInView, reducedMotion } = useScrollReveal();
   const { dict } = useTranslation();
 
   return (
@@ -12,9 +12,9 @@ export default function StatsSection() {
         {dict.stats.data.map((stat, i) => (
           <motion.div
             key={stat.label}
-            initial={{ opacity: 0, y: 30 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 12 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: i * 0.12 }}
+            transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : i * 0.06 }}
             className="stats-editorial__item text-left px-3 py-5 sm:px-6 lg:px-8"
           >
             <p className="text-3xl sm:text-4xl md:text-5xl font-semibold text-orange-500 tracking-[-.05em]">
