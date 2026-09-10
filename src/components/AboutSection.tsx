@@ -23,14 +23,14 @@ const features = [
 ];
 
 const clientLogos = [
-  { src: wonderfulIndonesia, alt: 'Wonderful Indonesia' },
-  { src: pertamina, alt: 'Pertamina' },
-  { src: dynamix, alt: 'Dynamix' },
-  { src: motogp, alt: 'MotoGP' },
-  { src: emc, alt: 'EMC Healthcare' },
-  { src: mandalika, alt: 'Mandalika International Street Circuit' },
-  { src: iims, alt: 'Indonesia International Motor Show' },
-  { src: wonderfulIndonesiaRed, alt: 'Wonderful Indonesia' },
+  { src: wonderfulIndonesia, alt: 'Wonderful Indonesia', href: 'https://wonderfulindonesia.co.id/' },
+  { src: pertamina, alt: 'Pertamina', href: 'https://www.pertamina.com/en/' },
+  { src: dynamix, alt: 'Dynamix', href: 'https://dynamixgroup.com/' },
+  { src: motogp, alt: 'MotoGP', href: 'https://www.motogp.com/en' },
+  { src: emc, alt: 'EMC Healthcare', href: 'https://www.emc.id/id' },
+  { src: mandalika, alt: 'Mandalika International Street Circuit', href: 'https://www.themandalikagp.com/' },
+  { src: iims, alt: 'Indonesia International Motor Show', href: 'https://indonesianmotorshow.com/' },
+  { src: wonderfulIndonesiaRed, alt: 'Sarinah', href: 'https://www.sarinah.co.id/' },
 ];
 
 export default function AboutSection() {
@@ -52,7 +52,6 @@ export default function AboutSection() {
             <img
               src={aboutImg}
               alt="Tim kami sedang bekerja"
-              fetchPriority="high"
               decoding="async"
               className="w-full h-[360px] sm:h-[500px] object-cover"
             />
@@ -136,7 +135,9 @@ export default function AboutSection() {
           <ul className="client-wall__logos-grid" aria-label="Daftar klien">
             {clientLogos.map((client) => (
               <li key={client.src} className="client-logo-slot">
-                <img src={client.src} alt={client.alt} loading="lazy" decoding="async" />
+                <a href={client.href} target="_blank" rel="noopener noreferrer" aria-label={`Kunjungi website ${client.alt}`}>
+                  <img src={client.src} alt={client.alt} loading="lazy" decoding="async" />
+                </a>
               </li>
             ))}
           </ul>
