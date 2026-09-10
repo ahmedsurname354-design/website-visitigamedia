@@ -5,6 +5,7 @@ import { listPublicNews } from '@/lib/adminApi';
 import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
 import type { NewsRecord } from '@/types/admin';
 import { useTranslation } from '@/i18n';
+import LightReveal from '@/components/LightReveal';
 
 export default function NewsPage() {
   const { lang } = useTranslation();
@@ -23,11 +24,13 @@ export default function NewsPage() {
   return (
     <section className="journal-page min-h-screen px-4 pb-24 pt-32 text-[#241811] sm:px-6 sm:pt-40 lg:px-8">
       <div className="mx-auto max-w-[1344px]">
-        <p className="editorial-eyebrow">Visitiga Journal</p>
-        <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight sm:text-6xl">
-          {en ? 'Latest ' : 'Berita '}<span className="text-orange-500">{en ? 'news.' : 'terbaru.'}</span>
-        </h1>
-        <p className="mt-4 max-w-2xl text-[#735c4d]">{en ? 'The latest articles and updates from Visitiga Media.' : 'Artikel dan kabar terbaru dari Visitiga Media.'}</p>
+        <LightReveal>
+          <p className="editorial-eyebrow">Visitiga Journal</p>
+          <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight sm:text-6xl">
+            {en ? 'Latest ' : 'Berita '}<span className="text-orange-500">{en ? 'news.' : 'terbaru.'}</span>
+          </h1>
+          <p className="mt-4 max-w-2xl text-[#735c4d]">{en ? 'The latest articles and updates from Visitiga Media.' : 'Artikel dan kabar terbaru dari Visitiga Media.'}</p>
+        </LightReveal>
 
         {loading ? (
           <div className="mt-16 text-slate-500">
@@ -40,7 +43,8 @@ export default function NewsPage() {
         ) : (
           <div className="journal-grid mt-12 grid gap-7 md:grid-cols-2 lg:grid-cols-3">
             {articles.map((article, index) => (
-              <article key={article.id} className="journal-card overflow-hidden border border-[#ead5c1] bg-white shadow-sm">
+              <LightReveal key={article.id} delay={Math.min(index * 0.045, 0.18)} className="h-full">
+              <article className="journal-card h-full overflow-hidden border border-[#ead5c1] bg-white shadow-sm">
                 <img
                   src={optimizedImageUrl(article.cover_image, 800)}
                   onError={({ currentTarget }) => restoreOriginalImage(currentTarget, article.cover_image)}
@@ -62,6 +66,7 @@ export default function NewsPage() {
                   </Link>
                 </div>
               </article>
+              </LightReveal>
             ))}
           </div>
         )}

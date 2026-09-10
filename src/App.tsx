@@ -32,9 +32,10 @@ const AdminLayout = lazy(() => import('@/components/admin/AdminLayout'));
 function PublicLayout() {
   const location = useLocation();
   return <div className="public-site">
+    <a href="#main-content" className="sr-only z-50 rounded-lg bg-white px-4 py-3 font-semibold text-[#211c18] shadow-lg focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Lewati ke konten utama</a>
     <PageMeta />
     <Navbar />
-    <main>
+    <main id="main-content">
       <Suspense key={location.pathname} fallback={<RouteLoadingFallback />}>
         <PageTransition animate={location.pathname !== '/'}><Outlet /></PageTransition>
       </Suspense>

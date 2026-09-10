@@ -4,7 +4,7 @@ import { deleteProduct, listProducts, saveProduct } from '@/lib/adminApi';
 import { ContentModal, InputField } from '@/components/admin/ContentModal';
 import { ImageUploadField } from '@/components/admin/ImageUploadField';
 import { CatalogueUploadCard } from '@/components/admin/CatalogueUploadCard';
-import { Alert, Header as BaseHeader } from '@/pages/admin/PortfoliosPage';
+import { Alert, Header as BaseHeader } from '@/components/admin/AdminUi';
 import type { Product } from '@/types/admin';
 
 const defaults = { color: '#2a1a12', accent: '#fb923c' };

@@ -5,7 +5,7 @@ import { deleteNews, listNews, saveNews } from '@/lib/adminApi';
 import { ContentModal, InputField } from '@/components/admin/ContentModal';
 import { ImageUploadField } from '@/components/admin/ImageUploadField';
 import { RichTextEditor } from '@/components/admin/RichTextEditor';
-import { Actions, Alert, Empty, Header } from '@/pages/admin/PortfoliosPage';
+import { Actions, Alert, Empty, Header } from '@/components/admin/AdminUi';
 import type { NewsRecord } from '@/types/admin';
 
 export default function NewsManagerPage() {

@@ -46,28 +46,29 @@ export default function AdminLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900">
+    <div className="admin-shell">
+      <a href="#admin-content" className="sr-only z-[80] rounded-lg bg-white px-4 py-3 font-semibold text-slate-900 shadow-lg focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Lewati navigasi</a>
       <AnimatePresence>
         {mobileOpen && <motion.button aria-label="Tutup menu" className="fixed inset-0 z-40 bg-slate-950/50 lg:hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setMobileOpen(false)} />}
       </AnimatePresence>
-      <motion.aside animate={{ width: collapsed ? 88 : 256 }} className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-slate-950 text-slate-200 shadow-2xl transition-transform lg:translate-x-0 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <motion.aside aria-label="Navigasi admin" animate={{ width: collapsed ? 88 : 256 }} className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-slate-950 text-slate-200 shadow-2xl transition-transform lg:translate-x-0 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex h-20 items-center gap-3 border-b border-white/10 px-5">
           <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-orange-500 font-black text-slate-950">VA</div>
           {!collapsed && <span className="whitespace-nowrap font-bold tracking-tight text-white">Visitiga Admin</span>}
         </div>
-        <nav className="flex-1 space-y-2 p-3">
+        <nav aria-label="Menu utama admin" className="flex-1 space-y-2 p-3">
           {links.map(({ to, label, icon: Icon, end }) => <NavLink key={to} to={to} end={end} onClick={() => setMobileOpen(false)} className={({ isActive }) => `relative flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition ${isActive ? 'bg-orange-500 text-slate-950' : 'hover:bg-white/10 hover:text-white'}`}>
             <Icon className="h-5 w-5 shrink-0" /> {!collapsed && <span>{label}</span>}{to === '/admin/leads' && newLeadCount > 0 && <span className={`${collapsed ? 'absolute right-2 top-2 h-2.5 w-2.5 p-0' : 'ml-auto min-w-6 px-1.5 py-0.5 text-center text-[11px]'} rounded-full bg-red-500 font-bold text-white`}>{collapsed ? '' : newLeadCount > 99 ? '99+' : newLeadCount}</span>}
           </NavLink>)}
         </nav>
-        <button onClick={() => setCollapsed((value) => !value)} className="hidden border-t border-white/10 p-4 text-slate-400 transition hover:text-white lg:flex lg:items-center lg:justify-center" aria-label="Ubah ukuran sidebar"><ChevronLeft className={`h-5 w-5 transition-transform ${collapsed ? 'rotate-180' : ''}`} /></button>
+        <button onClick={() => setCollapsed((value) => !value)} className="hidden min-h-14 border-t border-white/10 p-4 text-slate-400 transition hover:text-white lg:flex lg:items-center lg:justify-center" aria-label={collapsed ? 'Perluas sidebar' : 'Ciutkan sidebar'} aria-expanded={!collapsed}><ChevronLeft className={`h-5 w-5 transition-transform ${collapsed ? 'rotate-180' : ''}`} /></button>
       </motion.aside>
       <div className={`min-h-screen transition-[margin] duration-300 ${collapsed ? 'lg:ml-[88px]' : 'lg:ml-64'}`}>
         <header className="sticky top-0 z-30 flex h-20 items-center justify-between border-b border-slate-200 bg-white/90 px-4 backdrop-blur sm:px-8">
           <div className="flex items-center gap-3"><button onClick={() => setMobileOpen(true)} className="rounded-lg p-2 hover:bg-slate-100 lg:hidden" aria-label="Buka menu"><Menu className="h-5 w-5" /></button><div><p className="text-xs font-semibold uppercase tracking-[.2em] text-orange-600">Pengelolaan Konten</p><h1 className="font-bold">Dasbor Admin</h1></div></div>
           <div className="flex items-center gap-3"><div className="hidden text-right sm:block"><p className="max-w-48 truncate text-sm font-semibold">{email}</p><p className="text-xs text-slate-500">Administrator</p></div><div className="grid h-10 w-10 place-items-center rounded-full bg-orange-100 text-sm font-bold text-orange-700">{email.slice(0, 1).toUpperCase()}</div><button disabled={loggingOut} onClick={() => void logout()} className="inline-flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-semibold text-slate-500 transition hover:bg-red-50 hover:text-red-600 disabled:cursor-wait disabled:opacity-60" aria-label="Keluar" title="Keluar">{loggingOut ? <LoaderCircle className="h-5 w-5 animate-spin" /> : <LogOut className="h-5 w-5" />}<span className="hidden md:inline">Keluar</span></button></div>
         </header>
-        <main className="p-4 sm:p-8">{logoutError && <p role="alert" className="mx-auto mb-5 max-w-7xl rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{logoutError}</p>}<motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .25 }}><Outlet /></motion.div></main>
+        <main id="admin-content" className="admin-main">{logoutError && <p role="alert" className="mx-auto mb-5 max-w-7xl rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{logoutError}</p>}<motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .25 }}><Outlet /></motion.div></main>
       </div>
     </div>
   );

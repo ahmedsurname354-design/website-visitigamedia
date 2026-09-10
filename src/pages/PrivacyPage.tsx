@@ -1,5 +1,6 @@
 import { Mail } from 'lucide-react';
 import { useTranslation } from '@/i18n';
+import LightReveal from '@/components/LightReveal';
 
 const content = {
   id: {
@@ -32,17 +33,19 @@ export default function PrivacyPage() {
   return (
     <article className="editorial-section min-h-screen pt-32 sm:pt-40">
       <div className="editorial-container max-w-4xl">
-        <p className="editorial-eyebrow">{copy.eyebrow}</p>
-        <h1 className="editorial-title">{copy.title}</h1>
-        <p className="mt-4 text-sm text-[#87796e]">{copy.updated}</p>
-        <p className="mt-8 max-w-3xl text-lg leading-8 text-[#6f6258]">{copy.intro}</p>
+        <LightReveal>
+          <p className="editorial-eyebrow">{copy.eyebrow}</p>
+          <h1 className="editorial-title">{copy.title}</h1>
+          <p className="mt-4 text-sm text-[#87796e]">{copy.updated}</p>
+          <p className="mt-8 max-w-3xl text-lg leading-8 text-[#6f6258]">{copy.intro}</p>
+        </LightReveal>
         <div className="privacy-content mt-12 space-y-10">
-          {copy.sections.map(([heading, body]) => <section key={heading}><h2>{heading}</h2><p>{body}</p></section>)}
+          {copy.sections.map(([heading, body], index) => <LightReveal key={heading} delay={Math.min(index * 0.035, 0.14)}><section className="privacy-card"><h2>{heading}</h2><p>{body}</p></section></LightReveal>)}
         </div>
-        <div className="mt-12 rounded-2xl bg-[#f1eae1] p-6 sm:p-8">
+        <LightReveal className="privacy-contact mt-12 rounded-2xl bg-[#f1eae1] p-6 sm:p-8">
           <p className="text-[#6f6258]">{copy.contact}</p>
           <a href="mailto:marcomm@visitiga.com?subject=Privasi%20Website%20Visitiga" className="mt-3 inline-flex items-center gap-2 font-semibold text-orange-700"><Mail aria-hidden="true" className="h-4 w-4" />marcomm@visitiga.com</a>
-        </div>
+        </LightReveal>
       </div>
     </article>
   );

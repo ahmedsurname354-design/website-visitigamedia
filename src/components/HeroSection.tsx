@@ -1,5 +1,4 @@
-import { useRef, type RefObject, type ReactNode } from 'react';
-import { m as motion, useScroll, useTransform } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Play, ShieldCheck } from 'lucide-react';
 import { useTranslation } from '@/i18n';
@@ -11,14 +10,13 @@ const heroImg = '/hero-1600.webp';
 
 export default function HeroSection() {
   const { t } = useTranslation();
-  const sectionRef = useRef<HTMLElement>(null);
-  const { reducedMotion, parallax } = useMotionPolicy();
+  const { reducedMotion } = useMotionPolicy();
 
   return (
-    <section ref={sectionRef} id="home" className="hero-editorial theme-keep-light relative bg-black">
+    <section id="home" className="hero-editorial theme-keep-light relative bg-black">
       <div className="hero-editorial__stage">
         {/* Background image */}
-        <HeroBackground sectionRef={sectionRef} parallax={parallax}>
+        <div className="absolute inset-0">
           <img
             src={heroImg}
             srcSet="/hero-640.webp 640w, /hero-960.webp 960w, /hero-1600.webp 1600w"
@@ -30,7 +28,7 @@ export default function HeroSection() {
             decoding="async"
             className="w-full h-full object-cover object-[68%_center] sm:object-center"
           />
-        </HeroBackground>
+        </div>
         <div className="hero-editorial__scrim absolute inset-0" />
 
         <div aria-hidden="true" className="hero-editorial__glow absolute inset-0 pointer-events-none" />
@@ -93,15 +91,4 @@ export default function HeroSection() {
       </div>
     </section>
   );
-}
-
-function HeroBackground({ sectionRef, parallax, children }: { sectionRef: RefObject<HTMLElement>; parallax: boolean; children: ReactNode }) {
-  return parallax ? <ParallaxBackground sectionRef={sectionRef}>{children}</ParallaxBackground> : <div className="absolute inset-0">{children}</div>;
-}
-
-// Mount the scroll subscription only while desktop motion is enabled.
-function ParallaxBackground({ sectionRef, children }: { sectionRef: RefObject<HTMLElement>; children: ReactNode }) {
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', '-3%']);
-  return <motion.div className="absolute inset-0" style={{ y, scale: 1.08 }}>{children}</motion.div>;
 }

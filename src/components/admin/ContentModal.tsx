@@ -1,10 +1,35 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
 import { X } from 'lucide-react';
+import { useDialogA11y } from '@/hooks/useDialogA11y';
 
-export function ContentModal({ title, children, onClose, onSubmit }: { title: string; children: ReactNode; onClose: () => void; onSubmit: (form: FormData) => Promise<void> }) {
+type ContentModalProps = { title: string; children: ReactNode; onClose: () => void; onSubmit: (form: FormData) => Promise<void> };
+
+export function ContentModal({ title, children, onClose, onSubmit }: ContentModalProps) {
   const [saving, setSaving] = useState(false);
-  const submit = async (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); setSaving(true); try { await onSubmit(new FormData(event.currentTarget)); } finally { setSaving(false); } };
-  return <div className="fixed inset-0 z-[70] grid place-items-center bg-slate-950/60 p-3 sm:p-6"><form onSubmit={submit} className="max-h-[92vh] w-full max-w-4xl overflow-y-auto rounded-2xl bg-white p-5 shadow-2xl sm:p-7"><div className="sticky top-0 z-10 -mt-5 -mx-5 flex items-center justify-between border-b border-slate-100 bg-white/95 px-5 py-4 backdrop-blur sm:-mt-7 sm:-mx-7 sm:px-7"><div><p className="text-xs font-bold uppercase tracking-[.16em] text-orange-600">Content editor</p><h3 className="mt-1 text-xl font-black">{title}</h3></div><button type="button" onClick={onClose} className="rounded-lg p-2 hover:bg-slate-100" aria-label="Tutup"><X className="h-5 w-5" /></button></div><div className="mt-6 grid gap-5 sm:grid-cols-2">{children}</div><div className="sticky bottom-0 -mx-5 mt-7 flex justify-end gap-3 border-t border-slate-100 bg-white/95 px-5 py-4 backdrop-blur sm:-mx-7 sm:px-7"><button type="button" onClick={onClose} className="rounded-xl px-4 py-2.5 text-sm font-semibold hover:bg-slate-100">Batal</button><button disabled={saving} className="rounded-xl bg-orange-500 px-4 py-2.5 text-sm font-bold text-white hover:bg-orange-600 disabled:opacity-50">{saving ? 'Menyimpan…' : 'Simpan'}</button></div></form></div>;
+  const { dialogRef, titleId } = useDialogA11y(onClose);
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); setSaving(true);
+    try { await onSubmit(new FormData(event.currentTarget)); } finally { setSaving(false); }
+  };
+  return (
+    <div className="fixed inset-0 z-[70] grid place-items-center bg-slate-950/60 p-3 sm:p-6">
+      <form ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={titleId} onSubmit={submit} className="max-h-[92vh] w-full max-w-4xl overflow-y-auto rounded-2xl bg-white p-5 shadow-2xl sm:p-7">
+        <div className="sticky top-0 z-10 -mx-5 -mt-5 flex items-center justify-between border-b border-slate-100 bg-white/95 px-5 py-4 backdrop-blur sm:-mx-7 sm:-mt-7 sm:px-7">
+          <div><p className="text-xs font-bold uppercase tracking-[.16em] text-orange-600">Content editor</p><h3 id={titleId} className="mt-1 text-xl font-black">{title}</h3></div>
+          <button type="button" onClick={onClose} className="admin-icon-button" aria-label="Tutup"><X aria-hidden="true" /></button>
+        </div>
+        <div className="mt-6 grid gap-5 sm:grid-cols-2">{children}</div>
+        <div className="sticky bottom-0 -mx-5 mt-7 flex justify-end gap-3 border-t border-slate-100 bg-white/95 px-5 py-4 backdrop-blur sm:-mx-7 sm:px-7">
+          <button type="button" onClick={onClose} className="admin-button hover:bg-slate-100">Batal</button>
+          <button disabled={saving} className="admin-button admin-button--primary">{saving ? 'Menyimpan…' : 'Simpan'}</button>
+        </div>
+      </form>
+    </div>
+  );
 }
 
-export function InputField({ label, name, initial = '', type = 'text', required = true, className = '' }: { label: string; name: string; initial?: string; type?: string; required?: boolean; className?: string }) { return <label className={`text-sm font-medium ${className}`}>{label}<input name={name} type={type} required={required} defaultValue={initial} className="mt-2 w-full rounded-xl border border-slate-300 px-3 py-2 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100" /></label>; }
+type InputFieldProps = { label: string; name: string; initial?: string; type?: string; required?: boolean; className?: string };
+
+export function InputField({ label, name, initial = '', type = 'text', required = true, className = '' }: InputFieldProps) {
+  return <label className={`text-sm font-medium ${className}`}>{label}<input name={name} type={type} required={required} defaultValue={initial} className="mt-2 w-full rounded-xl border border-slate-300 px-3 py-2 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100" /></label>;
+}
