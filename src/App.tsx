@@ -1,8 +1,10 @@
 import { lazy, Suspense, useEffect, type ReactNode } from 'react';
-import { BrowserRouter as Router, Navigate, Outlet, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Outlet, Routes, Route, useLocation } from 'react-router-dom';
 import { LazyMotion, domAnimation, MotionConfig } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import AppErrorBoundary from '@/components/AppErrorBoundary';
+import PageMeta from '@/components/PageMeta';
 import HomePage from '@/pages/HomePage';
 import { publicPageLoaders } from '@/lib/publicRoutes';
 const AboutPage = lazy(publicPageLoaders.about);
@@ -10,6 +12,9 @@ const ServicesPage = lazy(publicPageLoaders.services);
 const PortfolioPage = lazy(publicPageLoaders.portfolio);
 const VideoPage = lazy(publicPageLoaders.video);
 const ContactPage = lazy(publicPageLoaders.contact);
+const FAQPage = lazy(publicPageLoaders.faq);
+const PrivacyPage = lazy(publicPageLoaders.privacy);
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 const ProductPage = lazy(publicPageLoaders.product);
 const NewsPage = lazy(publicPageLoaders.news);
 const NewsDetailPage = lazy(publicPageLoaders.newsDetail);
@@ -27,6 +32,7 @@ const AdminLayout = lazy(() => import('@/components/admin/AdminLayout'));
 function PublicLayout() {
   const location = useLocation();
   return <div className="public-site">
+    <PageMeta />
     <Navbar />
     <main>
       <Suspense key={location.pathname} fallback={<RouteLoadingFallback />}>
@@ -62,6 +68,8 @@ function AnimatedRoutes() {
               <Route path="/portfolio" element={<PortfolioPage />} />
               <Route path="/video" element={<VideoPage />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/faq" element={<FAQPage />} />
+              <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="/news" element={<NewsPage />} />
               <Route path="/news/:id" element={<NewsDetailPage />} />
             </Route>
@@ -78,7 +86,9 @@ function AnimatedRoutes() {
                 </Route>
               </Route>
             </Route>
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route element={<PublicLayout />}>
+              <Route path="*" element={<NotFoundPage />} />
+            </Route>
           </Routes>
     </Suspense>
   );
@@ -113,7 +123,7 @@ function App() {
     <MotionConfig reducedMotion="user" transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}>
       <div className={`app-shell theme-${theme} overflow-x-clip`}>
         <Router>
-          <AnimatedRoutes />
+          <AppErrorBoundary><AnimatedRoutes /></AppErrorBoundary>
         </Router>
       </div>
     </MotionConfig>

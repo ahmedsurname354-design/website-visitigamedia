@@ -6,6 +6,8 @@ import DOMPurify from 'dompurify';
 import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
 import { getPublicNews, listPublicNews } from '@/lib/adminApi';
 import type { NewsRecord } from '@/types/admin';
+import { useTranslation } from '@/i18n';
+import { usePageMeta } from '@/hooks/usePageMeta';
 
 const MAX_RELATED_ARTICLES = 6;
 
@@ -24,11 +26,22 @@ function formatPublishedDate(value: string | null) {
 
 export default function NewsDetailPage() {
   const { id } = useParams();
+  const { lang } = useTranslation();
+  const en = lang === 'en';
   const [article, setArticle] = useState<NewsRecord | null | undefined>(undefined);
   const [allArticles, setAllArticles] = useState<NewsRecord[]>([]);
   const [loadError, setLoadError] = useState('');
   const [relatedError, setRelatedError] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  usePageMeta({
+    title: article?.title ? `${article.title} — Visitiga` : (en ? 'News — Visitiga' : 'Berita — Visitiga'),
+    description: article?.excerpt || (en ? 'Latest news and articles from Visitiga Media.' : 'Berita dan artikel terbaru dari Visitiga Media.'),
+    pathname: id ? `/news/${id}` : '/news',
+    image: article?.cover_image,
+    type: article ? 'article' : 'website',
+    structuredData: article ? { '@context': 'https://schema.org', '@type': 'Article', headline: article.title, description: article.excerpt, image: article.cover_image, datePublished: article.published_at, author: { '@type': 'Person', name: article.author } } : undefined,
+  });
 
   useEffect(() => {
     let active = true;
@@ -45,7 +58,7 @@ export default function NewsDetailPage() {
       if (!active) return;
 
       if (articleResult.status === 'rejected') {
-        setLoadError('Berita belum dapat dimuat. Silakan coba lagi beberapa saat.');
+        setLoadError(en ? 'News could not be loaded. Please try again shortly.' : 'Berita belum dapat dimuat. Silakan coba lagi beberapa saat.');
         setArticle(null);
         return;
       }
@@ -61,7 +74,7 @@ export default function NewsDetailPage() {
 
     void loadPage();
     return () => { active = false; };
-  }, [id]);
+  }, [en, id]);
 
   const relatedArticles = useMemo(
     () => (article ? getRelatedArticles(article, allArticles) : []),
@@ -84,10 +97,10 @@ export default function NewsDetailPage() {
     return (
       <main className="min-h-screen bg-[#fffaf3] px-4 pb-20 pt-32 text-[#241811] sm:px-6 sm:pt-40">
         <div className="mx-auto max-w-xl rounded-2xl border border-red-200 bg-white p-8 text-center shadow-sm">
-          <h1 className="text-2xl font-black">Berita gagal dimuat</h1>
+          <h1 className="text-2xl font-black">{en ? 'Unable to load news' : 'Berita gagal dimuat'}</h1>
           <p className="mt-3 text-sm leading-6 text-[#735c4d]">{loadError}</p>
           <button type="button" onClick={() => window.location.reload()} className="mt-6 rounded-full bg-orange-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-orange-700">
-            Muat ulang
+            {en ? 'Reload' : 'Muat ulang'}
           </button>
         </div>
       </main>
@@ -119,7 +132,7 @@ export default function NewsDetailPage() {
     <article className="min-h-screen bg-[#fffaf3] pb-20 pt-28 text-[#241811] sm:pt-36">
       <div className="mx-auto max-w-[1536px] px-4 sm:px-6 lg:px-8">
         <Link to="/news" className="inline-flex min-h-11 items-center gap-2 rounded-full text-sm font-bold text-orange-600 transition hover:text-orange-700">
-          <ArrowLeft className="h-4 w-4" /> Kembali ke berita
+          <ArrowLeft className="h-4 w-4" /> {en ? 'Back to news' : 'Kembali ke berita'}
         </Link>
 
         <div className="mt-5 grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] xl:gap-14">
@@ -144,7 +157,7 @@ export default function NewsDetailPage() {
 
           <aside className="min-w-0 border-t border-[#ead5c1] pt-8 lg:sticky lg:top-28 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
             <section aria-labelledby="share-heading">
-              <h2 id="share-heading" className="text-lg font-black">Bagikan</h2>
+              <h2 id="share-heading" className="text-lg font-black">{en ? 'Share' : 'Bagikan'}</h2>
               <div className="mt-4 flex flex-wrap gap-2">
                 {shareLinks.map((share) => (
                   <a key={share.label} href={share.href} target={share.href.startsWith('http') ? '_blank' : undefined} rel={share.href.startsWith('http') ? 'noopener noreferrer' : undefined} aria-label={share.label} title={share.label} className="grid size-10 place-items-center rounded-full border border-[#ddc9b8] bg-white text-[#3d2a20] transition hover:border-orange-500 hover:text-orange-600">
@@ -159,7 +172,7 @@ export default function NewsDetailPage() {
             </section>
 
             <section className="mt-7 border-t border-[#ead5c1] pt-7" aria-labelledby="related-heading">
-              <h2 id="related-heading" className="text-xl font-black">Artikel terkait</h2>
+              <h2 id="related-heading" className="text-xl font-black">{en ? 'Related articles' : 'Artikel terkait'}</h2>
               {relatedError ? <p className="mt-4 text-sm leading-6 text-[#735c4d]">Artikel terkait belum dapat dimuat.</p> : relatedArticles.length === 0 ? <p className="mt-4 text-sm leading-6 text-[#735c4d]">Belum ada artikel terkait lainnya.</p> : (
                 <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
                   {relatedArticles.map((related) => (

@@ -90,6 +90,57 @@ const translations = {
       emailInfo: 'marcomm@visitiga.com',
       locationInfo: 'Jl. Setra Dago Barat No.9 Antapani, Bandung',
     },
+    faq: {
+      eyebrow: 'Tanya Jawab',
+      title: 'Pertanyaan yang Sering Diajukan',
+      introduction: 'Temukan informasi umum tentang solusi media Visitiga. Untuk harga, jadwal, garansi, dan ketersediaan, tim kami akan memberikan informasi sesuai kebutuhan proyek Anda.',
+      items: [
+        {
+          question: 'Layanan apa saja yang tersedia di Visitiga?',
+          answer: 'Visitiga menyediakan LED videotron outdoor, LED display indoor, rental LED untuk berbagai acara, serta media konvensional seperti billboard, lightbox, totem sign, signage toko, dan neon sign.',
+        },
+        {
+          question: 'Apa perbedaan LED display indoor dan outdoor?',
+          answer: 'LED outdoor dirancang untuk area luar ruang dengan tingkat kecerahan tinggi dan ketahanan terhadap cuaca. LED indoor mengutamakan ketajaman visual dari jarak dekat untuk lokasi seperti lobi, mal, bank, kampus, dan ruang konferensi.',
+        },
+        {
+          question: 'Apakah Visitiga menyediakan rental LED untuk acara?',
+          answer: 'Ya. Rental LED tersedia untuk event, konser, pameran, pernikahan, dan acara korporat, dengan pilihan ukuran serta dukungan tim teknis di lokasi. Ketersediaan perlu dikonfirmasi kepada tim Visitiga.',
+        },
+        {
+          question: 'Media konvensional apa saja yang dapat dikerjakan?',
+          answer: 'Pilihan media konvensional meliputi billboard, lightbox, signage toko, totem sign, dan neon sign. Tim Visitiga dapat membantu menentukan solusi berdasarkan lokasi dan kebutuhan visual merek Anda.',
+        },
+        {
+          question: 'Apakah ukuran dan spesifikasi LED dapat disesuaikan?',
+          answer: 'Ya. Solusi dapat disesuaikan dengan kebutuhan proyek. Visitiga menyediakan beberapa pilihan pixel pitch untuk penggunaan indoor dan outdoor; spesifikasi akhirnya ditentukan setelah kebutuhan dan lokasi ditinjau.',
+        },
+        {
+          question: 'Bagaimana proses konsultasi dan permintaan penawaran?',
+          answer: 'Sampaikan kebutuhan Anda melalui WhatsApp, email, atau formulir kontak. Tim Visitiga akan mempelajari informasi proyek terlebih dahulu sebelum memberikan rekomendasi dan penawaran yang relevan.',
+        },
+        {
+          question: 'Apakah Visitiga menangani pemasangan dan dukungan setelah penjualan?',
+          answer: 'Ya. Layanan Visitiga mencakup penyediaan, pemasangan, dan perawatan LED display, serta dukungan purnajual. Detail cakupan dukungan dan garansi akan dikonfirmasi sesuai produk atau proyek yang dipilih.',
+        },
+        {
+          question: 'Apakah layanan tersedia untuk proyek di luar Bandung?',
+          answer: 'Visitiga melayani kebutuhan solusi LED untuk bisnis di Indonesia. Silakan informasikan lokasi proyek agar tim dapat mengonfirmasi jangkauan layanan, kebutuhan teknis, dan ketersediaannya.',
+        },
+        {
+          question: 'Informasi apa yang perlu disiapkan sebelum konsultasi?',
+          answer: 'Siapkan jenis kebutuhan, lokasi pemasangan atau acara, perkiraan ukuran layar, kondisi indoor atau outdoor, serta jadwal yang diharapkan. Foto lokasi atau referensi visual juga dapat membantu proses konsultasi.',
+        },
+        {
+          question: 'Bagaimana cara menghubungi Visitiga?',
+          answer: 'Anda dapat menghubungi Visitiga melalui WhatsApp, mengirim email ke marcomm@visitiga.com, atau mengisi formulir pada halaman Kontak. Kantor pusat Visitiga berada di Jl. Setra Dago Barat No.9 Antapani, Bandung.',
+        },
+      ],
+      ctaTitle: 'Masih punya pertanyaan?',
+      ctaDescription: 'Ceritakan kebutuhan visual Anda dan dapatkan informasi yang sesuai langsung dari tim Visitiga.',
+      whatsapp: 'Konsultasi via WhatsApp',
+      contact: 'Buka Halaman Kontak',
+    },
     footer: {
       brandDescription: 'Solusi layar LED profesional untuk bisnis Anda di seluruh Indonesia. Kualitas premium, desain kreatif, dan layanan terbaik.',
       links: {
@@ -219,6 +270,57 @@ const translations = {
       emailInfo: 'marcomm@visitiga.com',
       locationInfo: 'Jl. Setra Dago Barat No.9 Antapani, Bandung',
     },
+    faq: {
+      eyebrow: 'Frequently Asked Questions',
+      title: 'How Can We Help?',
+      introduction: 'Find general information about Visitiga media solutions. For pricing, schedules, warranties, and availability, our team will provide details based on your project requirements.',
+      items: [
+        {
+          question: 'What services does Visitiga provide?',
+          answer: 'Visitiga provides outdoor LED videotrons, indoor LED displays, LED rentals for various events, and conventional media such as billboards, lightboxes, totem signs, store signage, and neon signs.',
+        },
+        {
+          question: 'What is the difference between indoor and outdoor LED displays?',
+          answer: 'Outdoor LED displays are designed for exterior locations with high brightness and weather resistance. Indoor LED displays prioritize sharp visuals at close viewing distances for locations such as lobbies, malls, banks, campuses, and conference rooms.',
+        },
+        {
+          question: 'Does Visitiga provide LED rentals for events?',
+          answer: 'Yes. LED rentals are available for events, concerts, exhibitions, weddings, and corporate functions, with a choice of sizes and on-site technical support. Availability must be confirmed with the Visitiga team.',
+        },
+        {
+          question: 'What types of conventional media are available?',
+          answer: 'Conventional media options include billboards, lightboxes, store signage, totem signs, and neon signs. The Visitiga team can help determine a solution based on the location and your brand\'s visual requirements.',
+        },
+        {
+          question: 'Can the LED size and specifications be customized?',
+          answer: 'Yes. Solutions can be tailored to project requirements. Visitiga provides several pixel-pitch options for indoor and outdoor use; final specifications are determined after reviewing the requirements and location.',
+        },
+        {
+          question: 'How do consultations and quotation requests work?',
+          answer: 'Share your requirements through WhatsApp, email, or the contact form. The Visitiga team will review the project information before providing a relevant recommendation and quotation.',
+        },
+        {
+          question: 'Does Visitiga handle installation and after-sales support?',
+          answer: 'Yes. Visitiga services include supplying, installing, and maintaining LED displays, as well as after-sales support. The scope of support and warranty details will be confirmed for the selected product or project.',
+        },
+        {
+          question: 'Are services available for projects outside Bandung?',
+          answer: 'Visitiga serves business LED solution needs across Indonesia. Share the project location so the team can confirm service coverage, technical requirements, and availability.',
+        },
+        {
+          question: 'What information should I prepare before a consultation?',
+          answer: 'Prepare the type of requirement, installation or event location, estimated screen size, indoor or outdoor conditions, and expected schedule. Location photos or visual references can also support the consultation.',
+        },
+        {
+          question: 'How can I contact Visitiga?',
+          answer: 'You can contact Visitiga through WhatsApp, email marcomm@visitiga.com, or submit the form on the Contact page. Visitiga\'s head office is at Jl. Setra Dago Barat No.9 Antapani, Bandung.',
+        },
+      ],
+      ctaTitle: 'Still have questions?',
+      ctaDescription: 'Tell us about your visual requirements and get relevant information directly from the Visitiga team.',
+      whatsapp: 'Consult via WhatsApp',
+      contact: 'Open Contact Page',
+    },
     footer: {
       brandDescription: 'Professional LED display solutions for your business across Indonesia. Premium quality, creative design, exceptional service.',
       links: {
@@ -293,6 +395,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     localStorage.setItem('lang', lang);
+    document.documentElement.lang = lang;
   }, [lang]);
 
   const dict = useMemo(() => translations[lang], [lang]);

@@ -4,8 +4,11 @@ import { Link } from 'react-router-dom';
 import { listPublicNews } from '@/lib/adminApi';
 import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
 import type { NewsRecord } from '@/types/admin';
+import { useTranslation } from '@/i18n';
 
 export default function NewsPage() {
+  const { lang } = useTranslation();
+  const en = lang === 'en';
   const [articles, setArticles] = useState<NewsRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -13,27 +16,27 @@ export default function NewsPage() {
   useEffect(() => {
     void listPublicNews()
       .then(setArticles)
-      .catch(() => setError('Berita belum dapat dimuat.'))
+      .catch(() => setError(en ? 'News could not be loaded.' : 'Berita belum dapat dimuat.'))
       .finally(() => setLoading(false));
-  }, []);
+  }, [en]);
 
   return (
     <section className="journal-page min-h-screen px-4 pb-24 pt-32 text-[#241811] sm:px-6 sm:pt-40 lg:px-8">
       <div className="mx-auto max-w-[1344px]">
         <p className="editorial-eyebrow">Visitiga Journal</p>
         <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight sm:text-6xl">
-          Berita <span className="text-orange-500">terbaru.</span>
+          {en ? 'Latest ' : 'Berita '}<span className="text-orange-500">{en ? 'news.' : 'terbaru.'}</span>
         </h1>
-        <p className="mt-4 max-w-2xl text-[#735c4d]">Artikel dan kabar terbaru dari Visitiga Media.</p>
+        <p className="mt-4 max-w-2xl text-[#735c4d]">{en ? 'The latest articles and updates from Visitiga Media.' : 'Artikel dan kabar terbaru dari Visitiga Media.'}</p>
 
         {loading ? (
           <div className="mt-16 text-slate-500">
-            <LoaderCircle className="mr-2 inline h-4 w-4 animate-spin" />Memuat berita…
+            <LoaderCircle className="mr-2 inline h-4 w-4 animate-spin" />{en ? 'Loading news…' : 'Memuat berita…'}
           </div>
         ) : error ? (
           <p className="mt-16 text-red-600">{error}</p>
         ) : articles.length === 0 ? (
-          <p className="mt-16 text-[#735c4d]">Belum ada berita yang dipublikasikan.</p>
+          <p className="mt-16 text-[#735c4d]">{en ? 'No news has been published yet.' : 'Belum ada berita yang dipublikasikan.'}</p>
         ) : (
           <div className="journal-grid mt-12 grid gap-7 md:grid-cols-2 lg:grid-cols-3">
             {articles.map((article, index) => (
@@ -41,7 +44,7 @@ export default function NewsPage() {
                 <img
                   src={optimizedImageUrl(article.cover_image, 800)}
                   onError={({ currentTarget }) => restoreOriginalImage(currentTarget, article.cover_image)}
-                  alt=""
+                  alt={article.title}
                   loading={index === 0 ? 'eager' : 'lazy'}
                   fetchPriority={index === 0 ? 'high' : 'auto'}
                   decoding="async"
@@ -52,10 +55,10 @@ export default function NewsPage() {
                   <h2 className="mt-3 text-2xl font-black leading-tight">{article.title}</h2>
                   <p className="mt-3 line-clamp-3 text-sm leading-6 text-[#735c4d]">{article.excerpt}</p>
                   <p className="mt-5 text-xs text-[#735c4d]">
-                    {article.author} · {new Date(article.published_at!).toLocaleDateString('id-ID')}
+                    {article.author} · {new Date(article.published_at!).toLocaleDateString(en ? 'en-US' : 'id-ID')}
                   </p>
                   <Link to={`/news/${article.id}`} className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-orange-600 hover:text-orange-700">
-                    Baca selengkapnya <ArrowRight className="h-4 w-4" />
+                    {en ? 'Read more' : 'Baca selengkapnya'} <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
               </article>

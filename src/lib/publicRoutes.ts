@@ -10,6 +10,8 @@ export const publicPageLoaders = {
   portfolio: () => import('@/pages/PortfolioPage'),
   video: () => import('@/pages/VideoPage'),
   contact: () => import('@/pages/ContactPage'),
+  faq: () => import('@/pages/FAQPage'),
+  privacy: () => import('@/pages/PrivacyPage'),
   news: () => import('@/pages/NewsPage'),
   newsDetail: () => import('@/pages/NewsDetailPage'),
 } satisfies Record<string, PageLoader>;
@@ -21,6 +23,8 @@ const routeLoaders: Record<string, PageLoader> = {
   '/portfolio': publicPageLoaders.portfolio,
   '/video': publicPageLoaders.video,
   '/contact': publicPageLoaders.contact,
+  '/faq': publicPageLoaders.faq,
+  '/privacy': publicPageLoaders.privacy,
   '/news': publicPageLoaders.news,
 };
 

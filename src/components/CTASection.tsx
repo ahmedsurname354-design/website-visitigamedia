@@ -2,6 +2,8 @@ import { type FormEvent, useState } from 'react';
 import { m as motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { ArrowRight, Phone, Mail, MapPin } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useTranslation, type Lang } from '@/i18n';
 
 const submissionKeyName = 'visitiga_contact_submission_key';
 
@@ -13,28 +15,29 @@ function contactSubmissionKey() {
   return key;
 }
 
-function getContactErrorMessage(error: { code?: string; message?: string }) {
+function getContactErrorMessage(error: { code?: string; message?: string }, lang: Lang) {
+  const en = lang === 'en';
   if (error.message?.toLowerCase().includes('rate limit')) {
-    return 'Terlalu banyak percobaan. Tunggu sekitar 15 menit sebelum mengirim kembali.';
+    return en ? 'Too many attempts. Please wait about 15 minutes before submitting again.' : 'Terlalu banyak percobaan. Tunggu sekitar 15 menit sebelum mengirim kembali.';
   }
 
   if (error.code === '401' || error.message?.toLowerCase().includes('unauthorized')) {
-    return 'Layanan formulir menolak kredensial situs. Periksa kembali kunci publik Supabase pada layanan hosting.';
+    return en ? 'The form service rejected the site credentials. Please contact the website administrator.' : 'Layanan formulir menolak kredensial situs. Hubungi administrator website.';
   }
 
   if (error.code === '42501') {
-    return 'Pengiriman ditolak oleh konfigurasi keamanan formulir. Pastikan migrasi keamanan terbaru sudah dijalankan di Supabase.';
+    return en ? 'The submission was rejected by the form security configuration.' : 'Pengiriman ditolak oleh konfigurasi keamanan formulir.';
   }
 
   if (error.code === '23514') {
-    return 'Periksa kembali data: nama minimal 2 karakter, pesan minimal 10 karakter, dan nomor WhatsApp bila diisi harus valid.';
+    return en ? 'Check your details: the name must be at least 2 characters, the message at least 10 characters, and the WhatsApp number must be valid when provided.' : 'Periksa kembali data: nama minimal 2 karakter, pesan minimal 10 karakter, dan nomor WhatsApp bila diisi harus valid.';
   }
 
   if (error.message?.toLowerCase().includes('fetch')) {
-    return 'Tidak dapat terhubung ke layanan formulir. Periksa konfigurasi Supabase pada layanan hosting.';
+    return en ? 'Unable to connect to the form service. Please check your connection and try again.' : 'Tidak dapat terhubung ke layanan formulir. Periksa koneksi lalu coba lagi.';
   }
 
-  return 'Pesan belum terkirim. Periksa koneksi, lalu coba lagi.';
+  return en ? 'Your message was not sent. Check your connection and try again.' : 'Pesan belum terkirim. Periksa koneksi, lalu coba lagi.';
 }
 
 export default function CTASection({ variant = 'full' }: { variant?: 'compact' | 'full' }) {
@@ -43,6 +46,8 @@ export default function CTASection({ variant = 'full' }: { variant?: 'compact' |
   const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [formError, setFormError] = useState('');
   const compact = variant === 'compact';
+  const { lang, dict } = useTranslation();
+  const en = lang === 'en';
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -56,7 +61,7 @@ export default function CTASection({ variant = 'full' }: { variant?: 'compact' |
     try {
       const { supabase } = await import('@/lib/supabase');
       if (!supabase) {
-        setFormError('Konfigurasi formulir belum tersedia. Hubungi administrator website.');
+        setFormError(en ? 'The form is not currently configured. Please contact the website administrator.' : 'Konfigurasi formulir belum tersedia. Hubungi administrator website.');
         setFormStatus('error');
         return;
       }
@@ -71,7 +76,7 @@ export default function CTASection({ variant = 'full' }: { variant?: 'compact' |
 
       if (error) {
         console.error('Failed to submit contact message:', error.message);
-        setFormError(getContactErrorMessage(error));
+        setFormError(getContactErrorMessage(error, lang));
         setFormStatus('error');
         return;
       }
@@ -80,7 +85,7 @@ export default function CTASection({ variant = 'full' }: { variant?: 'compact' |
       setFormStatus('success');
     } catch (error) {
       console.error('Unexpected error while submitting contact message:', error);
-      setFormError(getContactErrorMessage(error instanceof Error ? error : {}));
+      setFormError(getContactErrorMessage(error instanceof Error ? error : {}, lang));
       setFormStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -104,12 +109,12 @@ export default function CTASection({ variant = 'full' }: { variant?: 'compact' |
 
           <div className="relative">
             {compact ? (
-              <h2 className="text-white font-bold text-3xl md:text-5xl leading-tight tracking-tight max-w-2xl mx-auto">Siap Membuat Merek Anda Lebih Bersinar?</h2>
+              <h2 className="text-white font-bold text-3xl md:text-5xl leading-tight tracking-tight max-w-2xl mx-auto">{dict.cta.title}</h2>
             ) : (
-              <h1 className="text-white font-bold text-3xl md:text-5xl leading-tight tracking-tight max-w-2xl mx-auto">Siap Membuat Merek Anda Lebih Bersinar?</h1>
+              <h1 className="text-white font-bold text-3xl md:text-5xl leading-tight tracking-tight max-w-2xl mx-auto">{dict.cta.title}</h1>
             )}
             <p className="text-white/80 text-lg mt-4 max-w-xl mx-auto">
-              Dapatkan konsultasi dan penawaran gratis. Tim kami siap mewujudkan kebutuhan visual Anda.
+              {dict.cta.subtitle}
             </p>
 
             <div className="flex flex-col items-stretch justify-center gap-3 mt-8 min-[440px]:flex-row min-[440px]:items-center sm:mt-10">
@@ -120,14 +125,14 @@ export default function CTASection({ variant = 'full' }: { variant?: 'compact' |
                 className="group flex min-h-12 items-center justify-center gap-2 bg-black hover:bg-orange-950 text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
               >
                 <Phone className="w-4 h-4" />
-                Hubungi Kami
+                {dict.cta.callNow}
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
               </a>
               <a
                 href="mailto:marcomm@visitiga.com?subject=Konsultasi%20Visitiga%20Media"
                 className="flex min-h-12 items-center justify-center bg-white/20 hover:bg-white/30 text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 hover:-translate-y-0.5"
               >
-                Kirim Email
+                {dict.cta.emailUs}
               </a>
             </div>
 
@@ -136,10 +141,10 @@ export default function CTASection({ variant = 'full' }: { variant?: 'compact' |
               className="mt-8 grid gap-4 rounded-2xl border border-white/15 bg-black/10 p-4 text-left sm:mt-10 sm:grid-cols-2 sm:rounded-3xl sm:p-6 max-w-3xl mx-auto"
             >
               <div className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
-                <label htmlFor="contact-company">Perusahaan<input id="contact-company" name="company" type="text" tabIndex={-1} autoComplete="off" /></label>
+                <label htmlFor="contact-company">{en ? 'Company' : 'Perusahaan'}<input id="contact-company" name="company" type="text" tabIndex={-1} autoComplete="off" /></label>
               </div>
               <div>
-                <label htmlFor="contact-name" className="mb-2 block text-sm font-medium text-white">Nama</label>
+                <label htmlFor="contact-name" className="mb-2 block text-sm font-medium text-white">{en ? 'Name' : 'Nama'}</label>
                 <input
                   id="contact-name"
                   name="name"
@@ -147,7 +152,7 @@ export default function CTASection({ variant = 'full' }: { variant?: 'compact' |
                   minLength={2}
                   maxLength={120}
                   autoComplete="name"
-                  placeholder="Nama Anda"
+                  placeholder={en ? 'Your name' : 'Nama Anda'}
                   className="contact-field w-full rounded-xl px-4 py-3 outline-none transition"
                 />
               </div>
@@ -165,7 +170,7 @@ export default function CTASection({ variant = 'full' }: { variant?: 'compact' |
                 />
               </div>
               <div>
-                <label htmlFor="contact-phone" className="mb-2 block text-sm font-medium text-white">Nomor WhatsApp <span className="text-white/60">(opsional)</span></label>
+                <label htmlFor="contact-phone" className="mb-2 block text-sm font-medium text-white">{en ? 'WhatsApp number' : 'Nomor WhatsApp'} <span className="text-white/60">({en ? 'optional' : 'opsional'})</span></label>
                 <input
                   id="contact-phone"
                   name="phone"
@@ -178,7 +183,7 @@ export default function CTASection({ variant = 'full' }: { variant?: 'compact' |
                 />
               </div>
               <div className="sm:col-span-2">
-                <label htmlFor="contact-message" className="mb-2 block text-sm font-medium text-white">Kebutuhan Anda</label>
+                <label htmlFor="contact-message" className="mb-2 block text-sm font-medium text-white">{en ? 'Your requirements' : 'Kebutuhan Anda'}</label>
                 <textarea
                   id="contact-message"
                   name="message"
@@ -186,19 +191,23 @@ export default function CTASection({ variant = 'full' }: { variant?: 'compact' |
                   minLength={10}
                   maxLength={5000}
                   rows={4}
-                  placeholder="Ceritakan kebutuhan LED display Anda..."
+                  placeholder={en ? 'Tell us about your LED display requirements...' : 'Ceritakan kebutuhan LED display Anda...'}
                   className="contact-field w-full resize-y rounded-xl px-4 py-3 outline-none transition"
                 />
               </div>
+              <label className="sm:col-span-2 flex items-start gap-3 text-sm leading-6 text-white">
+                <input type="checkbox" name="privacyConsent" required className="mt-1 size-4 shrink-0 accent-orange-950" />
+                <span>{en ? 'I agree that my information may be used to respond to this request as described in the ' : 'Saya menyetujui penggunaan informasi saya untuk menanggapi permintaan ini sebagaimana dijelaskan dalam '}<Link to="/privacy" className="font-semibold underline underline-offset-2">{en ? 'Privacy Policy' : 'Kebijakan Privasi'}</Link>.</span>
+              </label>
               <div className="sm:col-span-2 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
                 <button
                   type="submit"
                   disabled={isSubmitting}
                   className="min-h-12 rounded-full bg-white px-6 py-3 font-semibold text-orange-600 transition hover:bg-orange-50 disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  {isSubmitting ? 'Mengirim...' : 'Kirim Permintaan'}
+                  {isSubmitting ? (en ? 'Sending...' : 'Mengirim...') : (en ? 'Send Request' : 'Kirim Permintaan')}
                 </button>
-                {formStatus === 'success' && <p role="status" className="text-sm text-white">Pesan berhasil dikirim. Terima kasih!</p>}
+                {formStatus === 'success' && <p role="status" className="text-sm text-white">{en ? 'Your message was sent. Thank you!' : 'Pesan berhasil dikirim. Terima kasih!'}</p>}
                 {formStatus === 'error' && <p role="alert" className="text-sm text-white">{formError}</p>}
               </div>
             </form>}
@@ -235,16 +244,16 @@ export default function CTASection({ variant = 'full' }: { variant?: 'compact' |
                 <div className="relative h-44 bg-black">
                   <iframe
                     src="https://www.google.com/maps?q=Jl.+Setra+Dago+Barat+No.9+Antapani+Bandung&output=embed"
-                    title="Peta lokasi kantor"
+                    title={en ? 'Office location map' : 'Peta lokasi kantor'}
                     className="absolute inset-0 h-full w-full border-0"
                     loading="lazy"
                   />
                 </div>
                 <div className="bg-black/90 p-4">
-                  <p className="text-[11px] uppercase tracking-[0.3em] text-white/60">Lokasi Kantor Pusat</p>
+                  <p className="text-[11px] uppercase tracking-[0.3em] text-white/60">{en ? 'Head Office Location' : 'Lokasi Kantor Pusat'}</p>
                   <p className="mt-3 text-white font-semibold text-sm">Jl. Setra Dago Barat No.9 Antapani, Bandung</p>
                   <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-orange-500 px-3 py-2 text-sm font-semibold text-black transition-colors duration-300 group-hover:bg-orange-400">
-                    Buka di Peta
+                    {en ? 'Open Map' : 'Buka di Peta'}
                   </p>
                 </div>
               </a>

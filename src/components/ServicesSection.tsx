@@ -6,7 +6,7 @@ import type { ServiceContent } from '@/types/admin';
 
 export default function ServicesSection({ content }: { content?: ServiceContent | null }) {
   const { ref, isInView, reducedMotion } = useScrollReveal();
-  const { dict } = useTranslation();
+  const { dict, lang } = useTranslation();
   const services = (content?.cards ?? dict.services.cards).map((card, index) => ({
     ...card,
     desc: 'desc' in card ? card.desc : card.description,
@@ -23,10 +23,10 @@ export default function ServicesSection({ content }: { content?: ServiceContent 
           transition={{ duration: reducedMotion ? 0 : 0.32 }}
           className="max-w-2xl mb-10 sm:mb-16"
         >
-          <p className="text-orange-500 text-sm font-semibold tracking-[0.3em] uppercase mb-4">{content?.eyebrow ?? 'Layanan Kami'}</p>
+          <p className="text-orange-500 text-sm font-semibold tracking-[0.3em] uppercase mb-4">{content?.eyebrow ?? dict.services.sectionLabel}</p>
           <h1 className="text-white font-bold text-4xl md:text-5xl leading-tight tracking-tight">
-            {content?.heading ?? 'Solusi LED Terbaik'} <br />
-            <span className="text-orange-500">{content?.heading_accent ?? 'untuk Setiap Kebutuhan'}</span>
+            {content?.heading ?? (lang === 'id' ? 'Solusi LED Terbaik' : 'The Best LED Solutions')} <br />
+            <span className="text-orange-500">{content?.heading_accent ?? (lang === 'id' ? 'untuk Setiap Kebutuhan' : 'for Every Need')}</span>
           </h1>
         </motion.div>
 
