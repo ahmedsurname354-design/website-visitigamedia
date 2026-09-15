@@ -4,6 +4,7 @@ import { useScrollReveal } from '@/hooks/useScrollReveal';
 import ProjectDetail, { type ProjectDetailData } from '@/components/ProjectDetail';
 import { useTranslation } from '@/i18n';
 import { listPublicPortfolios } from '@/lib/adminApi';
+import { getPrerenderData } from '@/lib/prerenderData';
 import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
 import type { Portfolio } from '@/types/admin';
 
@@ -567,7 +568,7 @@ export default function PortfolioSection() {
   const [selectedCategory, setSelectedCategory] = useState('Lihat semua');
   // null means Supabase is unavailable; an empty array means the admin has
   // intentionally removed every project, so do not resurrect static content.
-  const [remoteProjects, setRemoteProjects] = useState<Portfolio[] | null>(null);
+  const [remoteProjects, setRemoteProjects] = useState<Portfolio[] | null>(() => getPrerenderData()?.portfolios ?? null);
   const [selectedProject, setSelectedProject] = useState<{ img: string; title: string; category: string; client?: string; description?: string; overview?: string; challenge?: string; solution?: string } | null>(null);
   const { ref, isInView, reducedMotion } = useScrollReveal();
   const { lang } = useTranslation();

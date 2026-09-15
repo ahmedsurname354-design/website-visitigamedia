@@ -9,6 +9,7 @@ export default class AppErrorBoundary extends Component<{ children: ReactNode },
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     console.error('Application render failed:', error, info.componentStack);
+    void import('@/lib/observability').then(({ reportClientError }) => reportClientError(new Error(`${error.message}\n${info.componentStack}`), 'react-boundary'));
   }
 
   render() {

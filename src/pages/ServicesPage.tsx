@@ -3,9 +3,10 @@ import ServicesSection from '@/components/ServicesSection';
 import WebServiceSection from '@/components/WebServiceSection';
 import { getServiceContent } from '@/lib/adminApi';
 import type { ServiceContent } from '@/types/admin';
+import { getPrerenderData } from '@/lib/prerenderData';
 
 export default function ServicesPage() {
-  const [content, setContent] = useState<ServiceContent | null>(null);
+  const [content, setContent] = useState<ServiceContent | null>(() => getPrerenderData()?.serviceContent ?? null);
   const [error, setError] = useState('');
 
   useEffect(() => {

@@ -10,6 +10,7 @@ import { useTranslation } from '@/i18n';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { absoluteUrl } from '@/lib/seo';
 import LightReveal from '@/components/LightReveal';
+import { getPrerenderData } from '@/lib/prerenderData';
 
 const MAX_RELATED_ARTICLES = 6;
 
@@ -30,8 +31,11 @@ export default function NewsDetailPage() {
   const { id } = useParams();
   const { lang } = useTranslation();
   const en = lang === 'en';
-  const [article, setArticle] = useState<NewsRecord | null | undefined>(undefined);
-  const [allArticles, setAllArticles] = useState<NewsRecord[]>([]);
+  const [initialData] = useState(getPrerenderData);
+  const bootstrapArticle = initialData?.article;
+  const initialArticle = bootstrapArticle?.id === id ? bootstrapArticle : undefined;
+  const [article, setArticle] = useState<NewsRecord | null | undefined>(initialArticle);
+  const [allArticles, setAllArticles] = useState<NewsRecord[]>(initialData?.news ?? []);
   const [loadError, setLoadError] = useState('');
   const [relatedError, setRelatedError] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -63,7 +67,7 @@ export default function NewsDetailPage() {
         setArticle(null);
         return;
       }
-      setArticle(undefined);
+      if (!initialArticle) setArticle(undefined);
       setLoadError('');
       setRelatedError(false);
       const [articleResult, relatedResult] = await Promise.allSettled([getPublicNews(id), listPublicNews()]);
@@ -86,7 +90,7 @@ export default function NewsDetailPage() {
 
     void loadPage();
     return () => { active = false; };
-  }, [en, id]);
+  }, [en, id, initialArticle]);
 
   const relatedArticles = useMemo(
     () => (article ? getRelatedArticles(article, allArticles) : []),

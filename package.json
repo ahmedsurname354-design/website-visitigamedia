@@ -10,6 +10,9 @@
     "dev": "vite",
     "build:app": "vite build",
     "build": "npm run build:app && node scripts/prerender.mjs",
+    "budget": "node scripts/check-performance-budget.mjs",
+    "test:e2e": "playwright test",
+    "test:lighthouse": "lhci autorun",
     "seo:validate": "node scripts/prerender.mjs",
     "deploy:cloudflare": "npm run build && wrangler pages deploy --project-name visitiga-media --branch main",
     "lint": "eslint .",
@@ -29,10 +32,13 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.18.2",
-    "summernote": "^0.9.1"
+    "summernote": "^0.9.1",
+    "web-vitals": "^6.2.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
+    "@lhci/cli": "^0.15.1",
+    "@playwright/test": "^1.63.0",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
     "@types/jquery": "^4.0.1",

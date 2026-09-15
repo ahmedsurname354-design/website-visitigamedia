@@ -6,12 +6,14 @@ import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
 import type { NewsRecord } from '@/types/admin';
 import { useTranslation } from '@/i18n';
 import LightReveal from '@/components/LightReveal';
+import { getPrerenderData } from '@/lib/prerenderData';
 
 export default function NewsPage() {
   const { lang } = useTranslation();
   const en = lang === 'en';
-  const [articles, setArticles] = useState<NewsRecord[]>([]);
-  const [loading, setLoading] = useState(true);
+  const initialNews = getPrerenderData()?.news;
+  const [articles, setArticles] = useState<NewsRecord[]>(initialNews ?? []);
+  const [loading, setLoading] = useState(!initialNews);
   const [error, setError] = useState('');
 
   useEffect(() => {

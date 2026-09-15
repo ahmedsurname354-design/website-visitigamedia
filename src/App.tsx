@@ -118,6 +118,12 @@ function App() {
     document.documentElement.style.colorScheme = theme;
   }, []);
 
+  useEffect(() => {
+    let dispose: (() => void) | undefined;
+    void import('@/lib/observability').then(({ initializeObservability }) => { dispose = initializeObservability(); });
+    return () => dispose?.();
+  }, []);
+
 
   return (
     <LazyMotion features={domAnimation}>

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ArrowDownRight, ArrowUpRight, CalendarDays, Eye, LoaderCircle, MousePointerClick, Users } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import ObservabilityPanel from '@/components/admin/ObservabilityPanel';
 
 type EventRow = { visitor_id: string; created_at: string };
 type LeadRow = { created_at: string };
@@ -163,6 +164,7 @@ export default function DashboardPage() {
       </div>
       {summary.chart.length > 0 ? <ViewsLineChart items={summary.chart} /> : <div className="grid h-72 place-items-center text-sm text-slate-600">{loading ? 'Memuat grafik...' : 'Data grafik belum tersedia.'}</div>}
     </section>
+    <ObservabilityPanel />
   </div>;
 }
 

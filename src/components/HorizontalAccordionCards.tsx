@@ -1,6 +1,7 @@
 import { useEffect, useState, type CSSProperties } from 'react';
 import { listPublicProducts } from '@/lib/adminApi';
 import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
+import { getPrerenderData } from '@/lib/prerenderData';
 
 type AccordionItem = {
   title: string;
@@ -64,8 +65,9 @@ const fallbackItems: AccordionItem[] = [
 ];
 
 export default function HorizontalAccordionCards() {
+  const initialProducts = getPrerenderData()?.products;
   const [activeIndex, setActiveIndex] = useState(0);
-  const [items, setItems] = useState<AccordionItem[]>(fallbackItems);
+  const [items, setItems] = useState<AccordionItem[]>(() => initialProducts?.length ? initialProducts.map((product) => ({ title: product.name, label: product.label, description: product.description, image: product.image_url, color: product.color, accent: product.accent })) : fallbackItems);
   const [requestedImages, setRequestedImages] = useState(() => new Set([0]));
 
   const activate = (index: number) => {

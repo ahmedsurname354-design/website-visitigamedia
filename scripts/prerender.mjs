@@ -14,24 +14,50 @@ const supabaseUrl = env.VITE_SUPABASE_URL?.replace(/\/$/, '');
 const supabaseKey = env.VITE_SUPABASE_PUBLISHABLE_KEY;
 const requireNews = env.SEO_REQUIRE_NEWS === 'true';
 
-async function getPublishedArticles() {
+async function fetchPublicTable(table, select = '*', filters = {}) {
   if (!supabaseUrl || !supabaseKey) {
-    if (requireNews) throw new Error('SEO_REQUIRE_NEWS=true, tetapi kredensial Supabase tidak tersedia.');
-    console.warn('[seo] Kredensial Supabase tidak tersedia; prerender lokal hanya mencakup halaman statis.');
-    return [];
+    return null;
   }
-  const query = new URL(`${supabaseUrl}/rest/v1/news`);
-  query.searchParams.set('select', 'id,published_at,updated_at');
-  query.searchParams.set('published_at', 'not.is.null');
-  query.searchParams.set('order', 'published_at.desc');
+  const query = new URL(`${supabaseUrl}/rest/v1/${table}`);
+  query.searchParams.set('select', select);
+  for (const [key, value] of Object.entries(filters)) query.searchParams.set(key, value);
   const response = await fetch(query, { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` } });
   if (!response.ok) {
-    const message = `Supabase mengembalikan ${response.status} saat mengambil berita untuk SEO.`;
+    const message = `Supabase mengembalikan ${response.status} saat mengambil ${table} untuk prerender.`;
     if (requireNews) throw new Error(message);
-    console.warn(`[seo] ${message} Halaman statis tetap diproses.`);
-    return [];
+    console.warn(`[seo] ${message}`);
+    return null;
   }
   return response.json();
+}
+
+async function getBuildContent() {
+  if (!supabaseUrl || !supabaseKey) {
+    if (requireNews) throw new Error('SEO_REQUIRE_NEWS=true, tetapi kredensial Supabase tidak tersedia.');
+    console.warn('[seo] Kredensial Supabase tidak tersedia; prerender lokal memakai fallback statis.');
+    return { news: [], portfolios: null, products: null, serviceContent: null, catalogue: null };
+  }
+  const [news, portfolios, products, serviceRows, catalogueRows] = await Promise.all([
+    fetchPublicTable('news', '*', { published_at: 'not.is.null', order: 'published_at.desc' }),
+    fetchPublicTable('portfolios', '*', { order: 'created_at.desc' }),
+    fetchPublicTable('products', '*', { order: 'sort_order.asc,created_at.asc' }),
+    fetchPublicTable('service_content', '*', { id: 'eq.1' }),
+    fetchPublicTable('product_catalogue', '*', { id: 'eq.1' }),
+  ]);
+  return {
+    news: news ?? [], portfolios, products,
+    serviceContent: serviceRows?.[0] ?? null,
+    catalogue: catalogueRows?.[0] ?? null,
+  };
+}
+
+function dataForRoute(path, content) {
+  if (path === '/news') return { route: path, news: content.news };
+  if (path.startsWith('/news/')) return { route: path, news: content.news, article: content.news.find(({ id }) => path === `/news/${id}`) ?? null };
+  if (path === '/services') return { route: path, serviceContent: content.serviceContent };
+  if (path === '/product') return { route: path, products: content.products ?? undefined, catalogue: content.catalogue };
+  if (path === '/portfolio') return { route: path, portfolios: content.portfolios ?? undefined };
+  return { route: path };
 }
 
 async function waitForServer(url, child) {
@@ -46,7 +72,7 @@ async function waitForServer(url, child) {
   throw new Error('Server preview tidak siap dalam 20 detik.');
 }
 
-async function snapshot(page, path) {
+async function snapshot(page, path, content) {
   const response = await page.goto(`http://127.0.0.1:4173${path}`, { waitUntil: 'domcontentloaded' });
   if (!response?.ok()) throw new Error(`${path} mengembalikan status ${response?.status() ?? 'tanpa respons'}.`);
   if (path.startsWith('/news/')) await page.waitForSelector('article h1', { timeout: 15_000 });
@@ -61,14 +87,27 @@ async function snapshot(page, path) {
     const canonical = document.querySelector('link[rel="canonical"]');
     return Boolean(document.title && canonical && document.querySelector('meta[name="description"]'));
   });
-  await page.evaluate(() => {
-    document.querySelectorAll('[style]').forEach((element) => {
-      const htmlElement = /** @type {HTMLElement} */ (element);
-      if (htmlElement.style.opacity === '0') htmlElement.style.opacity = '1';
-      if (htmlElement.style.transform) htmlElement.style.transform = 'none';
-    });
+  const routeData = dataForRoute(path, content);
+  await page.evaluate((data) => {
     document.documentElement.dataset.prerendered = 'true';
-  });
+    const snapshot = document.getElementById('root');
+    if (!snapshot) throw new Error('Root prerender tidak ditemukan.');
+    snapshot.id = 'prerender-content';
+    const clientRoot = document.createElement('div');
+    clientRoot.id = 'root';
+    snapshot.before(clientRoot);
+    const swapStyle = document.createElement('style');
+    swapStyle.id = 'prerender-swap-style';
+    swapStyle.textContent = '#root{display:none}html[data-app-ready="true"] #root{display:block}';
+    document.head.appendChild(swapStyle);
+    const existing = document.getElementById('visitiga-prerender-data');
+    existing?.remove();
+    const script = document.createElement('script');
+    script.id = 'visitiga-prerender-data';
+    script.type = 'application/json';
+    script.textContent = JSON.stringify(data).replace(/</g, '\\u003c');
+    document.head.appendChild(script);
+  }, routeData);
   const html = `<!doctype html>\n${await page.locator('html').evaluate((element) => element.outerHTML)}`;
   const output = path === '/' ? join(distDir, 'index.html') : join(distDir, path.slice(1), 'index.html');
   await mkdir(dirname(output), { recursive: true });
@@ -87,7 +126,8 @@ async function validateOutput(routes) {
 }
 
 async function main() {
-  const articles = await getPublishedArticles();
+  const content = await getBuildContent();
+  const articles = content.news;
   const articleRoutes = articles.map(({ id }) => `/news/${id}`);
   const routes = [...STATIC_ROUTES, ...articleRoutes];
   const viteBin = join(projectRoot, 'node_modules', 'vite', 'bin', 'vite.js');
@@ -97,11 +137,26 @@ async function main() {
     await waitForServer('http://127.0.0.1:4173/', server);
     browser = await chromium.launch({ headless: true });
     const page = await browser.newPage();
+    await page.addInitScript((allContent) => {
+      const path = window.location.pathname;
+      const data = path === '/news'
+        ? { route: path, news: allContent.news }
+        : path.startsWith('/news/')
+          ? { route: path, news: allContent.news, article: allContent.news.find(({ id }) => path === `/news/${id}`) ?? null }
+          : path === '/services'
+            ? { route: path, serviceContent: allContent.serviceContent }
+            : path === '/product'
+              ? { route: path, products: allContent.products ?? undefined, catalogue: allContent.catalogue }
+              : path === '/portfolio'
+                ? { route: path, portfolios: allContent.portfolios ?? undefined }
+                : { route: path };
+      window.__VISITIGA_PRERENDER_DATA__ = data;
+    }, content);
     for (const path of routes.filter((route) => route !== '/')) {
-      await snapshot(page, path);
+      await snapshot(page, path, content);
       console.log(`[seo] prerendered ${path}`);
     }
-    await snapshot(page, '/');
+    await snapshot(page, '/', content);
     console.log('[seo] prerendered /');
   } finally {
     await browser?.close();
