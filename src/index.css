@@ -557,6 +557,10 @@ img, video { max-width: 100%; }
 .site-footer .border-white\/5 { border-color: rgb(255 255 255 / .12) !important; }
 .site-footer .bg-white\/5 { background-color: rgb(255 255 255 / .08) !important; }
 .editorial-section--dark .editorial-eyebrow { color: #ffab7d; }
+.public-site .text-orange-500,
+.public-site .text-orange-600 { color: #a83e16 !important; }
+.public-site .bg-orange-500.text-white,
+.public-site .bg-orange-600.text-white { color: #fff !important; background-color: #a83e16 !important; }
 .theme-light .theme-keep-light .contact-field {
   border: 1px solid rgb(255 255 255 / .5) !important;
   color: #3f2b20 !important;

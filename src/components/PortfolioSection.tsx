@@ -707,9 +707,9 @@ export default function PortfolioSection() {
                 <p className="portfolio-card__category text-orange-500 text-xs font-semibold tracking-widest uppercase mb-1">
                   {proj.category}
                 </p>
-                <h3 className="portfolio-card__title text-white font-bold text-xl">
+                <h2 className="portfolio-card__title text-white font-bold text-xl">
                   {proj.title}
-                </h3>
+                </h2>
               </div>
             </motion.button>
           ))}
