@@ -13,6 +13,7 @@ export interface PrerenderData {
 declare global {
   interface Window {
     __VISITIGA_PRERENDER_DATA__?: PrerenderData;
+    __VISITIGA_PRERENDER_MODE__?: boolean;
   }
 }
 

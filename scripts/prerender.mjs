@@ -138,6 +138,7 @@ async function main() {
     browser = await chromium.launch({ headless: true });
     const page = await browser.newPage();
     await page.addInitScript((allContent) => {
+      window.__VISITIGA_PRERENDER_MODE__ = true;
       const path = window.location.pathname;
       const data = path === '/news'
         ? { route: path, news: allContent.news }

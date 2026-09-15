@@ -9,7 +9,9 @@ function subscribe(onChange: () => void) {
 }
 
 function getSnapshot() {
-  return window.matchMedia(reducedQuery).matches;
+  return window.__VISITIGA_PRERENDER_MODE__ === true
+    || document.documentElement.dataset.prerendered === 'true'
+    || window.matchMedia(reducedQuery).matches;
 }
 
 export function useMotionPolicy() {
