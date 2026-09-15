@@ -573,7 +573,11 @@ export default function PortfolioSection() {
   const { ref, isInView, reducedMotion } = useScrollReveal();
   const { lang } = useTranslation();
 
-  useEffect(() => { void listPublicPortfolios().then(setRemoteProjects).catch(() => setRemoteProjects([])); }, []);
+  useEffect(() => {
+    // Keep the prerender/bootstrap snapshot when a background refresh fails.
+    // A successful empty response still intentionally clears the public list.
+    void listPublicPortfolios().then(setRemoteProjects).catch(() => undefined);
+  }, []);
   const displayedProjects = remoteProjects !== null
     ? remoteProjects.map((project) => ({ img: project.image_url, title: project.title, category: project.category, client: project.client, description: project.description, overview: project.overview, challenge: project.challenge, solution: project.solution }))
     : projects;
