@@ -1,8 +1,8 @@
 module.exports = {
   ci: {
     collect: {
-      startServerCommand: 'npm run preview -- --host 127.0.0.1 --port 4173',
-      startServerReadyPattern: 'Local:',
+      startServerCommand: 'node scripts/serve-dist.mjs',
+      startServerReadyPattern: 'Static build:',
       url: [
         'http://127.0.0.1:4173/',
         'http://127.0.0.1:4173/product',
