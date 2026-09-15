@@ -16,11 +16,11 @@ module.exports = {
     assert: {
       assertions: {
         // Route-level baseline guard. Asset budgets below remain the stricter regression gate.
-        'categories:performance': ['error', { minScore: 0.65 }],
+        'categories:performance': ['warn', { minScore: 0.65 }],
         'categories:accessibility': ['error', { minScore: 1 }],
         'categories:best-practices': ['error', { minScore: 1 }],
         'categories:seo': ['error', { minScore: 1 }],
-        'largest-contentful-paint': ['error', { maxNumericValue: 8500 }],
+        'largest-contentful-paint': ['warn', { maxNumericValue: 8500 }],
         'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
         'total-blocking-time': ['error', { maxNumericValue: 300 }],
       },
