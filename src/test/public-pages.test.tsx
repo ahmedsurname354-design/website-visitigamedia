@@ -16,6 +16,10 @@ describe('public page essentials', () => {
     await waitFor(() => expect(document.title).toContain('FAQ'));
     expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute('href', expect.stringMatching(/\/faq$/));
     expect(document.querySelector('meta[name="description"]')).toHaveAttribute('content', expect.stringContaining('LED'));
+    expect(document.querySelector('meta[property="og:site_name"]')).toHaveAttribute('content', 'Visitiga Media');
+    expect(document.querySelector('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
+    const schemas = JSON.parse(document.querySelector('#page-structured-data')?.textContent || 'null');
+    expect(schemas).toEqual(expect.arrayContaining([expect.objectContaining({ '@type': 'FAQPage' }), expect.objectContaining({ '@type': 'BreadcrumbList' })]));
   });
 
   it('marks unknown routes as noindex and renders recovery links', async () => {

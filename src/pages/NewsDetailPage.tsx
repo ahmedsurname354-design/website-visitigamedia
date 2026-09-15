@@ -8,6 +8,7 @@ import { getPublicNews, listPublicNews } from '@/lib/adminApi';
 import type { NewsRecord } from '@/types/admin';
 import { useTranslation } from '@/i18n';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { absoluteUrl } from '@/lib/seo';
 import LightReveal from '@/components/LightReveal';
 
 const MAX_RELATED_ARTICLES = 6;
@@ -41,7 +42,17 @@ export default function NewsDetailPage() {
     pathname: id ? `/news/${id}` : '/news',
     image: article?.cover_image,
     type: article ? 'article' : 'website',
-    structuredData: article ? { '@context': 'https://schema.org', '@type': 'Article', headline: article.title, description: article.excerpt, image: article.cover_image, datePublished: article.published_at, author: { '@type': 'Person', name: article.author } } : undefined,
+    imageAlt: article?.title,
+    lang,
+    noIndex: !article,
+    structuredData: article ? [
+      { '@context': 'https://schema.org', '@type': 'Article', headline: article.title, description: article.excerpt, image: article.cover_image.startsWith('http') ? article.cover_image : absoluteUrl(article.cover_image), datePublished: article.published_at, dateModified: article.updated_at, mainEntityOfPage: absoluteUrl(`/news/${article.id}`), author: { '@type': 'Person', name: article.author }, publisher: { '@type': 'Organization', name: 'Visitiga Media', logo: { '@type': 'ImageObject', url: absoluteUrl('/social-preview.png') } } },
+      { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+        { '@type': 'ListItem', position: 1, name: en ? 'Home' : 'Beranda', item: absoluteUrl('/') },
+        { '@type': 'ListItem', position: 2, name: en ? 'News' : 'Berita', item: absoluteUrl('/news') },
+        { '@type': 'ListItem', position: 3, name: article.title, item: absoluteUrl(`/news/${article.id}`) },
+      ] },
+    ] : undefined,
   });
 
   useEffect(() => {
