@@ -8,9 +8,10 @@ import './index.css';
 // eslint-disable-next-line react-refresh/only-export-components
 function RevealClientApp({ children }: { children: ReactNode }) {
   useLayoutEffect(() => {
-    document.documentElement.dataset.appReady = 'true';
-    document.getElementById('prerender-content')?.remove();
+    const snapshot = document.getElementById('prerender-content');
+    if (snapshot) snapshot.replaceWith(root);
     document.getElementById('prerender-swap-style')?.remove();
+    document.documentElement.dataset.appReady = 'true';
     delete document.documentElement.dataset.prerendered;
 
     const cleanup = window.setTimeout(() => {

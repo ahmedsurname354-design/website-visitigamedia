@@ -98,7 +98,7 @@ async function snapshot(page, path, content) {
     snapshot.before(clientRoot);
     const swapStyle = document.createElement('style');
     swapStyle.id = 'prerender-swap-style';
-    swapStyle.textContent = '#root{display:none}html[data-app-ready="true"] #root{display:block}';
+    swapStyle.textContent = '#root{display:none}';
     document.head.appendChild(swapStyle);
     const existing = document.getElementById('visitiga-prerender-data');
     existing?.remove();
