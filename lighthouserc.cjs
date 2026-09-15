@@ -11,7 +11,7 @@ module.exports = {
         process.env.LHCI_ARTICLE_URL || 'http://127.0.0.1:4173/news',
       ],
       numberOfRuns: 1,
-      settings: { chromeFlags: '--headless --no-sandbox', formFactor: 'mobile', throttlingMethod: 'devtools' },
+      settings: { chromeFlags: '--headless --no-sandbox', formFactor: 'mobile', throttlingMethod: 'simulate' },
     },
     assert: {
       assertions: {
