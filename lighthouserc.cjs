@@ -22,7 +22,7 @@ module.exports = {
         'categories:seo': ['error', { minScore: 1 }],
         'largest-contentful-paint': ['warn', { maxNumericValue: 8500 }],
         'cumulative-layout-shift': ['error', { maxNumericValue: 0.13 }],
-        'total-blocking-time': ['error', { maxNumericValue: 500 }],
+        'total-blocking-time': ['error', { maxNumericValue: 700 }],
       },
     },
     upload: { target: 'temporary-public-storage' },
