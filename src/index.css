@@ -8,7 +8,7 @@
   --editorial-paper: #fbf8f3;
   --editorial-sand: #f1eae1;
   --editorial-line: #ded3c7;
-  --editorial-accent: #a83e16;
+  --editorial-accent: #dc642b;
   --editorial-accent-dark: #a83e16;
   --editorial-radius: 1.25rem;
   --editorial-shadow: 0 24px 70px rgb(48 34 24 / .1);
@@ -53,7 +53,7 @@ body {
 .editorial-button svg { width: 1rem; height: 1rem; }
 .editorial-button:hover { transform: translateY(-2px); }
 .editorial-button--primary { color: #fff !important; background: var(--editorial-accent); }
-.editorial-button--primary:hover { background: #873011; }
+.editorial-button--primary:hover { background: #ed7137; }
 .editorial-button--ghost { border: 1px solid rgb(255 255 255 / .4); color: #fff; background: rgb(255 255 255 / .07); backdrop-filter: blur(8px); }
 .editorial-button--ghost > span { width: auto !important; height: auto !important; border: 0 !important; }
 .editorial-button--outline { border: 1px solid var(--editorial-ink); color: var(--editorial-ink); }
@@ -139,7 +139,6 @@ body {
 .client-proof { margin-top: clamp(5rem, 9vw, 8rem); padding-block: 2rem; border-top: 1px solid var(--editorial-line); }
 .client-proof > p { color: #8d8075; font-size: .68rem; font-weight: 700; letter-spacing: .16em; text-align: center; text-transform: uppercase; }
 .client-proof > p { color: #6f6258; }
-.stats-editorial__item > p.text-orange-500 { color: #a83e16 !important; }
 .site-footer .text-white\/40 { color: rgb(255 255 255 / .68); }
 .client-proof > div { display: grid; grid-template-columns: repeat(6, 1fr); align-items: center; gap: 2rem; margin-top: 1.8rem; }
 .client-proof img { width: 100%; max-width: 7rem; max-height: 3.2rem; margin: auto; object-fit: contain; filter: grayscale(1); opacity: .65; }
@@ -556,11 +555,6 @@ img, video { max-width: 100%; }
 .site-footer .text-white { color: #fffaf5 !important; }
 .site-footer .border-white\/5 { border-color: rgb(255 255 255 / .12) !important; }
 .site-footer .bg-white\/5 { background-color: rgb(255 255 255 / .08) !important; }
-.editorial-section--dark .editorial-eyebrow { color: #ffab7d; }
-.public-site .text-orange-500,
-.public-site .text-orange-600 { color: #a83e16 !important; }
-.public-site .bg-orange-500.text-white,
-.public-site .bg-orange-600.text-white { color: #fff !important; background-color: #a83e16 !important; }
 .theme-light .theme-keep-light .contact-field {
   border: 1px solid rgb(255 255 255 / .5) !important;
   color: #3f2b20 !important;
