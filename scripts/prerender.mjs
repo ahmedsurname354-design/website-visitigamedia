@@ -72,7 +72,7 @@ async function waitForServer(url, child) {
   throw new Error('Server preview tidak siap dalam 20 detik.');
 }
 
-async function snapshot(page, path, content) {
+async function snapshot(page, path, content, outputOverride) {
   const response = await page.goto(`http://127.0.0.1:4173${path}`, { waitUntil: 'domcontentloaded' });
   if (!response?.ok()) throw new Error(`${path} mengembalikan status ${response?.status() ?? 'tanpa respons'}.`);
   if (path.startsWith('/news/')) await page.waitForSelector('article h1', { timeout: 15_000 });
@@ -109,7 +109,7 @@ async function snapshot(page, path, content) {
     document.head.appendChild(script);
   }, routeData);
   const html = `<!doctype html>\n${await page.locator('html').evaluate((element) => element.outerHTML)}`;
-  const output = path === '/' ? join(distDir, 'index.html') : join(distDir, path.slice(1), 'index.html');
+  const output = outputOverride ?? (path === '/' ? join(distDir, 'index.html') : join(distDir, path.slice(1), 'index.html'));
   await mkdir(dirname(output), { recursive: true });
   await writeFile(output, html, 'utf8');
 }
@@ -127,6 +127,7 @@ async function validateOutput(routes) {
 
 async function main() {
   const content = await getBuildContent();
+  const appShell = await readFile(join(distDir, 'index.html'), 'utf8');
   const articles = content.news;
   const articleRoutes = articles.map(({ id }) => `/news/${id}`);
   const routes = [...STATIC_ROUTES, ...articleRoutes];
@@ -159,10 +160,18 @@ async function main() {
     }
     await snapshot(page, '/', content);
     console.log('[seo] prerendered /');
+    await snapshot(page, '/__not-found', content, join(distDir, '404.html'));
+    console.log('[seo] prerendered 404');
   } finally {
     await browser?.close();
     server.kill();
   }
+  const adminShell = appShell
+    .replace('<meta name="robots" content="index, follow" />', '<meta name="robots" content="noindex, nofollow" />')
+    .replace(`<link rel="canonical" href="${siteUrl}/" />`, `<link rel="canonical" href="${siteUrl}/admin" />`)
+    .replace(/<title>.*?<\/title>/, '<title>Admin Visitiga</title>');
+  await mkdir(join(distDir, 'admin'), { recursive: true });
+  await writeFile(join(distDir, 'admin', 'index.html'), adminShell, 'utf8');
   await writeFile(join(distDir, 'sitemap.xml'), buildSitemap(STATIC_ROUTES, articles, siteUrl), 'utf8');
   await writeFile(join(distDir, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /admin\n\nSitemap: ${siteUrl}/sitemap.xml\n`, 'utf8');
   await validateOutput(routes);

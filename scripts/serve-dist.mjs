@@ -15,10 +15,11 @@ createServer(async (request, response) => {
   const safePath = normalize(pathname).replace(/^([/\\]*\.\.[/\\])+/, '').replace(/^[/\\]+/, '');
   const direct = await existingFile(join(root, safePath));
   const routeIndex = await existingFile(join(root, safePath, 'index.html'));
-  const file = direct || routeIndex || join(root, 'index.html');
+  const found = direct || routeIndex;
+  const file = found || join(root, '404.html');
   try {
     const body = await readFile(file);
-    response.writeHead(200, { 'Content-Type': types[extname(file)] || 'application/octet-stream' });
+    response.writeHead(found ? 200 : 404, { 'Content-Type': types[extname(file)] || 'application/octet-stream' });
     response.end(body);
   } catch {
     response.writeHead(500, { 'Content-Type': 'text/plain' });
