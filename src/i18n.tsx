@@ -181,7 +181,6 @@ const translations = {
       visitLive: 'Kunjungi Situs',
       viewProject: 'Lihat proyek',
     },
-    loading: 'Memuat...',
   },
   en: {
     navbar: {
@@ -361,7 +360,6 @@ const translations = {
       visitLive: 'Visit Live Site',
       viewProject: 'View project',
     },
-    loading: 'Loading...',
   },
 };
 

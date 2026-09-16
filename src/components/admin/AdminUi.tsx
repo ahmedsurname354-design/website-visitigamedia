@@ -45,18 +45,3 @@ export function AdminRowActions({ onEdit, onDelete }: { onEdit: () => void; onDe
     </td>
   );
 }
-
-// Compact aliases keep manager pages readable while all shared UI lives here.
-export function Header({ title, description, onAdd }: { title: string; description: string; onAdd: () => void }) {
-  return <AdminPageHeader title={title} description={description} onAction={onAdd} />;
-}
-
-export function Alert({ text }: { text: string }) {
-  return <AdminAlert>{text}</AdminAlert>;
-}
-
-export function Empty({ colSpan, text }: { colSpan: number; text: string }) {
-  return <AdminTableState colSpan={colSpan}>{text}</AdminTableState>;
-}
-
-export const Actions = AdminRowActions;
