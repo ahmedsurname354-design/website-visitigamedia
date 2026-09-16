@@ -1,4 +1,5 @@
 import { spawn } from 'node:child_process';
+import { once } from 'node:events';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import process from 'node:process';
@@ -70,6 +71,13 @@ async function waitForServer(url, child) {
     await new Promise((resolve) => setTimeout(resolve, 250));
   }
   throw new Error('Server preview tidak siap dalam 20 detik.');
+}
+
+async function stopServer(child) {
+  if (child.exitCode !== null) return;
+  const exited = once(child, 'exit');
+  child.kill();
+  await exited;
 }
 
 async function snapshot(page, path, content, outputOverride) {
@@ -164,7 +172,7 @@ async function main() {
     console.log('[seo] prerendered 404');
   } finally {
     await browser?.close();
-    server.kill();
+    await stopServer(server);
   }
   const adminShell = appShell
     .replace('<meta name="robots" content="index, follow" />', '<meta name="robots" content="noindex, nofollow" />')
