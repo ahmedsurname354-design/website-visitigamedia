@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { absoluteUrl, getStaticSeo } from '@/lib/seo';
+import { absoluteUrl, canonicalPublicPath, getStaticSeo, normalizePublicPath } from '@/lib/seo';
 
 describe('page SEO configuration', () => {
   it.each(['/about', '/services', '/product', '/portfolio', '/video', '/contact', '/news', '/faq', '/privacy'])('has unique Indonesian metadata for %s', (path) => {
@@ -11,5 +11,8 @@ describe('page SEO configuration', () => {
 
   it('builds canonical URLs without duplicate slashes', () => {
     expect(absoluteUrl('/faq')).toMatch(/^https:\/\/[^/]+\/faq$/);
+    expect(normalizePublicPath('/faq/')).toBe('/faq');
+    expect(canonicalPublicPath('/faq/')).toBe('/faq/');
+    expect(canonicalPublicPath('/')).toBe('/');
   });
 });

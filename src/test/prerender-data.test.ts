@@ -19,6 +19,12 @@ describe('prerender bootstrap', () => {
     expect(getPrerenderData()).toEqual({ route: '/news', news: [] });
   });
 
+  it('uses prerendered data after the host adds a trailing slash', () => {
+    window.history.replaceState({}, '', '/portfolio/');
+    window.__VISITIGA_PRERENDER_DATA__ = { route: '/portfolio', portfolios: [] };
+    expect(getPrerenderData()).toEqual({ route: '/portfolio', portfolios: [] });
+  });
+
   it('ignores data belonging to another route and detects prerendered HTML', () => {
     window.__VISITIGA_PRERENDER_DATA__ = { route: '/about' };
     document.documentElement.dataset.prerendered = 'true';

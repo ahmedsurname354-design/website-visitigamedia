@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, type ReactNode } from 'react';
-import { BrowserRouter as Router, Outlet, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Outlet, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { LazyMotion, domAnimation, MotionConfig } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -7,6 +7,7 @@ import AppErrorBoundary from '@/components/AppErrorBoundary';
 import PageMeta from '@/components/PageMeta';
 import HomePage from '@/pages/HomePage';
 import { publicPageLoaders } from '@/lib/publicRoutes';
+import { canonicalPublicPath } from '@/lib/seo';
 const AboutPage = lazy(publicPageLoaders.about);
 const ServicesPage = lazy(publicPageLoaders.services);
 const PortfolioPage = lazy(publicPageLoaders.portfolio);
@@ -31,6 +32,13 @@ const AdminLayout = lazy(() => import('@/components/admin/AdminLayout'));
 
 function PublicLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
+  useEffect(() => {
+    const canonicalPath = canonicalPublicPath(location.pathname);
+    if (location.pathname !== canonicalPath) {
+      void navigate({ pathname: canonicalPath, search: location.search, hash: location.hash }, { replace: true });
+    }
+  }, [location.hash, location.pathname, location.search, navigate]);
   return <div className="public-site">
     <a href="#main-content" className="sr-only z-50 rounded-lg bg-white px-4 py-3 font-semibold text-[#211c18] shadow-lg focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Lewati ke konten utama</a>
     <PageMeta />

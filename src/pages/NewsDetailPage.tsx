@@ -8,7 +8,7 @@ import { getPublicNews, listPublicNews } from '@/lib/adminApi';
 import type { NewsRecord } from '@/types/admin';
 import { useTranslation } from '@/i18n';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { absoluteUrl } from '@/lib/seo';
+import { absoluteUrl, canonicalPublicPath } from '@/lib/seo';
 import LightReveal from '@/components/LightReveal';
 import { getPrerenderData } from '@/lib/prerenderData';
 
@@ -43,18 +43,18 @@ export default function NewsDetailPage() {
   usePageMeta({
     title: article?.title ? `${article.title} — Visitiga` : (en ? 'News — Visitiga' : 'Berita — Visitiga'),
     description: article?.excerpt || (en ? 'Latest news and articles from Visitiga Media.' : 'Berita dan artikel terbaru dari Visitiga Media.'),
-    pathname: slug ? `/news/${slug}` : '/news',
+    pathname: canonicalPublicPath(slug ? `/news/${slug}` : '/news'),
     image: article?.cover_image,
     type: article ? 'article' : 'website',
     imageAlt: article?.title,
     lang,
     noIndex: !article,
     structuredData: article ? [
-      { '@context': 'https://schema.org', '@type': 'Article', headline: article.title, description: article.excerpt, image: article.cover_image.startsWith('http') ? article.cover_image : absoluteUrl(article.cover_image), datePublished: article.published_at, dateModified: article.updated_at, mainEntityOfPage: absoluteUrl(`/news/${article.slug}`), author: { '@type': 'Person', name: article.author }, publisher: { '@type': 'Organization', name: 'Visitiga Media', logo: { '@type': 'ImageObject', url: absoluteUrl('/social-preview.png') } } },
+      { '@context': 'https://schema.org', '@type': 'Article', headline: article.title, description: article.excerpt, image: article.cover_image.startsWith('http') ? article.cover_image : absoluteUrl(article.cover_image), datePublished: article.published_at, dateModified: article.updated_at, mainEntityOfPage: absoluteUrl(canonicalPublicPath(`/news/${article.slug}`)), author: { '@type': 'Person', name: article.author }, publisher: { '@type': 'Organization', name: 'Visitiga Media', logo: { '@type': 'ImageObject', url: absoluteUrl('/social-preview.png') } } },
       { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
         { '@type': 'ListItem', position: 1, name: en ? 'Home' : 'Beranda', item: absoluteUrl('/') },
-        { '@type': 'ListItem', position: 2, name: en ? 'News' : 'Berita', item: absoluteUrl('/news') },
-        { '@type': 'ListItem', position: 3, name: article.title, item: absoluteUrl(`/news/${article.slug}`) },
+        { '@type': 'ListItem', position: 2, name: en ? 'News' : 'Berita', item: absoluteUrl(canonicalPublicPath('/news')) },
+        { '@type': 'ListItem', position: 3, name: article.title, item: absoluteUrl(canonicalPublicPath(`/news/${article.slug}`)) },
       ] },
     ] : undefined,
   });

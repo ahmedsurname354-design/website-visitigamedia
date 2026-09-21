@@ -13,15 +13,32 @@ test('all public routes activate without browser or network errors', async ({ pa
   expect(problems.filter((problem) => !problem.includes('favicon'))).toEqual([]);
 });
 
+test('canonical public URLs stay indexable after hydration', async ({ page }) => {
+  for (const route of publicRoutes) {
+    const canonicalPath = route === '/' ? route : `${route}/`;
+    await page.goto(canonicalPath);
+    await expect(page.locator('#root')).toBeVisible();
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'index, follow');
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', new RegExp(`${canonicalPath}$`));
+    expect(await page.title()).not.toContain('Halaman Tidak Ditemukan');
+  }
+});
+
 test('navigation, language, article, 404, and admin redirect remain functional', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('link', { name: 'Tentang Kami', exact: true }).first().click();
-  await expect(page).toHaveURL(/\/about$/);
+  await expect(page).toHaveURL(/\/about\/$/);
   await page.getByRole('button', { name: 'Ganti bahasa' }).first().click();
   await expect(page.getByRole('link', { name: 'About Us', exact: true }).first()).toBeVisible();
   await page.goto('/news');
   const article = page.getByRole('link', { name: /Baca selengkapnya|Read more/ }).first();
-  if (await article.count()) { await article.click(); await expect(page.locator('article h1')).toBeVisible(); }
+  if (await article.count()) {
+    await article.click();
+    await expect(page).toHaveURL(/\/news\/[^/]+\/$/);
+    await expect(page.locator('article h1')).toBeVisible();
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'index, follow');
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /\/news\/[^/]+\/$/);
+  }
   await page.goto('/route-tidak-ada');
   await expect(page.getByRole('heading', { name: /Halaman tidak ditemukan|Page not found/ })).toBeVisible();
   await page.goto('/admin');

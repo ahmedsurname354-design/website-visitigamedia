@@ -1,5 +1,9 @@
 export const STATIC_ROUTES = ['/', '/about', '/services', '/product', '/portfolio', '/video', '/contact', '/news', '/faq', '/privacy'];
 
+export function canonicalRoute(path) {
+  return path.endsWith('/') ? path : `${path}/`;
+}
+
 export function buildRedirects(articles) {
   if (articles.length > 2000) throw new Error('Cloudflare Pages mendukung maksimal 2.000 redirect statis untuk berita.');
   return ['/admin/* /admin/index.html 200',
@@ -16,7 +20,7 @@ export function buildSitemap(routes, articles, baseUrl) {
   for (const article of articles) urls.push({ path: `/news/${article.slug}`, lastmod: article.updated_at || article.published_at });
   const entries = urls.map(({ path, lastmod }) => {
     const modified = lastmod ? `\n    <lastmod>${escapeXml(new Date(lastmod).toISOString())}</lastmod>` : '';
-    return `  <url>\n    <loc>${escapeXml(`${baseUrl}${path === '/' ? '/' : path}`)}</loc>${modified}\n  </url>`;
+    return `  <url>\n    <loc>${escapeXml(`${baseUrl}${canonicalRoute(path)}`)}</loc>${modified}\n  </url>`;
   });
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.join('\n')}\n</urlset>\n`;
 }

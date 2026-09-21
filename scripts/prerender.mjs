@@ -6,7 +6,7 @@ import process from 'node:process';
 import { pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
 import { loadEnv } from 'vite';
-import { buildRedirects, buildSitemap, STATIC_ROUTES } from './seo-build-lib.mjs';
+import { buildRedirects, buildSitemap, canonicalRoute, STATIC_ROUTES } from './seo-build-lib.mjs';
 
 const projectRoot = process.cwd();
 const distDir = join(projectRoot, 'dist');
@@ -96,6 +96,13 @@ async function snapshot(page, path, content, outputOverride) {
     const canonical = document.querySelector('link[rel="canonical"]');
     return Boolean(document.title && canonical && document.querySelector('meta[name="description"]'));
   });
+  if (path !== '/__not-found') {
+    await page.waitForFunction((expected) => {
+      const canonical = document.querySelector('link[rel="canonical"]');
+      const robots = document.querySelector('meta[name="robots"]');
+      return canonical?.href === expected && robots?.content === 'index, follow';
+    }, `${siteUrl}${canonicalRoute(path)}`);
+  }
   const routeData = dataForRoute(path, content);
   await page.evaluate((data) => {
     document.documentElement.dataset.prerendered = 'true';
@@ -129,7 +136,7 @@ async function validateOutput(routes) {
     const html = await readFile(output, 'utf8');
     const required = ['<title>', 'name="description"', 'rel="canonical"', 'property="og:title"', 'application/ld+json', '<h1'];
     for (const marker of required) if (!html.includes(marker)) throw new Error(`${output} tidak memiliki ${marker}.`);
-    if (!html.includes(`${siteUrl}${path === '/' ? '/' : path}`)) throw new Error(`${output} memiliki canonical yang salah.`);
+    if (!html.includes(`${siteUrl}${canonicalRoute(path)}`)) throw new Error(`${output} memiliki canonical yang salah.`);
     if (html.includes('Memuat berita…') || html.includes('Loading news…')) throw new Error(`${output} masih berisi placeholder pemuatan.`);
   }
 }

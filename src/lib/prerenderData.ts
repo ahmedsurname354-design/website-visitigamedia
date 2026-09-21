@@ -1,4 +1,5 @@
 import type { NewsRecord, Portfolio, Product, ProductCatalogue, ServiceContent } from '@/types/admin';
+import { normalizePublicPath } from '@/lib/seo';
 
 export interface PrerenderData {
   route: string;
@@ -27,7 +28,7 @@ export function getPrerenderData(): PrerenderData | undefined {
     }
   }
   const data = window.__VISITIGA_PRERENDER_DATA__;
-  return data?.route === window.location.pathname ? data : undefined;
+  return data && normalizePublicPath(data.route) === normalizePublicPath(window.location.pathname) ? data : undefined;
 }
 
 export function isPrerenderedDocument(): boolean {

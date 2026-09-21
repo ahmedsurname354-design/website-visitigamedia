@@ -2,6 +2,15 @@ import type { Lang } from '@/i18n';
 
 export const siteUrl = (import.meta.env.VITE_SITE_URL || 'https://visitiga-media.pages.dev').replace(/\/$/, '');
 
+export function normalizePublicPath(pathname: string) {
+  return pathname.replace(/\/+$/, '') || '/';
+}
+
+export function canonicalPublicPath(pathname: string) {
+  const path = normalizePublicPath(pathname);
+  return path === '/' ? '/' : `${path}/`;
+}
+
 type SeoCopy = { title: string; description: string };
 
 const seoByPath: Record<string, Record<Lang, SeoCopy>> = {

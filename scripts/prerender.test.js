@@ -9,7 +9,8 @@ describe('SEO build generator', () => {
       'https://example.com',
     );
     expect(sitemap).toContain('<loc>https://example.com/</loc>');
-    expect(sitemap).toContain('<loc>https://example.com/news/published-article</loc>');
+    expect(sitemap).toContain('<loc>https://example.com/news/published-article/</loc>');
+    expect(sitemap).toContain('<loc>https://example.com/news/</loc>');
     expect(sitemap).toContain('<lastmod>2026-09-02T00:00:00.000Z</lastmod>');
     expect(sitemap).not.toContain('/admin');
   });
