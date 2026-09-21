@@ -6,7 +6,7 @@ import process from 'node:process';
 import { pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
 import { loadEnv } from 'vite';
-import { buildSitemap, STATIC_ROUTES } from './seo-build-lib.mjs';
+import { buildRedirects, buildSitemap, STATIC_ROUTES } from './seo-build-lib.mjs';
 
 const projectRoot = process.cwd();
 const distDir = join(projectRoot, 'dist');
@@ -55,7 +55,7 @@ async function getBuildContent() {
 
 function dataForRoute(path, content) {
   if (path === '/news') return { route: path, news: content.news };
-  if (path.startsWith('/news/')) return { route: path, news: content.news, article: content.news.find(({ id }) => path === `/news/${id}`) ?? null };
+  if (path.startsWith('/news/')) return { route: path, news: content.news, article: content.news.find(({ slug }) => path === `/news/${slug}`) ?? null };
   if (path === '/services') return { route: path, serviceContent: content.serviceContent };
   if (path === '/product') return { route: path, products: content.products ?? undefined, catalogue: content.catalogue };
   if (path === '/portfolio') return { route: path, portfolios: content.portfolios ?? undefined };
@@ -138,7 +138,7 @@ async function main() {
   const content = await getBuildContent();
   const appShell = await readFile(join(distDir, 'index.html'), 'utf8');
   const articles = content.news;
-  const articleRoutes = articles.map(({ id }) => `/news/${id}`);
+  const articleRoutes = articles.map(({ slug }) => `/news/${slug}`);
   const routes = [...STATIC_ROUTES, ...articleRoutes];
   const viteBin = join(projectRoot, 'node_modules', 'vite', 'bin', 'vite.js');
   const server = spawn(process.execPath, [viteBin, 'preview', '--host', '127.0.0.1', '--port', '4173', '--strictPort'], { stdio: 'inherit' });
@@ -153,7 +153,7 @@ async function main() {
       const data = path === '/news'
         ? { route: path, news: allContent.news }
         : path.startsWith('/news/')
-          ? { route: path, news: allContent.news, article: allContent.news.find(({ id }) => path === `/news/${id}`) ?? null }
+          ? { route: path, news: allContent.news, article: allContent.news.find(({ slug }) => path === `/news/${slug}`) ?? null }
           : path === '/services'
             ? { route: path, serviceContent: allContent.serviceContent }
             : path === '/product'
@@ -171,6 +171,7 @@ async function main() {
     console.log('[seo] prerendered /');
     await snapshot(page, '/__not-found', content, join(distDir, '404.html'));
     console.log('[seo] prerendered 404');
+    await writeFile(join(distDir, '_redirects'), buildRedirects(articles), 'utf8');
   } finally {
     await browser?.close();
     await stopServer(server);

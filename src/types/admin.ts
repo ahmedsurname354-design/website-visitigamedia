@@ -16,6 +16,7 @@ export type PortfolioInput = Pick<Portfolio, 'title' | 'image_url' | 'client' | 
 
 export interface NewsRecord {
   id: string;
+  slug: string;
   title: string;
   cover_image: string;
   content: string;
@@ -27,7 +28,7 @@ export interface NewsRecord {
   updated_at: string;
 }
 
-export type NewsInput = Pick<NewsRecord, 'title' | 'cover_image' | 'content' | 'author' | 'category' | 'excerpt' | 'published_at'>;
+export type NewsInput = Pick<NewsRecord, 'title' | 'slug' | 'cover_image' | 'content' | 'author' | 'category' | 'excerpt' | 'published_at'>;
 
 export interface Product {
   id: string;

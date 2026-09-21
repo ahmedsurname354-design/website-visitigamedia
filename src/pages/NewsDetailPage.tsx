@@ -28,12 +28,12 @@ function formatPublishedDate(value: string | null) {
 }
 
 export default function NewsDetailPage() {
-  const { id } = useParams();
+  const { id: slug } = useParams();
   const { lang } = useTranslation();
   const en = lang === 'en';
   const [initialData] = useState(getPrerenderData);
   const bootstrapArticle = initialData?.article;
-  const initialArticle = bootstrapArticle?.id === id ? bootstrapArticle : undefined;
+  const initialArticle = bootstrapArticle?.slug === slug ? bootstrapArticle : undefined;
   const [article, setArticle] = useState<NewsRecord | null | undefined>(initialArticle);
   const [allArticles, setAllArticles] = useState<NewsRecord[]>(initialData?.news ?? []);
   const [loadError, setLoadError] = useState('');
@@ -43,18 +43,18 @@ export default function NewsDetailPage() {
   usePageMeta({
     title: article?.title ? `${article.title} — Visitiga` : (en ? 'News — Visitiga' : 'Berita — Visitiga'),
     description: article?.excerpt || (en ? 'Latest news and articles from Visitiga Media.' : 'Berita dan artikel terbaru dari Visitiga Media.'),
-    pathname: id ? `/news/${id}` : '/news',
+    pathname: slug ? `/news/${slug}` : '/news',
     image: article?.cover_image,
     type: article ? 'article' : 'website',
     imageAlt: article?.title,
     lang,
     noIndex: !article,
     structuredData: article ? [
-      { '@context': 'https://schema.org', '@type': 'Article', headline: article.title, description: article.excerpt, image: article.cover_image.startsWith('http') ? article.cover_image : absoluteUrl(article.cover_image), datePublished: article.published_at, dateModified: article.updated_at, mainEntityOfPage: absoluteUrl(`/news/${article.id}`), author: { '@type': 'Person', name: article.author }, publisher: { '@type': 'Organization', name: 'Visitiga Media', logo: { '@type': 'ImageObject', url: absoluteUrl('/social-preview.png') } } },
+      { '@context': 'https://schema.org', '@type': 'Article', headline: article.title, description: article.excerpt, image: article.cover_image.startsWith('http') ? article.cover_image : absoluteUrl(article.cover_image), datePublished: article.published_at, dateModified: article.updated_at, mainEntityOfPage: absoluteUrl(`/news/${article.slug}`), author: { '@type': 'Person', name: article.author }, publisher: { '@type': 'Organization', name: 'Visitiga Media', logo: { '@type': 'ImageObject', url: absoluteUrl('/social-preview.png') } } },
       { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
         { '@type': 'ListItem', position: 1, name: en ? 'Home' : 'Beranda', item: absoluteUrl('/') },
         { '@type': 'ListItem', position: 2, name: en ? 'News' : 'Berita', item: absoluteUrl('/news') },
-        { '@type': 'ListItem', position: 3, name: article.title, item: absoluteUrl(`/news/${article.id}`) },
+        { '@type': 'ListItem', position: 3, name: article.title, item: absoluteUrl(`/news/${article.slug}`) },
       ] },
     ] : undefined,
   });
@@ -63,14 +63,14 @@ export default function NewsDetailPage() {
     let active = true;
 
     async function loadPage() {
-      if (!id) {
+      if (!slug) {
         setArticle(null);
         return;
       }
       if (!initialArticle) setArticle(undefined);
       setLoadError('');
       setRelatedError(false);
-      const [articleResult, relatedResult] = await Promise.allSettled([getPublicNews(id), listPublicNews()]);
+      const [articleResult, relatedResult] = await Promise.allSettled([getPublicNews(slug), listPublicNews()]);
       if (!active) return;
 
       if (articleResult.status === 'rejected') {
@@ -90,7 +90,7 @@ export default function NewsDetailPage() {
 
     void loadPage();
     return () => { active = false; };
-  }, [en, id, initialArticle]);
+  }, [en, slug, initialArticle]);
 
   const relatedArticles = useMemo(
     () => (article ? getRelatedArticles(article, allArticles) : []),
@@ -193,7 +193,7 @@ export default function NewsDetailPage() {
               {relatedError ? <p className="mt-4 text-sm leading-6 text-[#735c4d]">Artikel terkait belum dapat dimuat.</p> : relatedArticles.length === 0 ? <p className="mt-4 text-sm leading-6 text-[#735c4d]">Belum ada artikel terkait lainnya.</p> : (
                 <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
                   {relatedArticles.map((related) => (
-                    <Link key={related.id} to={`/news/${related.id}`} className="related-article-link group grid grid-cols-[6.5rem_minmax(0,1fr)] gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500">
+                    <Link key={related.id} to={`/news/${related.slug}`} className="related-article-link group grid grid-cols-[6.5rem_minmax(0,1fr)] gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500">
                       <img src={optimizedImageUrl(related.cover_image, 600)} onError={({ currentTarget }) => restoreOriginalImage(currentTarget, related.cover_image)} alt="" loading="lazy" decoding="async" className="aspect-[4/3] w-full rounded-xl bg-[#f3e5d7] object-cover" />
                       <div className="min-w-0 py-0.5"><h3 className="line-clamp-3 text-sm font-bold leading-5 transition group-hover:text-orange-600">{related.title}</h3><p className="mt-2 truncate text-xs text-[#8b7161]">{related.category}</p></div>
                     </Link>

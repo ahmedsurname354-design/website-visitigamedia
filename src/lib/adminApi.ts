@@ -63,16 +63,18 @@ export async function listPublicNews(): Promise<NewsRecord[]> {
   return data as NewsRecord[];
 }
 
-export async function getPublicNews(id: string): Promise<NewsRecord | null> {
-  const { data, error } = await client().from('news').select('*').eq('id', id).not('published_at', 'is', null).maybeSingle();
+export async function getPublicNews(slug: string): Promise<NewsRecord | null> {
+  const { data, error } = await client().from('news').select('*').eq('slug', slug).not('published_at', 'is', null).maybeSingle();
   if (error) throw error;
   return data as NewsRecord | null;
 }
 
 export async function saveNews(input: NewsInput, id?: string): Promise<void> {
   assertSafeMediaUrl(input.cover_image, 'URL cover berita');
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(input.slug) || input.slug.length > 100) throw new Error('Slug hanya boleh berisi huruf kecil, angka, dan tanda hubung (maksimal 100 karakter).');
   const query = id ? client().from('news').update(input).eq('id', id) : client().from('news').insert(input);
   const { error } = await query;
+  if (error?.code === '23505') throw new Error('Slug sudah digunakan oleh berita lain. Pilih slug yang berbeda.');
   if (error) throw error;
 }
 

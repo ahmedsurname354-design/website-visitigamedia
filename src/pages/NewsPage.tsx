@@ -63,7 +63,7 @@ export default function NewsPage() {
                   <p className="mt-5 text-xs text-[#735c4d]">
                     {article.author} · {new Date(article.published_at!).toLocaleDateString(en ? 'en-US' : 'id-ID')}
                   </p>
-                  <Link to={`/news/${article.id}`} className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-orange-600 hover:text-orange-700">
+                  <Link to={`/news/${article.slug}`} className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-orange-600 hover:text-orange-700">
                     {en ? 'Read more' : 'Baca selengkapnya'} <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>

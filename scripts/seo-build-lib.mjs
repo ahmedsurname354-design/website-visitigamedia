@@ -1,12 +1,19 @@
 export const STATIC_ROUTES = ['/', '/about', '/services', '/product', '/portfolio', '/video', '/contact', '/news', '/faq', '/privacy'];
 
+export function buildRedirects(articles) {
+  if (articles.length > 2000) throw new Error('Cloudflare Pages mendukung maksimal 2.000 redirect statis untuk berita.');
+  return ['/admin/* /admin/index.html 200',
+    ...articles.map(({ slug }) => `/news/${slug} /news/${slug}/index.html 200`),
+    '/news/* /index.html 200', ''].join('\n');
+}
+
 export function escapeXml(value) {
   return String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&apos;');
 }
 
 export function buildSitemap(routes, articles, baseUrl) {
   const urls = routes.map((path) => ({ path }));
-  for (const article of articles) urls.push({ path: `/news/${article.id}`, lastmod: article.updated_at || article.published_at });
+  for (const article of articles) urls.push({ path: `/news/${article.slug}`, lastmod: article.updated_at || article.published_at });
   const entries = urls.map(({ path, lastmod }) => {
     const modified = lastmod ? `\n    <lastmod>${escapeXml(new Date(lastmod).toISOString())}</lastmod>` : '';
     return `  <url>\n    <loc>${escapeXml(`${baseUrl}${path === '/' ? '/' : path}`)}</loc>${modified}\n  </url>`;
