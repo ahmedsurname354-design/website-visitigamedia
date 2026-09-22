@@ -5,10 +5,12 @@ export function canonicalRoute(path) {
 }
 
 export function buildRedirects(articles, retiredPortfolioSlugs = []) {
-  if (articles.length + retiredPortfolioSlugs.length * 2 > 1997) throw new Error('Jumlah redirect Cloudflare Pages melebihi batas.');
+  if (articles.length > 1997) throw new Error('Jumlah redirect Cloudflare Pages melebihi batas.');
+  if (new Set(retiredPortfolioSlugs).size !== retiredPortfolioSlugs.length) throw new Error('Snapshot slug portofolio berisi duplikat.');
   return ['/admin/* /admin/index.html 200',
     ...articles.map(({ slug }) => `/news/${slug} /news/${slug}/index.html 200`),
-    ...retiredPortfolioSlugs.flatMap((slug) => [`/portfolio/${slug} /portfolio/ 301`, `/portfolio/${slug}/ /portfolio/ 301`]),
+    '/portfolio/:slug /portfolio/ 301',
+    '/portfolio/:slug/ /portfolio/ 301',
     '/news/* /index.html 200', ''].join('\n');
 }
 
