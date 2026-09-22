@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useTranslation } from '@/i18n';
 import { featuredPortfolios, portfolioCopy } from '@/lib/portfolio';
-import { listPublicPortfolios } from '@/lib/adminApi';
 import { getPrerenderData } from '@/lib/prerenderData';
 import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
 import type { Portfolio } from '@/types/admin';
@@ -274,7 +273,8 @@ export default function PortfolioSection() {
   useEffect(() => {
     // Keep the prerender/bootstrap snapshot when a background refresh fails.
     // A successful empty response still intentionally clears the public list.
-    void listPublicPortfolios().then(setRemoteProjects).catch(() => undefined);
+    void import('@/lib/adminApi').then(({ listPublicPortfolios }) => listPublicPortfolios())
+      .then(setRemoteProjects).catch(() => undefined);
   }, []);
   useEffect(() => {
     if (!previewProject) return;

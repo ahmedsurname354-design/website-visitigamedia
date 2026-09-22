@@ -11,7 +11,6 @@ import motogp from '@/assets/clients/motogp.webp';
 import ugm from '@/assets/clients/ugm.webp';
 import mandalika from '@/assets/clients/mandalika.webp';
 import iims from '@/assets/clients/iims.webp';
-import { listPublicPortfolios } from '@/lib/adminApi';
 import { getPrerenderData } from '@/lib/prerenderData';
 import { featuredPortfolios, portfolioCopy } from '@/lib/portfolio';
 import type { Portfolio } from '@/types/admin';
@@ -24,7 +23,10 @@ export default function HomeShowcase() {
   const { dict, lang } = useTranslation();
   const id = lang === 'id';
   const [portfolios, setPortfolios] = useState<Portfolio[]>(() => getPrerenderData()?.portfolios ?? []);
-  useEffect(() => { void listPublicPortfolios().then(setPortfolios).catch(() => undefined); }, []);
+  useEffect(() => {
+    void import('@/lib/adminApi').then(({ listPublicPortfolios }) => listPublicPortfolios())
+      .then(setPortfolios).catch(() => undefined);
+  }, []);
   const projects = featuredPortfolios(portfolios).slice(0, 3);
 
   return (
