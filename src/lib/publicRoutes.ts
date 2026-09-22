@@ -8,6 +8,7 @@ export const publicPageLoaders = {
   services: () => import('@/pages/ServicesPage'),
   product: () => import('@/pages/ProductPage'),
   portfolio: () => import('@/pages/PortfolioPage'),
+  caseStudy: () => import('@/pages/CaseStudyPage'),
   video: () => import('@/pages/VideoPage'),
   contact: () => import('@/pages/ContactPage'),
   faq: () => import('@/pages/FAQPage'),
@@ -32,6 +33,8 @@ export function preloadPublicRoute(path: string): Promise<PageModule | undefined
   const normalizedPath = path.split(/[?#]/, 1)[0].replace(/\/$/, '') || '/';
   const loader = normalizedPath.startsWith('/news/')
     ? publicPageLoaders.newsDetail
+    : normalizedPath.startsWith('/portfolio/')
+      ? publicPageLoaders.caseStudy
     : routeLoaders[normalizedPath];
   // Speculative loading must never surface an unhandled rejection.
   return loader?.().catch(() => undefined);

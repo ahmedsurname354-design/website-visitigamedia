@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import ServicesSection from '@/components/ServicesSection';
 import WebServiceSection from '@/components/WebServiceSection';
+import ServiceGuides from '@/components/ServiceGuides';
 import { getServiceContent } from '@/lib/adminApi';
 import type { ServiceContent } from '@/types/admin';
 import { getPrerenderData } from '@/lib/prerenderData';
@@ -33,6 +34,7 @@ export default function ServicesPage() {
     <>
       {error && <div role="alert" className="bg-amber-50 px-4 py-3 text-center text-sm text-amber-900">{error}</div>}
       <ServicesSection content={content} />
+      <ServiceGuides />
       <WebServiceSection content={content} />
     </>
   );

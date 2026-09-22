@@ -6,7 +6,7 @@ import process from 'node:process';
 import { pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
 import { loadEnv } from 'vite';
-import { buildRedirects, buildSitemap, canonicalRoute, STATIC_ROUTES } from './seo-build-lib.mjs';
+import { buildRedirects, buildSitemap, canonicalRoute, CASE_STUDY_ROUTES, STATIC_ROUTES } from './seo-build-lib.mjs';
 
 const projectRoot = process.cwd();
 const distDir = join(projectRoot, 'dist');
@@ -146,7 +146,7 @@ async function main() {
   const appShell = await readFile(join(distDir, 'index.html'), 'utf8');
   const articles = content.news;
   const articleRoutes = articles.map(({ slug }) => `/news/${slug}`);
-  const routes = [...STATIC_ROUTES, ...articleRoutes];
+  const routes = [...STATIC_ROUTES, ...CASE_STUDY_ROUTES, ...articleRoutes];
   const viteBin = join(projectRoot, 'node_modules', 'vite', 'bin', 'vite.js');
   const server = spawn(process.execPath, [viteBin, 'preview', '--host', '127.0.0.1', '--port', '4173', '--strictPort'], { stdio: 'inherit' });
   let browser;

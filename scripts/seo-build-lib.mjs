@@ -1,3 +1,8 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+export const CASE_STUDIES = JSON.parse(readFileSync(join(process.cwd(), 'src/data/case-studies.json'), 'utf8'));
+export const CASE_STUDY_ROUTES = CASE_STUDIES.map(({ slug }) => `/portfolio/${slug}`);
 export const STATIC_ROUTES = ['/', '/about', '/services', '/product', '/portfolio', '/video', '/contact', '/news', '/faq', '/privacy'];
 
 export function canonicalRoute(path) {
@@ -5,9 +10,11 @@ export function canonicalRoute(path) {
 }
 
 export function buildRedirects(articles) {
-  if (articles.length > 2000) throw new Error('Cloudflare Pages mendukung maksimal 2.000 redirect statis untuk berita.');
+  if (articles.length + CASE_STUDIES.length > 1997) throw new Error('Jumlah redirect Cloudflare Pages melebihi batas.');
   return ['/admin/* /admin/index.html 200',
     ...articles.map(({ slug }) => `/news/${slug} /news/${slug}/index.html 200`),
+    ...CASE_STUDIES.map(({ slug }) => `/portfolio/${slug} /portfolio/${slug}/index.html 200`),
+    '/portfolio/* /index.html 200',
     '/news/* /index.html 200', ''].join('\n');
 }
 
@@ -16,7 +23,7 @@ export function escapeXml(value) {
 }
 
 export function buildSitemap(routes, articles, baseUrl) {
-  const urls = routes.map((path) => ({ path }));
+  const urls = [...routes, ...CASE_STUDY_ROUTES].map((path) => ({ path }));
   for (const article of articles) urls.push({ path: `/news/${article.slug}`, lastmod: article.updated_at || article.published_at });
   const entries = urls.map(({ path, lastmod }) => {
     const modified = lastmod ? `\n    <lastmod>${escapeXml(new Date(lastmod).toISOString())}</lastmod>` : '';

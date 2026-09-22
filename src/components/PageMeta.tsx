@@ -11,7 +11,8 @@ export default function PageMeta() {
   const knownPaths = ['/', '/about', '/services', '/product', '/portfolio', '/video', '/contact', '/news', '/faq', '/privacy'];
   const staticPath = path.startsWith('/news/') ? '/news' : path;
   const isNewsDetail = path.startsWith('/news/');
-  const notFound = !isNewsDetail && !knownPaths.includes(path);
+  const isCaseStudy = path.startsWith('/portfolio/');
+  const notFound = !isNewsDetail && !isCaseStudy && !knownPaths.includes(path);
   const meta = notFound
     ? { title: lang === 'id' ? 'Halaman Tidak Ditemukan — Visitiga' : 'Page Not Found — Visitiga', description: lang === 'id' ? 'Halaman yang Anda cari tidak ditemukan.' : 'The page you are looking for could not be found.' }
     : getStaticSeo(staticPath, lang);
@@ -39,6 +40,6 @@ export default function PageMeta() {
     }
     return breadcrumbs;
   }, [dict.faq.items, lang, path]);
-  usePageMeta({ ...meta, pathname: canonicalPublicPath(path), structuredData, noIndex: notFound, lang, disabled: isNewsDetail });
+  usePageMeta({ ...meta, pathname: canonicalPublicPath(path), structuredData, noIndex: notFound, lang, disabled: isNewsDetail || isCaseStudy });
   return null;
 }
