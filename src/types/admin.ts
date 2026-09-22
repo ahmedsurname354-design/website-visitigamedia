@@ -1,6 +1,7 @@
 export interface Portfolio {
   id: string;
   title: string;
+  slug: string;
   image_url: string;
   client: string;
   category: string;
@@ -8,11 +9,30 @@ export interface Portfolio {
   overview: string;
   challenge: string;
   solution: string;
+  is_featured: boolean;
+  featured_at: string | null;
+  location: string;
+  audience: string;
+  specs: string[];
+  work_process: string;
+  title_en: string;
+  description_en: string;
+  audience_en: string;
+  overview_en: string;
+  challenge_en: string;
+  process_en: string;
+  solution_en: string;
+  specs_en: string[];
   created_at: string;
   updated_at: string;
 }
 
-export type PortfolioInput = Pick<Portfolio, 'title' | 'image_url' | 'client' | 'category' | 'description' | 'overview' | 'challenge' | 'solution'>;
+export type PortfolioInput = Pick<Portfolio, 'title' | 'slug' | 'image_url' | 'client' | 'category' | 'description' | 'overview' | 'challenge' | 'solution' | 'is_featured' | 'location' | 'audience' | 'specs' | 'work_process' | 'title_en' | 'description_en' | 'audience_en' | 'overview_en' | 'challenge_en' | 'process_en' | 'solution_en' | 'specs_en'>;
+
+export interface PortfolioSlugAlias {
+  old_slug: string;
+  portfolio_id: string;
+}
 
 export interface NewsRecord {
   id: string;

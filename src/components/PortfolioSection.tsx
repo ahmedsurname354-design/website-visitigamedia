@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom';
 import { ArrowUpRight, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
-import caseStudies from '@/data/case-studies.json';
-import englishStudies from '@/data/case-studies-en.json';
 import { useTranslation } from '@/i18n';
+import { featuredPortfolios, portfolioCopy } from '@/lib/portfolio';
 import { listPublicPortfolios } from '@/lib/adminApi';
 import { getPrerenderData } from '@/lib/prerenderData';
 import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
@@ -284,8 +283,9 @@ export default function PortfolioSection() {
     return () => window.removeEventListener('keydown', closeOnEscape);
   }, [previewProject]);
   const displayedProjects = remoteProjects !== null
-    ? remoteProjects.map((project) => ({ img: project.image_url, title: project.title, category: project.category, client: project.client, description: project.description, overview: project.overview, challenge: project.challenge, solution: project.solution }))
-    : projects;
+    ? remoteProjects.map((project) => ({ id: project.id, img: project.image_url, title: project.title, category: project.category }))
+    : projects.map((project) => ({ ...project, id: '' }));
+  const featured = remoteProjects ? featuredPortfolios(remoteProjects) : [];
   const displayedCategories = ['Lihat semua', ...Array.from(new Set(displayedProjects.map((project) => project.category)))];
 
   const filteredProjects = useMemo(
@@ -308,17 +308,17 @@ export default function PortfolioSection() {
               {lang === 'en' ? 'Our Work' : 'Karya Kami'}
             </p>
             <h1 className="text-white font-bold text-4xl md:text-5xl leading-tight tracking-tight">
-              {lang === 'en' ? <>Featured <span className="text-orange-500">Projects</span></> : <>Proyek <span className="text-orange-500">Unggulan</span></>}
+              {featured.length ? (lang === 'en' ? <>Featured <span className="text-orange-500">Projects</span></> : <>Proyek <span className="text-orange-500">Unggulan</span></>) : (lang === 'en' ? 'Projects' : 'Proyek')}
             </h1>
           </div>
         </motion.div>
 
-        <div className="mb-20 grid gap-6 md:grid-cols-2 xl:grid-cols-3" aria-label={lang === 'en' ? 'Selected case studies' : 'Studi kasus pilihan'}>
-          {caseStudies.map((study) => {
-            const copy = lang === 'en' ? englishStudies.find((item) => item.slug === study.slug) ?? study : study;
+        {featured.length > 0 && <div className="mb-20 grid gap-6 md:grid-cols-2 xl:grid-cols-3" aria-label={lang === 'en' ? 'Selected case studies' : 'Studi kasus pilihan'}>
+          {featured.map((study) => {
+            const copy = portfolioCopy(study, lang);
             return (
             <Link key={study.slug} to={`/portfolio/${study.slug}/`} className="group overflow-hidden rounded-lg border border-white/15 bg-white/5 transition hover:border-orange-500/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500">
-              <img src={optimizedImageUrl(study.image, 900)} alt={copy.title} loading="lazy" decoding="async" className={`aspect-[4/3] w-full object-cover ${study.slug === 'videotron-outdoor-mandalika' ? 'object-[center_30%]' : 'object-center'}`} />
+              <img src={optimizedImageUrl(study.image_url, 900)} alt={copy.title} loading="lazy" decoding="async" className="aspect-[4/3] w-full object-cover" />
               <div className="p-5">
                 <p className="text-xs font-semibold uppercase text-orange-400">{study.category} · {study.location}</p>
                 <div className="mt-3 flex items-start justify-between gap-3"><h2 className="text-xl font-semibold text-white">{copy.title}</h2><ArrowUpRight className="mt-1 size-5 shrink-0 text-orange-400" aria-hidden="true" /></div>
@@ -327,7 +327,7 @@ export default function PortfolioSection() {
               </div>
             </Link>
           );})}
-        </div>
+        </div>}
 
         <h2 className="mb-8 text-2xl font-semibold text-white">{lang === 'en' ? 'Project gallery' : 'Galeri proyek'}</h2>
 
@@ -350,7 +350,7 @@ export default function PortfolioSection() {
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
           {filteredProjects.map((proj, i) => {
-            const study = caseStudies.find((item) => item.image === proj.img);
+            const study = featured.find((item) => item.id === proj.id);
             const Card = study ? MotionLink : motion.button;
             return <Card
               {...(study ? { to: `/portfolio/${study.slug}/` } : { type: 'button' as const, onClick: () => setPreviewProject(proj) })}
