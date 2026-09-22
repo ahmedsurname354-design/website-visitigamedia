@@ -7,6 +7,7 @@ import { pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
 import { loadEnv } from 'vite';
 import { buildRedirects, buildSitemap, canonicalRoute, STATIC_ROUTES } from './seo-build-lib.mjs';
+const retiredPortfolioSlugs = JSON.parse(await readFile(new URL('./retired-portfolio-slugs.json', import.meta.url), 'utf8'));
 
 const projectRoot = process.cwd();
 const distDir = join(projectRoot, 'dist');
@@ -37,18 +38,17 @@ async function getBuildContent() {
   if (!supabaseUrl || !supabaseKey) {
     if (requireNews) throw new Error('SEO_REQUIRE_NEWS=true, tetapi kredensial Supabase tidak tersedia.');
     console.warn('[seo] Kredensial Supabase tidak tersedia; prerender lokal memakai fallback statis.');
-    return { news: [], portfolios: null, aliases: [], products: null, serviceContent: null, catalogue: null };
+    return { news: [], portfolios: null, products: null, serviceContent: null, catalogue: null };
   }
-  const [news, portfolios, aliases, products, serviceRows, catalogueRows] = await Promise.all([
+  const [news, portfolios, products, serviceRows, catalogueRows] = await Promise.all([
     fetchPublicTable('news', '*', { published_at: 'not.is.null', order: 'published_at.desc' }),
     fetchPublicTable('portfolios', '*', { order: 'created_at.desc' }),
-    fetchPublicTable('portfolio_slug_aliases', 'old_slug,portfolio_id'),
     fetchPublicTable('products', '*', { order: 'sort_order.asc,created_at.asc' }),
     fetchPublicTable('service_content', '*', { id: 'eq.1' }),
     fetchPublicTable('product_catalogue', '*', { id: 'eq.1' }),
   ]);
   return {
-    news: news ?? [], portfolios, aliases: aliases ?? [], products,
+    news: news ?? [], portfolios, products,
     serviceContent: serviceRows?.[0] ?? null,
     catalogue: catalogueRows?.[0] ?? null,
   };
@@ -60,8 +60,6 @@ function dataForRoute(path, content) {
   if (path === '/services') return { route: path, serviceContent: content.serviceContent, portfolios: content.portfolios ?? undefined };
   if (path === '/product') return { route: path, products: content.products ?? undefined, catalogue: content.catalogue };
   if (path === '/portfolio') return { route: path, portfolios: content.portfolios ?? undefined };
-  if (path.startsWith('/portfolio/')) return { route: path, portfolios: content.portfolios ?? undefined,
-    portfolio: content.portfolios?.find(({ slug, is_featured }) => is_featured && path === `/portfolio/${slug}`) ?? null };
   if (path === '/') return { route: path, portfolios: content.portfolios ?? undefined };
   return { route: path };
 }
@@ -150,8 +148,7 @@ async function main() {
   const appShell = await readFile(join(distDir, 'index.html'), 'utf8');
   const articles = content.news;
   const articleRoutes = articles.map(({ slug }) => `/news/${slug}`);
-  const caseStudyRoutes = (content.portfolios ?? []).filter(({ is_featured }) => is_featured).map(({ slug }) => `/portfolio/${slug}`);
-  const routes = [...STATIC_ROUTES, ...caseStudyRoutes, ...articleRoutes];
+  const routes = [...STATIC_ROUTES, ...articleRoutes];
   const viteBin = join(projectRoot, 'node_modules', 'vite', 'bin', 'vite.js');
   const server = spawn(process.execPath, [viteBin, 'preview', '--host', '127.0.0.1', '--port', '4173', '--strictPort'], { stdio: 'inherit' });
   let browser;
@@ -172,9 +169,6 @@ async function main() {
               ? { route: path, products: allContent.products ?? undefined, catalogue: allContent.catalogue }
               : path === '/portfolio'
                 ? { route: path, portfolios: allContent.portfolios ?? undefined }
-                : path.startsWith('/portfolio/')
-                  ? { route: path, portfolios: allContent.portfolios ?? undefined,
-                    portfolio: allContent.portfolios?.find(({ slug, is_featured }) => is_featured && path === `/portfolio/${slug}`) ?? null }
                   : path === '/'
                     ? { route: path, portfolios: allContent.portfolios ?? undefined }
                     : { route: path };
@@ -188,7 +182,7 @@ async function main() {
     console.log('[seo] prerendered /');
     await snapshot(page, '/__not-found', content, join(distDir, '404.html'));
     console.log('[seo] prerendered 404');
-    await writeFile(join(distDir, '_redirects'), buildRedirects(articles, content.portfolios ?? [], content.aliases), 'utf8');
+    await writeFile(join(distDir, '_redirects'), buildRedirects(articles, retiredPortfolioSlugs), 'utf8');
   } finally {
     await browser?.close();
     await stopServer(server);
@@ -199,7 +193,7 @@ async function main() {
     .replace(/<title>.*?<\/title>/, '<title>Admin Visitiga</title>');
   await mkdir(join(distDir, 'admin'), { recursive: true });
   await writeFile(join(distDir, 'admin', 'index.html'), adminShell, 'utf8');
-  await writeFile(join(distDir, 'sitemap.xml'), buildSitemap(STATIC_ROUTES, articles, content.portfolios ?? [], siteUrl), 'utf8');
+  await writeFile(join(distDir, 'sitemap.xml'), buildSitemap(STATIC_ROUTES, articles, siteUrl), 'utf8');
   await writeFile(join(distDir, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /admin\n\nSitemap: ${siteUrl}/sitemap.xml\n`, 'utf8');
   await validateOutput(routes);
   console.log(`[seo] ${routes.length} halaman tervalidasi; sitemap dan robots.txt dibuat.`);

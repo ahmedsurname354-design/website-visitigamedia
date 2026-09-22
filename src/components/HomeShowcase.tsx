@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { ArrowRight, Check, Monitor, PanelsTopLeft, Layers3, Grid2x2Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useMotionPolicy } from '@/hooks/useMotionPolicy';
@@ -11,23 +10,19 @@ import motogp from '@/assets/clients/motogp.webp';
 import ugm from '@/assets/clients/ugm.webp';
 import mandalika from '@/assets/clients/mandalika.webp';
 import iims from '@/assets/clients/iims.webp';
-import { getPrerenderData } from '@/lib/prerenderData';
-import { featuredPortfolios, portfolioCopy } from '@/lib/portfolio';
-import type { Portfolio } from '@/types/admin';
 
 const serviceIcons = [Monitor, PanelsTopLeft, Layers3, Grid2x2Plus];
+const projects = [
+  { image: '/portfolio/outdoor/outdoor-13.webp', title: 'Mandalika International Circuit', category: 'Outdoor LED' },
+  { image: '/portfolio/indoor-9.webp', title: 'Plaza Indonesia', category: 'Indoor Display' },
+  { image: '/portfolio/rental/rental-8.webp', title: 'MotoGP Mandalika 2025', category: 'Rental LED' },
+];
 const clients = [wonderfulIndonesia, pertamina, motogp, ugm, mandalika, iims];
 
 export default function HomeShowcase() {
   const { reducedMotion } = useMotionPolicy();
   const { dict, lang } = useTranslation();
   const id = lang === 'id';
-  const [portfolios, setPortfolios] = useState<Portfolio[]>(() => getPrerenderData()?.portfolios ?? []);
-  useEffect(() => {
-    void import('@/lib/adminApi').then(({ listPublicPortfolios }) => listPublicPortfolios())
-      .then(setPortfolios).catch(() => undefined);
-  }, []);
-  const projects = featuredPortfolios(portfolios).slice(0, 3);
 
   return (
     <>
@@ -57,7 +52,7 @@ export default function HomeShowcase() {
         </div>
       </section>
 
-      {projects.length > 0 && <section className="editorial-section editorial-section--dark" aria-labelledby="home-work-title">
+      <section className="editorial-section editorial-section--dark" aria-labelledby="home-work-title">
         <div className="editorial-container">
           <div className="editorial-heading-row">
             <div>
@@ -68,15 +63,15 @@ export default function HomeShowcase() {
           </div>
           <div className="featured-work-grid">
             {projects.map((project, index) => (
-              <Link key={project.id} to={`/portfolio/${project.slug}/`} className={`featured-work-card featured-work-card--${index + 1}`}>
-                <img src={project.image_url} alt={portfolioCopy(project, lang).title} loading="lazy" decoding="async" />
+              <Link key={project.title} to="/portfolio" className={`featured-work-card featured-work-card--${index + 1}`}>
+                <img src={project.image} alt={project.title} loading="lazy" decoding="async" />
                 <span className="featured-work-overlay" />
-                <span className="featured-work-meta"><small>{project.category}</small><strong>{portfolioCopy(project, lang).title}</strong></span>
+                <span className="featured-work-meta"><small>{project.category}</small><strong>{project.title}</strong></span>
               </Link>
             ))}
           </div>
         </div>
-      </section>}
+      </section>
 
       <section className="editorial-section editorial-story" aria-labelledby="home-about-title">
         <div className="editorial-container editorial-story-grid">

@@ -6,7 +6,6 @@ export interface PrerenderData {
   news?: NewsRecord[];
   article?: NewsRecord | null;
   portfolios?: Portfolio[];
-  portfolio?: Portfolio | null;
   products?: Product[];
   catalogue?: ProductCatalogue | null;
   serviceContent?: ServiceContent | null;

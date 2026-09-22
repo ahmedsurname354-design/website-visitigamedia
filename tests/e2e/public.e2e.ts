@@ -55,3 +55,21 @@ test('contact form handles a successful RPC response', async ({ page }) => {
   await page.getByRole('button', { name: /Kirim Permintaan/ }).click();
   await expect(page.getByText(/berhasil dikirim/i)).toBeVisible();
 });
+
+test('portfolio filters and opens an in-page project detail on desktop and mobile', async ({ page }) => {
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto('/portfolio/');
+    const gallery = page.locator('#root #portfolio');
+    await expect(gallery.locator('h1')).toContainText('Proyek');
+    await expect(page.getByRole('heading', { name: 'Proyek Unggulan' })).toHaveCount(0);
+    await gallery.locator('.flex.flex-wrap button').nth(1).click();
+    const card = gallery.locator('.grid button').first();
+    await expect(card).toBeVisible();
+    await card.click();
+    await expect(page).toHaveURL(/\/portfolio\/$/);
+    await expect(page.locator('#main-content article h1')).toBeVisible();
+    await page.getByRole('button', { name: 'Kembali ke Proyek' }).first().click();
+    await expect(gallery.locator('h1')).toBeVisible();
+  }
+});

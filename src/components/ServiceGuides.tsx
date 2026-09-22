@@ -1,13 +1,4 @@
-import { useEffect, useState } from 'react';
-import { ArrowUpRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { useTranslation } from '@/i18n';
-import { listPublicPortfolios } from '@/lib/adminApi';
-import { getPrerenderData } from '@/lib/prerenderData';
-import { featuredPortfolios, portfolioCopy } from '@/lib/portfolio';
-import type { Portfolio } from '@/types/admin';
-
-const relatedCategories = ['Indoor Media', 'Outdoor Media', 'Rental LED', 'Audio Visual'];
 
 const guides = [
   {
@@ -90,9 +81,6 @@ const englishGuides = [
 export default function ServiceGuides() {
   const { lang } = useTranslation();
   const english = lang === 'en';
-  const [portfolios, setPortfolios] = useState<Portfolio[]>(() => getPrerenderData()?.portfolios ?? []);
-  useEffect(() => { void listPublicPortfolios().then(setPortfolios).catch(() => undefined); }, []);
-  const featured = featuredPortfolios(portfolios);
   return <section className="bg-white py-20 text-neutral-900" aria-labelledby="service-guides-title">
     <div className="mx-auto max-w-7xl px-5 sm:px-8">
       <p className="text-sm font-semibold uppercase text-orange-600">{english ? 'Service guide' : 'Panduan layanan'}</p>
@@ -100,8 +88,6 @@ export default function ServiceGuides() {
       <div className="mt-12 divide-y divide-neutral-200 border-t border-neutral-200">
         {guides.map((item, index) => {
           const guide = english ? { ...item, ...englishGuides[index] } : item;
-          const related = featured.find((project) => project.slug === item.slug)
-            ?? featured.find((project) => project.category === relatedCategories[index]);
           return <article key={item.slug} className="grid gap-6 py-10 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-12">
           <div><span className="text-sm font-semibold text-orange-600">0{index + 1}</span><h3 className="mt-2 text-2xl font-semibold">{guide.title}</h3></div>
           <div className="grid gap-7 md:grid-cols-2">
@@ -109,7 +95,6 @@ export default function ServiceGuides() {
             <div><h4 className="text-sm font-semibold uppercase text-neutral-500">{english ? 'What to confirm' : 'Yang perlu dipastikan'}</h4><p className="mt-2 leading-7">{guide.focus}</p></div>
             <div><h4 className="text-sm font-semibold uppercase text-neutral-500">{english ? 'Workflow' : 'Alur kerja'}</h4><p className="mt-2 leading-7">{guide.workflow}</p></div>
             <div><h4 className="text-sm font-semibold uppercase text-neutral-500">{guide.question}</h4><p className="mt-2 leading-7">{guide.answer}</p></div>
-            {related && <Link to={`/portfolio/${related.slug}/`} className="inline-flex items-center gap-2 text-sm font-semibold text-orange-600 md:col-span-2">{portfolioCopy(related, lang).title}<ArrowUpRight className="size-4" /></Link>}
           </div>
         </article>;})}
       </div>
