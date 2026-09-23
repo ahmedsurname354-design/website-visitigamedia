@@ -772,6 +772,11 @@ img, video { max-width: 100%; }
 @keyframes page-content-enter { from { opacity: 0; } to { opacity: 1; } }
 .page-content-enter { animation: page-content-enter 200ms cubic-bezier(.22,1,.36,1); }
 .hero-editorial__glow { background: radial-gradient(ellipse at 75% 30%, rgb(249 115 22 / .08), transparent 35%), radial-gradient(ellipse at 35% 70%, rgb(254 215 170 / .04), transparent 40%); }
+.public-site .portfolio-hero h1,
+.public-site .portfolio-hero p,
+.public-site .portfolio-hero a,
+.public-site .portfolio-hero button,
+.public-site .portfolio-hero span { color: #fff !important; }
 .editorial-story-image img { aspect-ratio: 4 / 5; }
 .client-proof img { height: 3.2rem; }
 @media (prefers-reduced-motion: reduce) {

@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
-import type { ContactLead, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, Product, ProductCatalogue, ProductInput, ServiceContent, ServiceContentInput } from '@/types/admin';
+import type { ContactLead, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, PortfolioSlugAlias, Product, ProductCatalogue, ProductInput, ServiceContent, ServiceContentInput } from '@/types/admin';
 
 function client(): SupabaseClient {
   if (!supabase) throw new Error('Supabase belum dikonfigurasi.');
@@ -39,8 +39,38 @@ export async function listPublicPortfolios(): Promise<Portfolio[]> {
   return listPortfolios();
 }
 
+export async function getPublicPortfolioBySlug(slug: string): Promise<Portfolio | null> {
+  const { data, error } = await client().from('portfolios').select('*').eq('slug', slug).maybeSingle();
+  if (error) throw error;
+  return data as Portfolio | null;
+}
+
+export async function getPublicPortfolioById(id: string): Promise<Portfolio | null> {
+  const { data, error } = await client().from('portfolios').select('*').eq('id', id).maybeSingle();
+  if (error) throw error;
+  return data as Portfolio | null;
+}
+
+export async function getPortfolioAlias(slug: string): Promise<PortfolioSlugAlias | null> {
+  const { data, error } = await client().from('portfolio_slug_aliases').select('old_slug,portfolio_id').eq('old_slug', slug).maybeSingle();
+  if (error) throw error;
+  return data as PortfolioSlugAlias | null;
+}
+
+export async function listPortfolioAliases(): Promise<PortfolioSlugAlias[]> {
+  const { data, error } = await client().from('portfolio_slug_aliases').select('old_slug,portfolio_id');
+  if (error) throw error;
+  return data as PortfolioSlugAlias[];
+}
+
+export async function setPortfolioHeroSlides(projectIds: string[]): Promise<void> {
+  const { error } = await client().rpc('set_portfolio_hero_slides', { project_ids: projectIds });
+  if (error) throw error;
+}
+
 export async function savePortfolio(input: PortfolioInput, id?: string): Promise<void> {
   assertSafeMediaUrl(input.image_url, 'URL gambar project');
+  if (input.hero_image_url) assertSafeMediaUrl(input.hero_image_url, 'URL banner proyek');
   const query = id ? client().from('portfolios').update(input).eq('id', id) : client().from('portfolios').insert(input);
   const { error } = await query;
   if (error) throw error;

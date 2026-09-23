@@ -56,20 +56,30 @@ test('contact form handles a successful RPC response', async ({ page }) => {
   await expect(page.getByText(/berhasil dikirim/i)).toBeVisible();
 });
 
-test('portfolio filters and opens an in-page project detail on desktop and mobile', async ({ page }) => {
+test('portfolio filters, slideshow, and detail URLs work on desktop and mobile', async ({ page }) => {
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 844 });
     await page.goto('/portfolio/');
     const gallery = page.locator('#root #portfolio');
-    await expect(gallery.locator('h1')).toContainText('Proyek');
-    await expect(page.getByRole('heading', { name: 'Proyek Unggulan' })).toHaveCount(0);
-    await gallery.locator('.flex.flex-wrap button').nth(1).click();
-    const card = gallery.locator('.grid button').first();
+    await expect(gallery).toBeVisible();
+    const indicators = page.locator('.portfolio-hero button[aria-label^="Tampilkan slide"]');
+    expect(await indicators.count()).toBeLessThanOrEqual(6);
+    expect(await page.locator('.portfolio-hero h1').evaluate((element) => getComputedStyle(element).color)).toBe('rgb(255, 255, 255)');
+    expect(await page.locator('.portfolio-hero p').first().evaluate((element) => getComputedStyle(element).color)).toBe('rgb(255, 255, 255)');
+    await expect(page.getByRole('link', { name: 'Lihat proyek' })).toHaveAttribute('href', /\/portfolio\/[^/]+\/$/);
+    await page.getByRole('button', { name: 'Slide berikutnya' }).click();
+    await expect(page.getByRole('button', { name: 'Tampilkan slide 2' })).toHaveAttribute('aria-current', 'true');
+    await gallery.getByRole('button', { name: 'Lihat semua' }).click();
+    const card = gallery.locator('.grid a[href^="/portfolio/"]').first();
     await expect(card).toBeVisible();
+    const href = await card.getAttribute('href');
     await card.click();
-    await expect(page).toHaveURL(/\/portfolio\/$/);
+    await expect(page).toHaveURL(/\/portfolio\/[^/]+\/$/);
     await expect(page.locator('#main-content article h1')).toBeVisible();
-    await page.getByRole('button', { name: 'Kembali ke Proyek' }).first().click();
-    await expect(gallery.locator('h1')).toBeVisible();
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', new RegExp(`${href?.replaceAll('/', '\\/')}$`));
+    await page.goto(href!);
+    await expect(page.locator('#main-content article h1')).toBeVisible();
+    await page.getByRole('link', { name: 'Kembali ke portofolio' }).click();
+    await expect(page).toHaveURL(/\/portfolio\/$/);
   }
 });

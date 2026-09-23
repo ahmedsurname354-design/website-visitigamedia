@@ -1,6 +1,7 @@
 export interface Portfolio {
   id: string;
   title: string;
+  slug: string;
   image_url: string;
   client: string;
   category: string;
@@ -8,11 +9,20 @@ export interface Portfolio {
   overview: string;
   challenge: string;
   solution: string;
+  seo_title: string;
+  seo_description: string;
+  hero_image_url: string;
+  hero_position: number | null;
   created_at: string;
   updated_at: string;
 }
 
-export type PortfolioInput = Pick<Portfolio, 'title' | 'image_url' | 'client' | 'category' | 'description' | 'overview' | 'challenge' | 'solution'>;
+export type PortfolioInput = Pick<Portfolio, 'title' | 'slug' | 'image_url' | 'client' | 'category' | 'description' | 'overview' | 'challenge' | 'solution' | 'seo_title' | 'seo_description' | 'hero_image_url'>;
+
+export interface PortfolioSlugAlias {
+  old_slug: string;
+  portfolio_id: string;
+}
 
 export interface NewsRecord {
   id: string;
