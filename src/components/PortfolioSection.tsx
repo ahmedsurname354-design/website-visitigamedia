@@ -44,7 +44,7 @@ export function PortfolioHero({ slides }: { slides: Portfolio[] }) {
       <span className="min-w-12 text-center text-sm tabular-nums">{index + 1}/{slides.length}</span>
       <button type="button" aria-label="Slide berikutnya" onClick={() => move(index + 1)} className="grid size-11 place-items-center rounded-full border border-white/70 bg-black/30 hover:bg-black/60"><ChevronRight className="size-5" /></button>
     </div>}
-    {slides.length > 1 && <div className="absolute bottom-7 left-5 flex gap-2 sm:bottom-10 sm:left-8 lg:left-12">{slides.map((slide, slideIndex) => <button key={slide.id} type="button" aria-label={`Tampilkan slide ${slideIndex + 1}`} aria-current={slideIndex === index ? 'true' : undefined} onClick={() => move(slideIndex)} className={`h-2 rounded-full transition-[width,background-color] ${slideIndex === index ? 'w-7 bg-orange-400' : 'w-2 bg-white/70'}`} />)}</div>}
+    {slides.length > 1 && <div className="absolute bottom-5 left-5 flex sm:bottom-8 sm:left-8 lg:left-12">{slides.map((slide, slideIndex) => <button key={slide.id} type="button" aria-label={`Tampilkan slide ${slideIndex + 1}`} aria-current={slideIndex === index ? 'true' : undefined} onClick={() => move(slideIndex)} className="grid size-6 place-items-center"><span aria-hidden="true" className={`h-2 rounded-full transition-[width,background-color] ${slideIndex === index ? 'w-5 bg-orange-400' : 'w-2 bg-white/70'}`} /></button>)}</div>}
   </section>;
 }
 
