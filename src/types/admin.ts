@@ -17,7 +17,7 @@ export interface Portfolio {
   updated_at: string;
 }
 
-export type PortfolioInput = Pick<Portfolio, 'title' | 'slug' | 'image_url' | 'client' | 'category' | 'description' | 'overview' | 'challenge' | 'solution' | 'seo_title' | 'seo_description' | 'hero_image_url'>;
+export type PortfolioInput = Pick<Portfolio, 'title' | 'slug' | 'image_url' | 'client' | 'category' | 'description' | 'overview' | 'challenge' | 'solution' | 'seo_title' | 'seo_description'>;
 
 export interface PortfolioSlugAlias {
   old_slug: string;

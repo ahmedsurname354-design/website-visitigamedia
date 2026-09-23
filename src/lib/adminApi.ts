@@ -63,14 +63,8 @@ export async function listPortfolioAliases(): Promise<PortfolioSlugAlias[]> {
   return data as PortfolioSlugAlias[];
 }
 
-export async function setPortfolioHeroSlides(projectIds: string[]): Promise<void> {
-  const { error } = await client().rpc('set_portfolio_hero_slides', { project_ids: projectIds });
-  if (error) throw error;
-}
-
 export async function savePortfolio(input: PortfolioInput, id?: string): Promise<void> {
   assertSafeMediaUrl(input.image_url, 'URL gambar project');
-  if (input.hero_image_url) assertSafeMediaUrl(input.hero_image_url, 'URL banner proyek');
   const query = id ? client().from('portfolios').update(input).eq('id', id) : client().from('portfolios').insert(input);
   const { error } = await query;
   if (error) throw error;

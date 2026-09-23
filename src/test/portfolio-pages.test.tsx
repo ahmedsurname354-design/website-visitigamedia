@@ -4,7 +4,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '@/i18n';
 import PortfolioSection from '@/components/PortfolioSection';
 import { listPublicPortfolios } from '@/lib/adminApi';
-import { isSlidePosition } from '@/lib/portfolioSlides';
 import type { Portfolio } from '@/types/admin';
 
 const projects = [
@@ -20,12 +19,8 @@ const projects = [
 
 vi.mock('@/lib/adminApi', () => ({ listPublicPortfolios: vi.fn(async () => projects) }));
 
-describe('portfolio gallery and slideshow', () => {
-  it('only accepts six numbered slide positions', () => {
-    expect([null, undefined, 0, 1, 6, 7, 1.5].filter(isSlidePosition)).toEqual([1, 6]);
-  });
-
-  it('does not turn 49 legacy gallery projects into slides', async () => {
+describe('portfolio gallery', () => {
+  it('shows all 49 projects without a slideshow', async () => {
     const legacyProjects = Array.from({ length: 49 }, (_, index) => ({
       ...projects[0], id: `legacy-${index}`, slug: `legacy-${index}`, title: `Legacy ${index}`, hero_position: undefined,
     })) as unknown as Portfolio[];
@@ -36,14 +31,12 @@ describe('portfolio gallery and slideshow', () => {
     expect(screen.queryByRole('button', { name: 'Slide berikutnya' })).not.toBeInTheDocument();
   });
 
-  it('links cards to detail URLs and filters without removing slides', async () => {
+  it('links cards to SEO detail URLs and filters the gallery', async () => {
     render(<LanguageProvider><MemoryRouter><PortfolioSection /></MemoryRouter></LanguageProvider>);
     expect(await screen.findByRole('link', { name: /Outdoor Project/i })).toHaveAttribute('href', '/portfolio/outdoor-project/');
     fireEvent.click(screen.getByRole('button', { name: 'Indoor Media' }));
     expect(screen.queryByRole('link', { name: /Outdoor Project/i })).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Indoor Project/i })).toHaveAttribute('href', '/portfolio/indoor-project/');
-    expect(screen.getByRole('link', { name: 'Lihat proyek' })).toHaveAttribute('href', '/portfolio/outdoor-project/');
-    fireEvent.click(screen.getByRole('button', { name: 'Slide berikutnya' }));
-    await waitFor(() => expect(screen.getByRole('link', { name: 'Lihat proyek' })).toHaveAttribute('href', '/portfolio/indoor-project/'));
+    expect(screen.queryByRole('region', { name: 'Proyek pilihan' })).not.toBeInTheDocument();
   });
 });

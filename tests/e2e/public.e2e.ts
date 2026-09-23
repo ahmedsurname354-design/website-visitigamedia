@@ -56,19 +56,14 @@ test('contact form handles a successful RPC response', async ({ page }) => {
   await expect(page.getByText(/berhasil dikirim/i)).toBeVisible();
 });
 
-test('portfolio filters, slideshow, and detail URLs work on desktop and mobile', async ({ page }) => {
+test('portfolio gallery and detail URLs work on desktop and mobile', async ({ page }) => {
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 844 });
     await page.goto('/portfolio/');
     const gallery = page.locator('#root #portfolio');
     await expect(gallery).toBeVisible();
-    const indicators = page.locator('.portfolio-hero button[aria-label^="Tampilkan slide"]');
-    expect(await indicators.count()).toBeLessThanOrEqual(6);
-    expect(await page.locator('.portfolio-hero h1').evaluate((element) => getComputedStyle(element).color)).toBe('rgb(255, 255, 255)');
-    expect(await page.locator('.portfolio-hero p').first().evaluate((element) => getComputedStyle(element).color)).toBe('rgb(255, 255, 255)');
-    await expect(page.getByRole('link', { name: 'Lihat proyek' })).toHaveAttribute('href', /\/portfolio\/[^/]+\/$/);
-    await page.getByRole('button', { name: 'Slide berikutnya' }).click();
-    await expect(page.getByRole('button', { name: 'Tampilkan slide 2' })).toHaveAttribute('aria-current', 'true');
+    await expect(page.locator('.portfolio-hero')).toHaveCount(0);
+    await expect(gallery.getByRole('heading', { name: /Proyek|Projects/ })).toBeVisible();
     await gallery.getByRole('button', { name: 'Lihat semua' }).click();
     const card = gallery.locator('.grid a[href^="/portfolio/"]').first();
     await expect(card).toBeVisible();
