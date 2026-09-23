@@ -96,6 +96,10 @@ export async function getPublicNews(slug: string): Promise<NewsRecord | null> {
 export async function saveNews(input: NewsInput, id?: string): Promise<void> {
   assertSafeMediaUrl(input.cover_image, 'URL cover berita');
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(input.slug) || input.slug.length > 100) throw new Error('Slug hanya boleh berisi huruf kecil, angka, dan tanda hubung (maksimal 100 karakter).');
+  if ((input.seo_title?.length ?? 0) > 70) throw new Error('SEO title maksimal 70 karakter.');
+  if ((input.seo_description?.length ?? 0) > 180) throw new Error('Meta description maksimal 180 karakter.');
+  if ((input.cover_alt?.length ?? 0) > 180) throw new Error('Alt text cover maksimal 180 karakter.');
+  if ((input.target_keyword?.length ?? 0) > 100) throw new Error('Target keyword maksimal 100 karakter.');
   const query = id ? client().from('news').update(input).eq('id', id) : client().from('news').insert(input);
   const { error } = await query;
   if (error?.code === '23505') throw new Error('Slug sudah digunakan oleh berita lain. Pilih slug yang berbeda.');

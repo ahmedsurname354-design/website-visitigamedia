@@ -6,6 +6,7 @@ type PageLoader = () => Promise<PageModule>;
 export const publicPageLoaders = {
   about: () => import('@/pages/AboutPage'),
   services: () => import('@/pages/ServicesPage'),
+  serviceLanding: () => import('@/pages/ServiceLandingPage'),
   product: () => import('@/pages/ProductPage'),
   portfolio: () => import('@/pages/PortfolioPage'),
   portfolioDetail: () => import('@/pages/PortfolioDetailPage'),
@@ -35,6 +36,8 @@ export function preloadPublicRoute(path: string): Promise<PageModule | undefined
     ? publicPageLoaders.portfolioDetail
     : normalizedPath.startsWith('/news/')
     ? publicPageLoaders.newsDetail
+    : normalizedPath.startsWith('/services/')
+    ? publicPageLoaders.serviceLanding
     : routeLoaders[normalizedPath];
   // Speculative loading must never surface an unhandled rejection.
   return loader?.().catch(() => undefined);

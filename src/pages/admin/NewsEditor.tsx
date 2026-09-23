@@ -6,6 +6,7 @@ import { RichTextEditor } from '@/components/admin/RichTextEditor';
 import { AdminAlert } from '@/components/admin/AdminUi';
 import { NEWS_SLUG_PATTERN, slugifyNewsTitle } from '@/lib/newsSlug';
 import type { NewsRecord } from '@/types/admin';
+import { normalizeArticleHeadings } from '@/lib/articleSeo';
 
 export function NewsEditor({ article, onClose, onSaved }: { article: NewsRecord | null; onClose: () => void; onSaved: () => Promise<void> }) {
   const [title, setTitle] = useState(article?.title ?? '');
@@ -24,7 +25,9 @@ export function NewsEditor({ article, onClose, onSaved }: { article: NewsRecord 
       await saveNews({
         title: title.trim(), slug, author: String(form.get('author')).trim(),
         category: String(form.get('category')).trim(), cover_image: coverImage,
-        excerpt: String(form.get('excerpt')).trim(), content,
+        excerpt: String(form.get('excerpt')).trim(), content: normalizeArticleHeadings(content),
+        seo_title: String(form.get('seo_title')).trim(), seo_description: String(form.get('seo_description')).trim(),
+        cover_alt: String(form.get('cover_alt')).trim(), target_keyword: String(form.get('target_keyword')).trim(),
         published_at: date ? new Date(`${date}T00:00:00`).toISOString() : null,
       }, article?.id);
       await onSaved();
@@ -56,6 +59,15 @@ export function NewsEditor({ article, onClose, onSaved }: { article: NewsRecord 
     <label className="text-sm font-medium sm:col-span-2">Ringkasan
       <textarea name="excerpt" required defaultValue={article?.excerpt ?? ''} rows={3} className="mt-2 w-full rounded-xl border border-slate-300 px-3 py-2 outline-none focus:border-orange-500" />
     </label>
+    <details className="sm:col-span-2">
+      <summary className="cursor-pointer font-semibold">SEO artikel</summary>
+      <div className="mt-4 grid gap-5 sm:grid-cols-2">
+        <InputField label="SEO title (opsional)" name="seo_title" initial={article?.seo_title} required={false} maxLength={70} />
+        <InputField label="Target keyword (internal)" name="target_keyword" initial={article?.target_keyword} required={false} maxLength={100} />
+        <label className="text-sm font-medium sm:col-span-2">Meta description (opsional)<textarea name="seo_description" maxLength={180} defaultValue={article?.seo_description ?? ''} rows={3} className="mt-2 w-full rounded-xl border border-slate-300 px-3 py-2 outline-none focus:border-orange-500" /></label>
+        <label className="text-sm font-medium sm:col-span-2">Alt text cover (opsional)<input name="cover_alt" maxLength={180} defaultValue={article?.cover_alt ?? ''} className="mt-2 w-full rounded-xl border border-slate-300 px-3 py-2 outline-none focus:border-orange-500" /></label>
+      </div>
+    </details>
     <RichTextEditor name="content" initial={article?.content} />
   </ContentModal>;
 }

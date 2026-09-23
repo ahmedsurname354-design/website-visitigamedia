@@ -10,6 +10,7 @@ import { publicPageLoaders } from '@/lib/publicRoutes';
 import { canonicalPublicPath } from '@/lib/seo';
 const AboutPage = lazy(publicPageLoaders.about);
 const ServicesPage = lazy(publicPageLoaders.services);
+const ServiceLandingPage = lazy(publicPageLoaders.serviceLanding);
 const PortfolioPage = lazy(publicPageLoaders.portfolio);
 const PortfolioDetailPage = lazy(publicPageLoaders.portfolioDetail);
 const VideoPage = lazy(publicPageLoaders.video);
@@ -74,6 +75,7 @@ function AnimatedRoutes() {
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/services" element={<ServicesPage />} />
+              <Route path="/services/:serviceSlug" element={<ServiceLandingPage />} />
               <Route path="/product" element={<ProductPage />} />
               <Route path="/portfolio" element={<PortfolioPage />} />
               <Route path="/portfolio/:slug" element={<PortfolioDetailPage />} />

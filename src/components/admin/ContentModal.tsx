@@ -28,8 +28,8 @@ export function ContentModal({ title, children, onClose, onSubmit }: ContentModa
   );
 }
 
-type InputFieldProps = { label: string; name: string; initial?: string; type?: string; required?: boolean; className?: string };
+type InputFieldProps = { label: string; name: string; initial?: string; type?: string; required?: boolean; className?: string; maxLength?: number };
 
-export function InputField({ label, name, initial = '', type = 'text', required = true, className = '' }: InputFieldProps) {
-  return <label className={`text-sm font-medium ${className}`}>{label}<input name={name} type={type} required={required} defaultValue={initial} className="mt-2 w-full rounded-xl border border-slate-300 px-3 py-2 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100" /></label>;
+export function InputField({ label, name, initial = '', type = 'text', required = true, className = '', maxLength }: InputFieldProps) {
+  return <label className={`text-sm font-medium ${className}`}>{label}<input name={name} type={type} required={required} maxLength={maxLength} defaultValue={initial} className="mt-2 w-full rounded-xl border border-slate-300 px-3 py-2 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100" /></label>;
 }

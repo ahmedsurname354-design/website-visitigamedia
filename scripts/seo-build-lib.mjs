@@ -1,4 +1,4 @@
-export const STATIC_ROUTES = ['/', '/about', '/services', '/product', '/portfolio', '/video', '/contact', '/news', '/faq', '/privacy'];
+export const STATIC_ROUTES = ['/', '/about', '/services', '/services/led-indoor', '/services/videotron-outdoor', '/services/rental-led', '/services/media-konvensional', '/product', '/portfolio', '/video', '/contact', '/news', '/faq', '/privacy'];
 
 export function canonicalRoute(path) {
   return path.endsWith('/') ? path : `${path}/`;

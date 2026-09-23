@@ -26,6 +26,22 @@ const seoByPath: Record<string, Record<Lang, SeoCopy>> = {
     id: { title: 'Layanan LED Indoor, Outdoor & Rental — Visitiga', description: 'Jelajahi layanan LED videotron outdoor, LED display indoor, rental LED, dan media konvensional dari Visitiga.' },
     en: { title: 'Indoor, Outdoor & Rental LED Services — Visitiga', description: 'Explore outdoor videotron, indoor LED display, LED rental, and conventional media services from Visitiga.' },
   },
+  '/services/led-indoor': {
+    id: { title: 'LED Indoor untuk Ruang Komersial | Visitiga', description: 'Perencanaan LED indoor untuk ruang rapat, kampus, retail, dan area presentasi berdasarkan jarak pandang serta kebutuhan ruang.' },
+    en: { title: 'Indoor LED for Commercial Spaces | Visitiga', description: 'Indoor LED planning for meeting rooms, campuses, retail, and presentation areas based on viewing distance and room requirements.' },
+  },
+  '/services/videotron-outdoor': {
+    id: { title: 'Videotron Outdoor untuk Berbagai Lokasi | Visitiga', description: 'Perencanaan videotron outdoor dengan mempertimbangkan struktur, cuaca, kecerahan, jarak pandang, daya, dan akses perawatan.' },
+    en: { title: 'Outdoor Videotron for Different Sites | Visitiga', description: 'Outdoor videotron planning based on structure, weather exposure, brightness, viewing distance, power, and maintenance access.' },
+  },
+  '/services/rental-led': {
+    id: { title: 'Rental LED untuk Acara dan Panggung | Visitiga', description: 'Rental LED untuk acara, konferensi, pertunjukan, dan nonton bersama dengan konfigurasi sesuai venue serta jarak penonton.' },
+    en: { title: 'LED Rental for Events and Stages | Visitiga', description: 'LED rental for events, conferences, performances, and public screenings, configured for the venue and viewing distance.' },
+  },
+  '/services/media-konvensional': {
+    id: { title: 'Billboard dan Media Konvensional | Visitiga', description: 'Perencanaan billboard, lightbox, dan media konvensional berdasarkan lokasi, bidang visual, struktur, serta pencahayaan.' },
+    en: { title: 'Billboards and Conventional Media | Visitiga', description: 'Billboard, lightbox, and conventional media planning based on location, display area, structure, and lighting.' },
+  },
   '/product': {
     id: { title: 'Produk LED Display & Videotron — Visitiga', description: 'Jelajahi pilihan produk dan solusi media LED Visitiga yang dapat disesuaikan dengan kebutuhan merek Anda.' },
     en: { title: 'LED Display & Videotron Products — Visitiga', description: 'Explore Visitiga LED products and media solutions tailored to your brand requirements.' },

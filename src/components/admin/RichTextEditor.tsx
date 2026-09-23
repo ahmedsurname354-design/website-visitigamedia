@@ -21,7 +21,7 @@ export function RichTextEditor({ name, initial = '' }: { name: string; initial?:
         if (disposed) return;
         $editor = jquery(editor);
         if (typeof $editor.summernote !== 'function') throw new Error('Summernote tidak berhasil dimuat.');
-        $editor.summernote({ height: 320, placeholder: 'Tulis isi artikel di sini…', toolbar: [['style', ['style']], ['font', ['bold', 'italic', 'underline', 'clear']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['insert', ['link', 'picture', 'video']], ['view', ['fullscreen', 'codeview']]], callbacks: { onChange: (value: string) => setContent(value) } });
+        $editor.summernote({ height: 320, placeholder: 'Tulis isi artikel di sini…', styleTags: ['p', 'blockquote', 'pre', 'h2', 'h3', 'h4'], toolbar: [['style', ['style']], ['font', ['bold', 'italic', 'underline', 'clear']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['insert', ['link', 'picture', 'video']], ['view', ['fullscreen', 'codeview']]], callbacks: { onChange: (value: string) => setContent(value) } });
         $editor.summernote('code', initial);
         setReady(true);
       } catch (reason) { if (!disposed) setEditorError(reason instanceof Error ? reason.message : 'Editor tidak dapat dimuat.'); }

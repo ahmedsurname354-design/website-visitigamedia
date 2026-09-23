@@ -33,12 +33,16 @@ export interface NewsRecord {
   author: string;
   category: string;
   excerpt: string;
+  seo_title?: string;
+  seo_description?: string;
+  cover_alt?: string;
+  target_keyword?: string;
   published_at: string | null;
   created_at: string;
   updated_at: string;
 }
 
-export type NewsInput = Pick<NewsRecord, 'title' | 'slug' | 'cover_image' | 'content' | 'author' | 'category' | 'excerpt' | 'published_at'>;
+export type NewsInput = Pick<NewsRecord, 'title' | 'slug' | 'cover_image' | 'content' | 'author' | 'category' | 'excerpt' | 'seo_title' | 'seo_description' | 'cover_alt' | 'target_keyword' | 'published_at'>;
 
 export interface Product {
   id: string;

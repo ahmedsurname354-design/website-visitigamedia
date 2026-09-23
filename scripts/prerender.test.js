@@ -9,6 +9,7 @@ describe('SEO build generator', () => {
   it('includes portfolio details and news in the sitemap', () => {
     const sitemap = buildSitemap(STATIC_ROUTES, [{ slug: 'published-article', updated_at: '2026-09-02T00:00:00.000Z' }], 'https://example.com', [{ slug: 'totem-minitron-sampoerna-palembang', updated_at: '2026-09-22T00:00:00.000Z' }]);
     expect(sitemap).toContain('<loc>https://example.com/portfolio/</loc>');
+    expect(sitemap).toContain('<loc>https://example.com/services/led-indoor/</loc>');
     expect(sitemap).toContain('<loc>https://example.com/news/published-article/</loc>');
     expect(sitemap).toContain('/portfolio/totem-minitron-sampoerna-palembang/');
     expect(sitemap).not.toContain('/admin');

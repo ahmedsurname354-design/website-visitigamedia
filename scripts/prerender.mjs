@@ -57,6 +57,7 @@ function dataForRoute(path, content) {
   if (path === '/news') return { route: path, news: content.news };
   if (path.startsWith('/news/')) return { route: path, news: content.news, article: content.news.find(({ slug }) => path === `/news/${slug}`) ?? null };
   if (path === '/services') return { route: path, serviceContent: content.serviceContent, portfolios: content.portfolios ?? undefined };
+  if (path.startsWith('/services/')) return { route: path, portfolios: content.portfolios ?? undefined };
   if (path === '/product') return { route: path, products: content.products ?? undefined, catalogue: content.catalogue };
   if (path === '/portfolio') return { route: path, portfolios: content.portfolios ?? undefined };
   if (path.startsWith('/portfolio/')) return { route: path, portfolios: content.portfolios ?? undefined, portfolio: content.portfolios?.find(({ slug }) => path === `/portfolio/${slug}`) ?? null };
@@ -167,6 +168,8 @@ async function main() {
           ? { route: path, news: allContent.news, article: allContent.news.find(({ slug }) => path === `/news/${slug}`) ?? null }
           : path === '/services'
             ? { route: path, serviceContent: allContent.serviceContent, portfolios: allContent.portfolios ?? undefined }
+          : path.startsWith('/services/')
+            ? { route: path, portfolios: allContent.portfolios ?? undefined }
             : path === '/product'
               ? { route: path, products: allContent.products ?? undefined, catalogue: allContent.catalogue }
               : path === '/portfolio'

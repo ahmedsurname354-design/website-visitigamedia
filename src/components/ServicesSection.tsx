@@ -3,6 +3,9 @@ import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { Monitor, PanelsTopLeft, Layers3, Grid2x2Plus, ArrowUpRight } from 'lucide-react';
 import { useTranslation } from '@/i18n';
 import type { ServiceContent } from '@/types/admin';
+import { Link } from 'react-router-dom';
+
+const servicePaths = ['/services/videotron-outdoor/', '/services/led-indoor/', '/services/rental-led/', '/services/media-konvensional/'];
 
 export default function ServicesSection({ content }: { content?: ServiceContent | null }) {
   const { ref, isInView, reducedMotion } = useScrollReveal();
@@ -53,11 +56,15 @@ export default function ServicesSection({ content }: { content?: ServiceContent 
                     </span>
                   ))}
                 </div>
+                <Link to={servicePaths[i]} className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-white hover:text-orange-400">
+                  {lang === 'id' ? 'Pelajari layanan' : 'Explore service'}
+                  <ArrowUpRight className="h-4 w-4" />
+                </Link>
                 <a
                   href="https://bit.ly/49NclAE"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-7 inline-flex items-center gap-2 text-orange-500 text-sm font-semibold transition-all duration-300 hover:gap-3"
+                  className="ml-5 mt-7 inline-flex items-center gap-2 text-orange-500 text-sm font-semibold transition-all duration-300 hover:gap-3"
                 >
                   {service.action}
                   <ArrowUpRight className="h-4 w-4" />

@@ -13,6 +13,12 @@ import LightReveal from '@/components/LightReveal';
 import { getPrerenderData } from '@/lib/prerenderData';
 
 const MAX_RELATED_ARTICLES = 6;
+const SERVICE_LINKS = [
+  { title: 'LED indoor', path: '/services/led-indoor/', terms: ['indoor', 'ruang rapat', 'kampus', 'retail', 'ritel'] },
+  { title: 'Videotron outdoor', path: '/services/videotron-outdoor/', terms: ['outdoor', 'videotron', 'luar ruang', 'dooh'] },
+  { title: 'Rental LED', path: '/services/rental-led/', terms: ['rental', 'sewa', 'event', 'acara', 'panggung'] },
+  { title: 'Media konvensional', path: '/services/media-konvensional/', terms: ['billboard', 'lightbox', 'signage', 'konvensional'] },
+];
 
 function getRelatedArticles(article: NewsRecord, articles: NewsRecord[]) {
   const candidates = articles.filter((candidate) => candidate.id !== article.id);
@@ -20,6 +26,16 @@ function getRelatedArticles(article: NewsRecord, articles: NewsRecord[]) {
   const sameCategory = candidates.filter((candidate) => candidate.category.toLocaleLowerCase() === normalizedCategory);
   const otherCategories = candidates.filter((candidate) => candidate.category.toLocaleLowerCase() !== normalizedCategory);
   return [...sameCategory, ...otherCategories].slice(0, MAX_RELATED_ARTICLES);
+}
+
+function getRelatedServices(article: NewsRecord) {
+  const text = `${article.title} ${article.category} ${article.excerpt} ${article.target_keyword ?? ''}`.toLocaleLowerCase();
+  const matches = SERVICE_LINKS
+    .map((service) => ({ service, score: service.terms.filter((term) => text.includes(term)).length }))
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score)
+    .map(({ service }) => service);
+  return (matches.length > 0 ? matches : SERVICE_LINKS).slice(0, 2);
 }
 
 function formatPublishedDate(value: string | null) {
@@ -39,18 +55,20 @@ export default function NewsDetailPage() {
   const [loadError, setLoadError] = useState('');
   const [relatedError, setRelatedError] = useState(false);
   const [copied, setCopied] = useState(false);
+  const seoTitle = article?.seo_title?.trim() || article?.title;
+  const seoDescription = article?.seo_description?.trim() || article?.excerpt;
 
   usePageMeta({
-    title: article?.title ? `${article.title} — Visitiga` : (en ? 'News — Visitiga' : 'Berita — Visitiga'),
-    description: article?.excerpt || (en ? 'Latest news and articles from Visitiga Media.' : 'Berita dan artikel terbaru dari Visitiga Media.'),
+    title: seoTitle ? `${seoTitle} — Visitiga` : (en ? 'News — Visitiga' : 'Berita — Visitiga'),
+    description: seoDescription || (en ? 'Latest news and articles from Visitiga Media.' : 'Berita dan artikel terbaru dari Visitiga Media.'),
     pathname: canonicalPublicPath(slug ? `/news/${slug}` : '/news'),
     image: article?.cover_image,
     type: article ? 'article' : 'website',
-    imageAlt: article?.title,
+    imageAlt: article?.cover_alt?.trim() || article?.title,
     lang,
     noIndex: !article,
     structuredData: article ? [
-      { '@context': 'https://schema.org', '@type': 'Article', headline: article.title, description: article.excerpt, image: article.cover_image.startsWith('http') ? article.cover_image : absoluteUrl(article.cover_image), datePublished: article.published_at, dateModified: article.updated_at, mainEntityOfPage: absoluteUrl(canonicalPublicPath(`/news/${article.slug}`)), author: { '@type': 'Person', name: article.author }, publisher: { '@type': 'Organization', name: 'Visitiga Media', logo: { '@type': 'ImageObject', url: absoluteUrl('/social-preview.png') } } },
+      { '@context': 'https://schema.org', '@type': 'Article', headline: article.title, description: seoDescription || article.excerpt, image: article.cover_image.startsWith('http') ? article.cover_image : absoluteUrl(article.cover_image), datePublished: article.published_at, dateModified: article.updated_at, mainEntityOfPage: absoluteUrl(canonicalPublicPath(`/news/${article.slug}`)), author: { '@type': 'Person', name: article.author }, publisher: { '@type': 'Organization', name: 'Visitiga Media', logo: { '@type': 'ImageObject', url: absoluteUrl('/social-preview.png') } }, ...(article.target_keyword?.trim() ? { keywords: article.target_keyword.trim() } : {}) },
       { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
         { '@type': 'ListItem', position: 1, name: en ? 'Home' : 'Beranda', item: absoluteUrl('/') },
         { '@type': 'ListItem', position: 2, name: en ? 'News' : 'Berita', item: absoluteUrl(canonicalPublicPath('/news')) },
@@ -163,7 +181,7 @@ export default function NewsDetailPage() {
               {article.excerpt && <p className="mt-6 max-w-4xl text-base leading-7 text-[#735c4d] sm:text-lg sm:leading-8">{article.excerpt}</p>}
             </header></LightReveal>
 
-            <LightReveal delay={0.04} className="mt-8"><img src={optimizedImageUrl(article.cover_image, 1400)} onError={({ currentTarget }) => restoreOriginalImage(currentTarget, article.cover_image)} alt={article.title} decoding="async" className="news-detail-cover aspect-[16/9] w-full rounded-2xl bg-[#f3e5d7] object-cover shadow-sm" /></LightReveal>
+            <LightReveal delay={0.04} className="mt-8"><img src={optimizedImageUrl(article.cover_image, 1400)} onError={({ currentTarget }) => restoreOriginalImage(currentTarget, article.cover_image)} alt={article.cover_alt?.trim() || article.title} decoding="async" className="news-detail-cover aspect-[16/9] w-full rounded-2xl bg-[#f3e5d7] object-cover shadow-sm" /></LightReveal>
             <LightReveal delay={0.06} className="mt-9"><div
               className="max-w-4xl text-base leading-8 text-[#5d4030] sm:text-[1.05rem] [&_a]:font-semibold [&_a]:text-orange-700 [&_a]:underline [&_a]:decoration-orange-300 [&_a]:underline-offset-4 [&_blockquote]:my-8 [&_blockquote]:border-l-4 [&_blockquote]:border-orange-400 [&_blockquote]:bg-[#fff2e5] [&_blockquote]:px-5 [&_blockquote]:py-4 [&_blockquote]:italic [&_h1]:mb-4 [&_h1]:mt-9 [&_h1]:text-3xl [&_h1]:font-black [&_h2]:mb-4 [&_h2]:mt-9 [&_h2]:text-2xl [&_h2]:font-black [&_h3]:mb-3 [&_h3]:mt-7 [&_h3]:text-xl [&_h3]:font-bold [&_img]:my-8 [&_img]:h-auto [&_img]:max-w-full [&_img]:rounded-xl [&_li]:mb-2 [&_ol]:my-5 [&_ol]:list-decimal [&_ol]:pl-6 [&_p]:mb-5 [&_strong]:font-bold [&_strong]:text-[#35231a] [&_ul]:my-5 [&_ul]:list-disc [&_ul]:pl-6"
               dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content) }}
@@ -200,6 +218,13 @@ export default function NewsDetailPage() {
                   ))}
                 </div>
               )}
+            </section>
+            <section className="mt-7 border-t border-[#ead5c1] pt-7" aria-labelledby="service-links-heading">
+              <h2 id="service-links-heading" className="text-xl font-black">{en ? 'Related services' : 'Layanan terkait'}</h2>
+              <div className="mt-4 grid gap-2">
+                {getRelatedServices(article).map((service) => <Link key={service.path} to={service.path} className="rounded-lg border border-[#ead5c1] bg-white px-4 py-3 text-sm font-semibold transition hover:border-orange-500 hover:text-orange-700">{service.title}</Link>)}
+                <Link to="/portfolio/" className="px-1 pt-2 text-sm font-semibold text-orange-700 underline underline-offset-4">{en ? 'View related projects' : 'Lihat portofolio proyek'}</Link>
+              </div>
             </section>
             </LightReveal>
           </aside>
