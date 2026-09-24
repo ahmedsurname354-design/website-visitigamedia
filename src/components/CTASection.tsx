@@ -4,14 +4,15 @@ import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { ArrowRight, Phone, Mail, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation, type Lang } from '@/i18n';
+import { readLocalStorage, writeLocalStorage } from '@/lib/safeStorage';
 
 const submissionKeyName = 'visitiga_contact_submission_key';
 
 function contactSubmissionKey() {
-  const existing = localStorage.getItem(submissionKeyName);
+  const existing = readLocalStorage(submissionKeyName);
   if (existing && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(existing)) return existing;
   const key = crypto.randomUUID();
-  localStorage.setItem(submissionKeyName, key);
+  writeLocalStorage(submissionKeyName, key);
   return key;
 }
 

@@ -11,8 +11,6 @@ export interface Portfolio {
   solution: string;
   seo_title: string;
   seo_description: string;
-  hero_image_url: string;
-  hero_position: number | null;
   created_at: string;
   updated_at: string;
 }

@@ -1,4 +1,5 @@
 import type { Metric } from 'web-vitals';
+import { readLocalStorage, writeLocalStorage } from '@/lib/safeStorage';
 
 export type ObservationKind = 'web_vital' | 'client_error' | 'csp_violation';
 export type ObservationRating = 'good' | 'needs-improvement' | 'poor';
@@ -7,10 +8,10 @@ const keyName = 'visitiga_observation_key';
 const sent = new Set<string>();
 
 function observationKey() {
-  const existing = localStorage.getItem(keyName);
+  const existing = readLocalStorage(keyName);
   if (existing && /^[0-9a-f-]{36}$/i.test(existing)) return existing;
   const value = crypto.randomUUID();
-  localStorage.setItem(keyName, value);
+  writeLocalStorage(keyName, value);
   return value;
 }
 

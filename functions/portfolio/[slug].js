@@ -11,7 +11,9 @@ async function queryOne(config, table, column, value, select) {
   url.searchParams.set('select', select);
   url.searchParams.set(column, `eq.${value}`);
   url.searchParams.set('limit', '1');
-  const response = await fetch(url, { headers: { apikey: config.supabaseKey, Authorization: `Bearer ${config.supabaseKey}` } });
+  const headers = { apikey: config.supabaseKey };
+  if (!config.supabaseKey.startsWith('sb_publishable_')) headers.Authorization = `Bearer ${config.supabaseKey}`;
+  const response = await fetch(url, { headers });
   if (!response.ok) throw new Error(`Supabase ${response.status}`);
   const rows = await response.json();
   return rows[0] || null;

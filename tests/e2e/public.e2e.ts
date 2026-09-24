@@ -62,7 +62,6 @@ test('portfolio gallery and detail URLs work on desktop and mobile', async ({ pa
     await page.goto('/portfolio/');
     const gallery = page.locator('#root #portfolio');
     await expect(gallery).toBeVisible();
-    await expect(page.locator('.portfolio-hero')).toHaveCount(0);
     await expect(gallery.getByRole('heading', { name: /Proyek|Projects/ })).toBeVisible();
     await gallery.getByRole('button', { name: 'Lihat semua' }).click();
     const card = gallery.locator('.grid a[href^="/portfolio/"]').first();

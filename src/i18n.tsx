@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { readLocalStorage, writeLocalStorage } from '@/lib/safeStorage';
 
 export type Lang = 'id' | 'en';
 
@@ -387,12 +388,12 @@ const LanguageContext = createContext<TranslationContextValue | undefined>(undef
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Lang>(() => {
     if (typeof window === 'undefined') return 'id';
-    const stored = localStorage.getItem('lang');
+    const stored = readLocalStorage('lang');
     return stored === 'en' ? 'en' : 'id';
   });
 
   useEffect(() => {
-    localStorage.setItem('lang', lang);
+    writeLocalStorage('lang', lang);
     document.documentElement.lang = lang;
   }, [lang]);
 

@@ -1,12 +1,13 @@
 import { supabase } from '@/lib/supabase';
+import { readLocalStorage, writeLocalStorage } from '@/lib/safeStorage';
 
 const visitorKey = 'visitiga_visitor_id';
 
 function visitorId() {
-  const existing = localStorage.getItem(visitorKey);
+  const existing = readLocalStorage(visitorKey);
   if (existing) return existing;
   const id = crypto.randomUUID();
-  localStorage.setItem(visitorKey, id);
+  writeLocalStorage(visitorKey, id);
   return id;
 }
 

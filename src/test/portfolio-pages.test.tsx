@@ -7,11 +7,11 @@ import { listPublicPortfolios } from '@/lib/adminApi';
 import type { Portfolio } from '@/types/admin';
 
 const projects = [
-  { id: '1', slug: 'outdoor-project', title: 'Outdoor Project', category: 'Outdoor Media', hero_position: 1 },
-  { id: '2', slug: 'indoor-project', title: 'Indoor Project', category: 'Indoor Media', hero_position: 2 },
-  { id: '3', slug: 'other-project', title: 'Other Project', category: 'Indoor Media', hero_position: null },
+  { id: '1', slug: 'outdoor-project', title: 'Outdoor Project', category: 'Outdoor Media' },
+  { id: '2', slug: 'indoor-project', title: 'Indoor Project', category: 'Indoor Media' },
+  { id: '3', slug: 'other-project', title: 'Other Project', category: 'Indoor Media' },
 ].map((item) => ({
-  image_url: '/image.jpg', hero_image_url: '', description: 'Project photo',
+  image_url: '/image.jpg', description: 'Project photo',
   client: 'Client', overview: '', challenge: '', solution: '', seo_title: '', seo_description: '',
   created_at: '2026-09-22T00:00:00Z', updated_at: '2026-09-22T00:00:00Z',
   ...item,
@@ -20,9 +20,9 @@ const projects = [
 vi.mock('@/lib/adminApi', () => ({ listPublicPortfolios: vi.fn(async () => projects) }));
 
 describe('portfolio gallery', () => {
-  it('shows all 49 projects without a slideshow', async () => {
+  it('shows all 49 projects in the gallery', async () => {
     const legacyProjects = Array.from({ length: 49 }, (_, index) => ({
-      ...projects[0], id: `legacy-${index}`, slug: `legacy-${index}`, title: `Legacy ${index}`, hero_position: undefined,
+      ...projects[0], id: `legacy-${index}`, slug: `legacy-${index}`, title: `Legacy ${index}`,
     })) as unknown as Portfolio[];
     vi.mocked(listPublicPortfolios).mockResolvedValueOnce(legacyProjects);
     render(<LanguageProvider><MemoryRouter><PortfolioSection /></MemoryRouter></LanguageProvider>);

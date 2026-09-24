@@ -8,6 +8,7 @@ import PageMeta from '@/components/PageMeta';
 import HomePage from '@/pages/HomePage';
 import { publicPageLoaders } from '@/lib/publicRoutes';
 import { canonicalPublicPath } from '@/lib/seo';
+import { writeLocalStorage } from '@/lib/safeStorage';
 const AboutPage = lazy(publicPageLoaders.about);
 const ServicesPage = lazy(publicPageLoaders.services);
 const ServiceLandingPage = lazy(publicPageLoaders.serviceLanding);
@@ -126,7 +127,7 @@ function App() {
   const theme: 'light' | 'dark' = 'light';
 
   useEffect(() => {
-    localStorage.setItem('theme', theme);
+    writeLocalStorage('theme', theme);
     document.documentElement.style.colorScheme = theme;
   }, []);
 

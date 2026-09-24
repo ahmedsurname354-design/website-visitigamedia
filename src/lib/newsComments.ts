@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { readLocalStorage, writeLocalStorage } from '@/lib/safeStorage';
 
 export interface NewsComment {
   id: string;
@@ -24,12 +25,10 @@ export async function listNewsComments(newsId: string, cursor?: NewsComment) {
 
 let memoryKey: string | undefined;
 function submissionKey() {
-  try {
-    const existing = localStorage.getItem('visitiga_comment_submission_key');
-    if (existing && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(existing)) return existing;
-  } catch { /* Storage can be disabled; retain a key for this page session. */ }
+  const existing = readLocalStorage('visitiga_comment_submission_key');
+  if (existing && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(existing)) return existing;
   memoryKey ??= crypto.randomUUID();
-  try { localStorage.setItem('visitiga_comment_submission_key', memoryKey); } catch { /* Use memory key. */ }
+  writeLocalStorage('visitiga_comment_submission_key', memoryKey);
   return memoryKey;
 }
 
