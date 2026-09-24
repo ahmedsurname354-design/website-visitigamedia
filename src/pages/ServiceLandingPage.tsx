@@ -23,7 +23,7 @@ export default function ServiceLandingPage() {
   const heroImage = related[0]?.image_url;
 
   return <article className="bg-white text-neutral-900">
-    <header className="relative isolate min-h-[32rem] overflow-hidden bg-neutral-950 text-white">
+    <header className="brand-surface-dark relative isolate min-h-[32rem] overflow-hidden bg-neutral-950 text-white">
       {heroImage && <img src={optimizedImageUrl(heroImage, 1800)} onError={({ currentTarget }) => restoreOriginalImage(currentTarget, heroImage)} alt="" className="absolute inset-0 -z-20 h-full w-full object-cover opacity-45" />}
       <div className="absolute inset-0 -z-10 bg-black/55" />
       <div className="mx-auto flex min-h-[32rem] max-w-7xl flex-col justify-end px-5 pb-16 pt-32 sm:px-8">
@@ -44,7 +44,7 @@ export default function ServiceLandingPage() {
 
       {related.length > 0 && <section className="mt-20 border-t border-neutral-200 pt-14"><div className="flex items-end justify-between gap-6"><div><p className="text-sm font-semibold uppercase text-orange-700">Portofolio terkait</p><h2 className="mt-3 text-3xl font-semibold">Lihat penerapannya pada proyek.</h2></div><Link to="/portfolio/" className="hidden items-center gap-2 text-sm font-semibold text-orange-700 sm:flex">Semua proyek <ArrowRight className="size-4" /></Link></div><div className="mt-9 grid max-w-4xl gap-6 sm:grid-cols-2">{related.map((project) => <Link key={project.id} to={`/portfolio/${project.slug}/`} className="group"><img src={optimizedImageUrl(project.image_url, 800)} onError={({ currentTarget }) => restoreOriginalImage(currentTarget, project.image_url)} alt="" loading="lazy" className="aspect-[4/3] w-full rounded-md object-cover" /><h3 className="mt-4 text-lg font-semibold group-hover:text-orange-700">{project.title}</h3><p className="mt-1 text-sm text-neutral-500">{project.category}</p></Link>)}</div></section>}
 
-      <section className="mt-20 border-t border-neutral-200 pt-12"><h2 className="text-2xl font-semibold">Diskusikan kebutuhan media Anda.</h2><p className="mt-3 max-w-2xl leading-7 text-neutral-700">Sampaikan lokasi, ukuran area, jarak pandang, dan cara media akan digunakan agar konfigurasi dapat dibahas berdasarkan kebutuhan proyek.</p><Link to="/contact/" className="mt-7 inline-flex items-center gap-2 bg-orange-700 px-5 py-3 text-sm font-semibold !text-white hover:bg-orange-800">Hubungi Visitiga <ArrowRight className="size-4" /></Link></section>
+      <section className="mt-20 border-t border-neutral-200 pt-12"><h2 className="text-2xl font-semibold">Diskusikan kebutuhan media Anda.</h2><p className="mt-3 max-w-2xl leading-7 text-neutral-700">Sampaikan lokasi, ukuran area, jarak pandang, dan cara media akan digunakan agar konfigurasi dapat dibahas berdasarkan kebutuhan proyek.</p><Link to="/contact/" className="brand-button mt-7 inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold">Hubungi Visitiga <ArrowRight className="size-4" /></Link></section>
     </div>
   </article>;
 }

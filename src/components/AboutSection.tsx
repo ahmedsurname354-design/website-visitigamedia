@@ -63,10 +63,10 @@ export default function AboutSection() {
             initial={reducedMotion ? false : { opacity: 0, y: 12 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.06 }}
-            className="absolute -bottom-4 right-3 sm:-bottom-6 sm:-right-6 bg-orange-500 rounded-2xl p-4 sm:p-6 max-w-[180px] sm:max-w-[200px] shadow-2xl shadow-orange-500/30"
+            className="brand-on-orange absolute -bottom-4 right-3 sm:-bottom-6 sm:-right-6 bg-orange-500 rounded-2xl p-4 sm:p-6 max-w-[180px] sm:max-w-[200px] shadow-2xl shadow-orange-500/30"
           >
-            <p className="text-white font-bold text-3xl">12+</p>
-            <p className="text-white/80 text-sm mt-1">Tahun menghadirkan solusi LED terbaik</p>
+            <p className="font-bold text-3xl">12+</p>
+            <p className="text-sm mt-1 opacity-80">Tahun menghadirkan solusi LED terbaik</p>
           </motion.div>
         </motion.div>
 
@@ -86,7 +86,7 @@ export default function AboutSection() {
             transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.06 }}
             className="text-white font-bold text-4xl md:text-5xl leading-tight tracking-tight mb-6"
           >
-            Mitra Tepercaya untuk <span className="text-orange-500">Inovasi LED</span>
+            Mitra Tepercaya untuk <span className="inline-block whitespace-nowrap text-orange-500">Inovasi LED</span>
           </motion.h1>
           <motion.p
             initial={reducedMotion ? false : { opacity: 0, y: 12 }}

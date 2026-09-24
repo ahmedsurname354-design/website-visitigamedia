@@ -103,7 +103,7 @@ export default function CTASection({ variant = 'full' }: { variant?: 'compact' |
           initial={reducedMotion ? false : { opacity: 0, y: 12 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: reducedMotion ? 0 : 0.32 }}
-          className="theme-keep-light bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-16 text-center relative overflow-hidden"
+          className="theme-keep-light brand-panel rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-16 text-center relative overflow-hidden"
         >
           <div className="absolute -bottom-16 -left-10 w-56 h-56 bg-white/5 rounded-full" />
 

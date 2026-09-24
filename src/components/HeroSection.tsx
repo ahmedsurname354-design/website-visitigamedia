@@ -13,7 +13,7 @@ export default function HeroSection() {
   const { reducedMotion } = useMotionPolicy();
 
   return (
-    <section id="home" className="hero-editorial theme-keep-light relative bg-black">
+    <section id="home" className="hero-editorial theme-keep-light brand-surface-dark relative bg-black">
       <div className="hero-editorial__stage">
         {/* Background image */}
         <div className="absolute inset-0">
@@ -40,7 +40,7 @@ export default function HeroSection() {
               <h1
                 className="hero-editorial__title text-white font-semibold text-[clamp(2.75rem,7vw,5.5rem)] leading-[.94] tracking-[-0.06em]"
               >
-                {t('hero.titleLine1')} <span className="text-orange-500">{t('hero.titleLine2')}</span> <br />
+                {t('hero.titleLine1')} <span className="hero-editorial__accent text-orange-500">{t('hero.titleLine2')}</span> <br />
                 {t('hero.titleLine3')}
               </h1>
             </div>

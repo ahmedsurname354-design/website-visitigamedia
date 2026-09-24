@@ -26,7 +26,7 @@ export default function VideoSection() {
           initial={reducedMotion ? false : { opacity: 0, y: 12 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: reducedMotion ? 0 : 0.32 }}
-          className="relative min-h-[400px] overflow-hidden rounded-3xl md:min-h-[560px]"
+          className="brand-surface-dark relative min-h-[400px] overflow-hidden rounded-3xl md:min-h-[560px]"
         >
           {playing ? (
             <video className="absolute inset-0 h-full w-full bg-black object-contain" controls autoPlay playsInline preload="metadata" poster={videoImg}>
@@ -42,9 +42,9 @@ export default function VideoSection() {
           <button type="button" onClick={() => setPlaying(true)} className="absolute inset-0 flex w-full flex-col items-center justify-center text-left" aria-label={en ? 'Play Visitiga showreel' : 'Putar cuplikan Visitiga'}>
             <motion.div
               whileHover={{ scale: 1.1 }}
-              className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-orange-500 flex items-center justify-center shadow-2xl shadow-orange-500/40 group-hover:scale-110 transition-transform duration-300"
+              className="brand-button w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center shadow-2xl shadow-orange-500/40 group-hover:scale-110 transition-transform duration-300"
             >
-              <Play className="w-8 h-8 text-white fill-white ml-1" />
+              <Play className="w-8 h-8 fill-current ml-1" />
             </motion.div>
             <p className="text-white font-semibold text-lg mt-6 tracking-wide">{dict.video.watchButton}</p>
             <p className="text-white/50 text-sm mt-1">{dict.video.duration}</p>
