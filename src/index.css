@@ -813,7 +813,7 @@ img, video { max-width: 100%; }
 .public-site .related-article-link { border-color: var(--editorial-line); background-color: var(--editorial-card); }
 .public-site .faq-cta { background-color: var(--editorial-sand); }
 .public-site .brand-surface-dark { background-color: var(--editorial-dark); }
-.public-site .brand-surface-dark :is(h1, h2, h3, p, a:not(.brand-button)) { color: var(--editorial-on-dark) !important; }
+.public-site .brand-surface-dark :is(h1, h2, h3, p, a:not(.brand-button):not(.editorial-button--primary)) { color: var(--editorial-on-dark) !important; }
 
 @media (max-width: 640px) {
   .public-site .theme-section,
