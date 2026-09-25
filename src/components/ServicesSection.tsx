@@ -3,7 +3,7 @@ import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { Monitor, PanelsTopLeft, Layers3, Grid2x2Plus, ArrowRight, MessageCircle } from 'lucide-react';
 import { useTranslation } from '@/i18n';
 import type { ServiceContent } from '@/types/admin';
-import { Link } from 'react-router-dom';
+import { LocalizedLink as Link } from '@/components/LocalizedLink';
 
 const servicePaths = ['/services/videotron-outdoor/', '/services/led-indoor/', '/services/rental-led/', '/services/media-konvensional/'];
 

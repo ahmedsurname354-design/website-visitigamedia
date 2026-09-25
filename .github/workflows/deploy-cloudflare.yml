@@ -52,10 +52,10 @@ jobs:
       - name: Select a prerendered article for Lighthouse
         shell: bash
         run: |
-          article_file=$(find dist/news -mindepth 2 -maxdepth 2 -name index.html | head -n 1)
+          article_file=$(find dist/id/news -mindepth 2 -maxdepth 2 -name index.html | head -n 1)
           if [ -n "$article_file" ]; then
             article_path=${article_file#dist}
-            echo "LHCI_ARTICLE_URL=http://127.0.0.1:4173${article_path%/index.html}" >> "$GITHUB_ENV"
+            echo "LHCI_ARTICLE_URL=http://127.0.0.1:4173${article_path%/index.html}/" >> "$GITHUB_ENV"
           fi
 
       - name: Run Lighthouse performance gates

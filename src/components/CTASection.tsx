@@ -2,7 +2,7 @@ import { type FormEvent, useState } from 'react';
 import { m as motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { ArrowRight, Phone, Mail, MapPin } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { LocalizedLink as Link } from '@/components/LocalizedLink';
 import { useTranslation, type Lang } from '@/i18n';
 import { readLocalStorage, writeLocalStorage } from '@/lib/safeStorage';
 

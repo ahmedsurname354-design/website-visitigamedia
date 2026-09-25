@@ -1,9 +1,10 @@
 import type { Lang } from '@/i18n';
+import { localizedPublicPath, stripLanguagePrefix } from '@/lib/localizedRoutes';
 
 export const siteUrl = (import.meta.env.VITE_SITE_URL || 'https://visitiga-media.pages.dev').replace(/\/$/, '');
 
 export function normalizePublicPath(pathname: string) {
-  return pathname.replace(/\/+$/, '') || '/';
+  return stripLanguagePrefix(pathname).replace(/\/+$/, '') || '/';
 }
 
 export function canonicalPublicPath(pathname: string) {
@@ -78,4 +79,8 @@ export function getStaticSeo(pathname: string, lang: Lang): SeoCopy {
 
 export function absoluteUrl(pathname: string) {
   return `${siteUrl}${pathname === '/' ? '/' : pathname}`;
+}
+
+export function localizedAbsoluteUrl(pathname: string, lang: Lang) {
+  return absoluteUrl(localizedPublicPath(pathname, lang));
 }

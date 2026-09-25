@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
+import { LocalizedLink as Link } from '@/components/LocalizedLink';
 import { ArrowLeft } from 'lucide-react';
 import { getPortfolioAlias, getPublicPortfolioById, getPublicPortfolioBySlug, listPublicPortfolios } from '@/lib/adminApi';
 import { getPrerenderData } from '@/lib/prerenderData';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { absoluteUrl, canonicalPublicPath } from '@/lib/seo';
+import { absoluteUrl, canonicalPublicPath, localizedAbsoluteUrl } from '@/lib/seo';
+import { localizedPublicPath } from '@/lib/localizedRoutes';
 import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
 import { useTranslation } from '@/i18n';
 import type { Portfolio } from '@/types/admin';
@@ -43,15 +45,15 @@ export default function PortfolioDetailPage() {
   const pathname = canonicalPublicPath(`/portfolio/${project?.slug || slug || ''}`);
   const description = project ? clean(project.seo_description) || clean(project.description) || `${project.title} - portofolio Visitiga Media.` : '';
   const structuredData = useMemo(() => project ? [
-    { '@context': 'https://schema.org', '@type': 'CreativeWork', name: project.title, description, image: project.image_url.startsWith('http') ? project.image_url : absoluteUrl(project.image_url), url: absoluteUrl(pathname), creator: { '@type': 'Organization', name: 'Visitiga Media' } },
+    { '@context': 'https://schema.org', '@type': 'CreativeWork', name: project.title, description, image: project.image_url.startsWith('http') ? project.image_url : absoluteUrl(project.image_url), url: localizedAbsoluteUrl(pathname, lang), creator: { '@type': 'Organization', name: 'Visitiga Media' } },
     { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Beranda', item: absoluteUrl('/') },
-      { '@type': 'ListItem', position: 2, name: 'Portofolio', item: absoluteUrl('/portfolio/') },
-      { '@type': 'ListItem', position: 3, name: project.title, item: absoluteUrl(pathname) },
+      { '@type': 'ListItem', position: 1, name: lang === 'en' ? 'Home' : 'Beranda', item: localizedAbsoluteUrl('/', lang) },
+      { '@type': 'ListItem', position: 2, name: lang === 'en' ? 'Portfolio' : 'Portofolio', item: localizedAbsoluteUrl('/portfolio/', lang) },
+      { '@type': 'ListItem', position: 3, name: project.title, item: localizedAbsoluteUrl(pathname, lang) },
     ] },
-  ] : undefined, [description, pathname, project]);
+  ] : undefined, [description, lang, pathname, project]);
   usePageMeta({ title: project ? `${clean(project.seo_title) || project.title} | Visitiga Media` : 'Proyek | Visitiga Media', description, pathname, image: project?.image_url, imageAlt: project?.title, structuredData, noIndex: !project, lang });
-  if (redirect) return <Navigate to={redirect} replace />;
+  if (redirect) return <Navigate to={localizedPublicPath(redirect, lang)} replace />;
   if (project === undefined) return <div className="public-surface min-h-screen pt-36 text-center text-sm text-neutral-600" role="status">Memuat proyek...</div>;
   if (!project) return <div className="public-surface min-h-screen px-5 pt-36 text-center text-neutral-900"><h1 className="text-3xl font-bold">{error ? 'Proyek belum dapat dimuat' : 'Proyek tidak ditemukan'}</h1><Link to="/portfolio/" className="public-link mt-5 inline-block text-orange-700 underline">Kembali ke portofolio</Link></div>;
   const sections = [

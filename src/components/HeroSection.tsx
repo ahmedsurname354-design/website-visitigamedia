@@ -1,5 +1,5 @@
 import { m as motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { LocalizedLink as Link } from '@/components/LocalizedLink';
 import { ArrowRight, Play, ShieldCheck } from 'lucide-react';
 import { useTranslation } from '@/i18n';
 import { preloadPublicRoute } from '@/lib/publicRoutes';

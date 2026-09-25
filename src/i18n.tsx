@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { readLocalStorage, writeLocalStorage } from '@/lib/safeStorage';
+import { getPathLanguage, localizedPublicPath, stripLanguagePrefix } from '@/lib/localizedRoutes';
 
 export type Lang = 'id' | 'en';
 
@@ -386,11 +387,30 @@ interface TranslationContextValue {
 const LanguageContext = createContext<TranslationContextValue | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Lang>(() => {
+  const [lang, setLanguageState] = useState<Lang>(() => {
     if (typeof window === 'undefined') return 'id';
+    const pathLanguage = getPathLanguage(window.location.pathname);
+    if (pathLanguage) return pathLanguage;
     const stored = readLocalStorage('lang');
     return stored === 'en' ? 'en' : 'id';
   });
+
+  const setLang = (nextLanguage: Lang) => {
+    setLanguageState(nextLanguage);
+    if (typeof window === 'undefined') return;
+    const pathname = localizedPublicPath(stripLanguagePrefix(window.location.pathname), nextLanguage);
+    window.history.pushState({}, '', `${pathname}${window.location.search}${window.location.hash}`);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  };
+
+  useEffect(() => {
+    const syncLanguageFromUrl = () => {
+      const pathLanguage = getPathLanguage(window.location.pathname);
+      if (pathLanguage) setLanguageState(pathLanguage);
+    };
+    window.addEventListener('popstate', syncLanguageFromUrl);
+    return () => window.removeEventListener('popstate', syncLanguageFromUrl);
+  }, []);
 
   useEffect(() => {
     writeLocalStorage('lang', lang);

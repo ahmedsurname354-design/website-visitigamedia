@@ -1,5 +1,5 @@
 import { useId, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { LocalizedLink as Link } from '@/components/LocalizedLink';
 import { AnimatePresence, m as motion } from 'framer-motion';
 import { ArrowUpRight, ChevronDown, MessageCircle } from 'lucide-react';
 import { useTranslation } from '@/i18n';

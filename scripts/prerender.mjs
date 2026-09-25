@@ -6,12 +6,15 @@ import process from 'node:process';
 import { pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
 import { loadEnv } from 'vite';
-import { buildRedirects, buildSitemap, canonicalRoute, STATIC_ROUTES } from './seo-build-lib.mjs';
+import { buildRedirects, buildSitemap, canonicalRoute, localizedRoute, SEO_LANGUAGES, STATIC_ROUTES } from './seo-build-lib.mjs';
 
 const projectRoot = process.cwd();
 const distDir = join(projectRoot, 'dist');
 const env = { ...loadEnv('production', projectRoot, ''), ...process.env };
 const siteUrl = (env.VITE_SITE_URL || 'https://visitiga-media.pages.dev').replace(/\/$/, '');
+if (!/^https:\/\/[a-z0-9.-]+(?::\d+)?$/i.test(siteUrl)) {
+  throw new Error('VITE_SITE_URL harus berupa origin HTTPS tanpa path.');
+}
 const supabaseUrl = env.VITE_SUPABASE_URL?.replace(/\/$/, '');
 const supabaseKey = env.VITE_SUPABASE_PUBLISHABLE_KEY;
 const requireNews = env.SEO_REQUIRE_NEWS === 'true';
@@ -59,14 +62,15 @@ async function getBuildContent() {
 }
 
 function dataForRoute(path, content) {
-  if (path === '/news') return { route: path, news: content.news };
-  if (path.startsWith('/news/')) return { route: path, news: content.news, article: content.news.find(({ slug }) => path === `/news/${slug}`) ?? null };
-  if (path === '/services') return { route: path, serviceContent: content.serviceContent, portfolios: content.portfolios ?? undefined };
-  if (path.startsWith('/services/')) return { route: path, portfolios: content.portfolios ?? undefined, serviceLanding: content.serviceLandings?.find(({ slug }) => path === `/services/${slug}`) ?? null };
-  if (path === '/product') return { route: path, products: content.products ?? undefined, catalogue: content.catalogue };
-  if (path === '/portfolio') return { route: path, portfolios: content.portfolios ?? undefined };
-  if (path.startsWith('/portfolio/')) return { route: path, portfolios: content.portfolios ?? undefined, portfolio: content.portfolios?.find(({ slug }) => path === `/portfolio/${slug}`) ?? null };
-  if (path === '/') return { route: path, portfolios: content.portfolios ?? undefined };
+  const publicPath = (path.replace(/^\/(?:id|en)(?=\/|$)/, '').replace(/\/+$/, '') || '/');
+  if (publicPath === '/news') return { route: path, news: content.news };
+  if (publicPath.startsWith('/news/')) return { route: path, news: content.news, article: content.news.find(({ slug }) => publicPath === `/news/${slug}`) ?? null };
+  if (publicPath === '/services') return { route: path, serviceContent: content.serviceContent, portfolios: content.portfolios ?? undefined };
+  if (publicPath.startsWith('/services/')) return { route: path, portfolios: content.portfolios ?? undefined, serviceLanding: content.serviceLandings?.find(({ slug }) => publicPath === `/services/${slug}`) ?? null };
+  if (publicPath === '/product') return { route: path, products: content.products ?? undefined, catalogue: content.catalogue };
+  if (publicPath === '/portfolio') return { route: path, portfolios: content.portfolios ?? undefined };
+  if (publicPath.startsWith('/portfolio/')) return { route: path, portfolios: content.portfolios ?? undefined, portfolio: content.portfolios?.find(({ slug }) => publicPath === `/portfolio/${slug}`) ?? null };
+  if (publicPath === '/') return { route: path, portfolios: content.portfolios ?? undefined };
   return { route: path };
 }
 
@@ -92,9 +96,10 @@ async function stopServer(child) {
 async function snapshot(page, path, content, outputOverride) {
   const response = await page.goto(`http://127.0.0.1:4173${path}`, { waitUntil: 'domcontentloaded' });
   if (!response?.ok()) throw new Error(`${path} mengembalikan status ${response?.status() ?? 'tanpa respons'}.`);
-  if (path.startsWith('/news/') || path.startsWith('/portfolio/')) await page.waitForSelector('article h1', { timeout: 15_000 });
+  const publicPath = (path.replace(/^\/(?:id|en)(?=\/|$)/, '').replace(/\/+$/, '') || '/');
+  if (publicPath.startsWith('/news/') || publicPath.startsWith('/portfolio/')) await page.waitForSelector('article h1', { timeout: 15_000 });
   else await page.waitForSelector('#main-content h1', { timeout: 15_000 });
-  if (path === '/news') {
+  if (publicPath === '/news') {
     await page.waitForFunction(() => {
       const text = document.querySelector('#main-content')?.textContent || '';
       return !text.includes('Memuat berita') && !text.includes('Loading news');
@@ -104,16 +109,17 @@ async function snapshot(page, path, content, outputOverride) {
     const canonical = document.querySelector('link[rel="canonical"]');
     return Boolean(document.title && canonical && document.querySelector('meta[name="description"]'));
   });
-  if (path !== '/__not-found') {
+  if (publicPath !== '/__not-found') {
     await page.waitForFunction((expected) => {
       const canonical = document.querySelector('link[rel="canonical"]');
       const robots = document.querySelector('meta[name="robots"]');
       return canonical?.href === expected && robots?.content === 'index, follow';
-    }, `${siteUrl}${canonicalRoute(path)}`);
+    }, `${siteUrl}${canonicalRoute(path.startsWith('/id/') || path.startsWith('/en/') ? path : localizedRoute(path, 'id'))}`);
   }
   const routeData = dataForRoute(path, content);
   await page.evaluate((data) => {
     document.documentElement.dataset.prerendered = 'true';
+    if (window.__VISITIGA_SITE_URL__) document.documentElement.dataset.siteUrl = window.__VISITIGA_SITE_URL__;
     const snapshot = document.getElementById('root');
     if (!snapshot) throw new Error('Root prerender tidak ditemukan.');
     snapshot.id = 'prerender-content';
@@ -156,7 +162,8 @@ async function main() {
   const articleRoutes = articles.map(({ slug }) => `/news/${slug}`);
   if (content.portfolios?.some(({ slug }) => !slug)) throw new Error('Migrasi slug portofolio belum diterapkan di Supabase. Jalankan migrasi sebelum build/deploy.');
   const portfolioRoutes = (content.portfolios ?? []).map(({ slug }) => `/portfolio/${slug}`);
-  const routes = [...STATIC_ROUTES, ...articleRoutes, ...portfolioRoutes];
+  const baseRoutes = [...STATIC_ROUTES, ...articleRoutes, ...portfolioRoutes];
+  const routes = baseRoutes.flatMap((path) => SEO_LANGUAGES.map((language) => localizedRoute(path, language)));
   const viteBin = join(projectRoot, 'node_modules', 'vite', 'bin', 'vite.js');
   const server = spawn(process.execPath, [viteBin, 'preview', '--host', '127.0.0.1', '--port', '4173', '--strictPort'], { stdio: 'inherit' });
   let browser;
@@ -164,35 +171,35 @@ async function main() {
     await waitForServer('http://127.0.0.1:4173/', server);
     browser = await chromium.launch({ headless: true });
     const page = await browser.newPage();
+    await page.addInitScript((origin) => { window.__VISITIGA_SITE_URL__ = origin; }, siteUrl);
     await page.addInitScript((allContent) => {
       window.__VISITIGA_PRERENDER_MODE__ = true;
       const path = window.location.pathname;
-      const data = path === '/news'
+      const publicPath = (path.replace(/^\/(?:id|en)(?=\/|$)/, '').replace(/\/+$/, '') || '/');
+      const data = publicPath === '/news'
         ? { route: path, news: allContent.news }
-        : path.startsWith('/news/')
-          ? { route: path, news: allContent.news, article: allContent.news.find(({ slug }) => path === `/news/${slug}`) ?? null }
-          : path === '/services'
+        : publicPath.startsWith('/news/')
+          ? { route: path, news: allContent.news, article: allContent.news.find(({ slug }) => publicPath === `/news/${slug}`) ?? null }
+          : publicPath === '/services'
             ? { route: path, serviceContent: allContent.serviceContent, portfolios: allContent.portfolios ?? undefined }
-          : path.startsWith('/services/')
-            ? { route: path, portfolios: allContent.portfolios ?? undefined, serviceLanding: allContent.serviceLandings?.find(({ slug }) => path === `/services/${slug}`) ?? null }
-            : path === '/product'
+          : publicPath.startsWith('/services/')
+            ? { route: path, portfolios: allContent.portfolios ?? undefined, serviceLanding: allContent.serviceLandings?.find(({ slug }) => publicPath === `/services/${slug}`) ?? null }
+            : publicPath === '/product'
               ? { route: path, products: allContent.products ?? undefined, catalogue: allContent.catalogue }
-              : path === '/portfolio'
+              : publicPath === '/portfolio'
                 ? { route: path, portfolios: allContent.portfolios ?? undefined }
-                : path.startsWith('/portfolio/')
-                  ? { route: path, portfolios: allContent.portfolios ?? undefined, portfolio: allContent.portfolios?.find(({ slug }) => path === `/portfolio/${slug}`) ?? null }
-                  : path === '/'
+                : publicPath.startsWith('/portfolio/')
+                  ? { route: path, portfolios: allContent.portfolios ?? undefined, portfolio: allContent.portfolios?.find(({ slug }) => publicPath === `/portfolio/${slug}`) ?? null }
+                  : publicPath === '/'
                     ? { route: path, portfolios: allContent.portfolios ?? undefined }
                     : { route: path };
       window.__VISITIGA_PRERENDER_DATA__ = data;
     }, content);
-    for (const path of routes.filter((route) => route !== '/')) {
+    for (const path of routes) {
       await snapshot(page, path, content);
       console.log(`[seo] prerendered ${path}`);
     }
-    await snapshot(page, '/', content);
-    console.log('[seo] prerendered /');
-    await snapshot(page, '/__not-found', content, join(distDir, '404.html'));
+    await snapshot(page, '/id/__not-found', content, join(distDir, '404.html'));
     console.log('[seo] prerendered 404');
     await writeFile(join(distDir, '_redirects'), buildRedirects(articles), 'utf8');
   } finally {
@@ -207,7 +214,7 @@ async function main() {
   await writeFile(join(distDir, 'admin', 'index.html'), adminShell, 'utf8');
   await writeFile(join(distDir, 'portfolio-fallback.html'), appShell, 'utf8');
   await writeFile(join(distDir, 'portfolio-edge-config.json'), JSON.stringify({ supabaseUrl, supabaseKey, siteUrl }), 'utf8');
-  await writeFile(join(distDir, '_routes.json'), JSON.stringify({ version: 1, include: ['/portfolio/*'], exclude: [] }), 'utf8');
+  await writeFile(join(distDir, '_routes.json'), JSON.stringify({ version: 1, include: ['/sitemap.xml', '/news/*', '/portfolio/*', '/id/news/*', '/en/news/*', '/id/portfolio/*', '/en/portfolio/*'], exclude: [] }), 'utf8');
   await writeFile(join(distDir, 'sitemap.xml'), buildSitemap(STATIC_ROUTES, articles, siteUrl, content.portfolios ?? []), 'utf8');
   await writeFile(join(distDir, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /admin\n\nSitemap: ${siteUrl}/sitemap.xml\n`, 'utf8');
   await validateOutput(routes);

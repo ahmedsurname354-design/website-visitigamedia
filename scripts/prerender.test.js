@@ -8,10 +8,11 @@ const retired = JSON.parse(readFileSync(join(process.cwd(), 'scripts/retired-por
 describe('SEO build generator', () => {
   it('includes portfolio details and news in the sitemap', () => {
     const sitemap = buildSitemap(STATIC_ROUTES, [{ slug: 'published-article', updated_at: '2026-09-02T00:00:00.000Z' }], 'https://example.com', [{ slug: 'totem-minitron-sampoerna-palembang', updated_at: '2026-09-22T00:00:00.000Z' }]);
-    expect(sitemap).toContain('<loc>https://example.com/portfolio/</loc>');
-    expect(sitemap).toContain('<loc>https://example.com/services/led-indoor/</loc>');
-    expect(sitemap).toContain('<loc>https://example.com/news/published-article/</loc>');
-    expect(sitemap).toContain('/portfolio/totem-minitron-sampoerna-palembang/');
+    expect(sitemap).toContain('<loc>https://example.com/id/portfolio/</loc>');
+    expect(sitemap).toContain('<loc>https://example.com/en/services/led-indoor/</loc>');
+    expect(sitemap).toContain('<loc>https://example.com/id/news/published-article/</loc>');
+    expect(sitemap).toContain('hreflang="en" href="https://example.com/en/news/published-article/"');
+    expect(sitemap).toContain('/id/portfolio/totem-minitron-sampoerna-palembang/');
     expect(sitemap).not.toContain('/admin');
   });
 
@@ -19,9 +20,9 @@ describe('SEO build generator', () => {
     const redirects = buildRedirects([{ slug: 'existing-article' }]);
     expect(retired).toHaveLength(49);
     expect(new Set(retired).size).toBe(49);
-    expect(redirects).not.toContain('/portfolio/:slug');
-    expect(redirects).not.toContain('/portfolio/*');
-    expect(redirects).toContain('/news/existing-article /news/existing-article/index.html 200');
+    expect(redirects).toContain('/portfolio/:slug/ /id/portfolio/:slug/ 301');
+    expect(redirects).toContain('/news/existing-article/ /id/news/existing-article/ 301');
+    expect(redirects).toContain('/en/* /index.html 200');
   });
 
   it('rejects redirects beyond the Cloudflare static limit', () => {

@@ -1,6 +1,6 @@
 import { Instagram, Facebook, Youtube, ArrowUp } from 'lucide-react';
 import Logo from '@/components/Logo';
-import { Link } from 'react-router-dom';
+import { LocalizedLink as Link } from '@/components/LocalizedLink';
 import type { MouseEvent } from 'react';
 import { useTranslation } from '@/i18n';
 

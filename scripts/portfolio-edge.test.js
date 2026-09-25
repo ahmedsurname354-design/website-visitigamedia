@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { onRequestGet } from '../functions/portfolio/[slug].js';
+import { onRequestGet } from '../functions/[locale]/portfolio/[slug].js';
 
 const config = { supabaseUrl: 'https://db.example', supabaseKey: 'public-key', siteUrl: 'https://site.example' };
 const project = { id: 'project-1', slug: 'current-project', title: 'Current Project', description: 'A project', seo_title: '', seo_description: '', image_url: '/project.jpg' };
@@ -7,8 +7,8 @@ const shell = '<html><head><title>Old</title><meta name="description" content="O
 
 function context(slug, staticExists = false, edgeConfig = config) {
   return {
-    request: new Request(`https://site.example/portfolio/${slug}/`),
-    params: { slug },
+    request: new Request(`https://site.example/id/portfolio/${slug}/`),
+    params: { locale: 'id', slug },
     env: { ASSETS: { fetch: vi.fn(async (url) => {
       const path = new URL(url).pathname;
       if (path === '/portfolio-edge-config.json') return Response.json(edgeConfig);
@@ -27,11 +27,11 @@ function mockDatabase(rows) {
 }
 
 describe('portfolio edge route', () => {
-  it('serves a prerendered project when available', async () => {
+  it('serves current database content even when a prerendered project exists', async () => {
     mockDatabase({ project });
     const response = await onRequestGet(context('current-project', true));
     expect(response.status).toBe(200);
-    expect(await response.text()).toBe('prerendered');
+    expect(await response.text()).toContain('<h1>Current Project</h1>');
   });
 
   it('serves a new slug immediately with its own initial metadata', async () => {
@@ -40,7 +40,8 @@ describe('portfolio edge route', () => {
     const html = await response.text();
     expect(response.status).toBe(200);
     expect(html).toContain('<title>Current Project | Visitiga Media</title>');
-    expect(html).toContain('href="https://site.example/portfolio/current-project/"');
+    expect(html).toContain('href="https://site.example/id/portfolio/current-project/"');
+    expect(html).toContain('hreflang="en" href="https://site.example/en/portfolio/current-project/"');
     expect(html).toContain('content="https://site.example/project.jpg"');
   });
 
@@ -48,7 +49,7 @@ describe('portfolio edge route', () => {
     mockDatabase({ alias: { portfolio_id: 'project-1' }, target: { slug: 'current-project' } });
     const redirected = await onRequestGet(context('old-project'));
     expect(redirected.status).toBe(301);
-    expect(redirected.headers.get('location')).toBe('https://site.example/portfolio/current-project/');
+    expect(redirected.headers.get('location')).toBe('https://site.example/id/portfolio/current-project/');
     mockDatabase({});
     expect((await onRequestGet(context('unknown-project'))).status).toBe(404);
   });

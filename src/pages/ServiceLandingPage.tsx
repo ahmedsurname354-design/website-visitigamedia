@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
+import { LocalizedLink as Link } from '@/components/LocalizedLink';
 import { getServiceLanding, listPublicPortfolios } from '@/lib/adminApi';
 import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
 import { getPrerenderData } from '@/lib/prerenderData';
 import { defaultServiceLandings, isServiceLandingSlug } from '@/lib/serviceLanding';
 import { useTranslation } from '@/i18n';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { absoluteUrl } from '@/lib/seo';
+import { localizedAbsoluteUrl } from '@/lib/seo';
+import { localizedPublicPath } from '@/lib/localizedRoutes';
 import type { Portfolio, ServiceLandingContent } from '@/types/admin';
 
 export default function ServiceLandingPage() {
@@ -40,14 +42,14 @@ export default function ServiceLandingPage() {
   const metaDescription = lang === 'en' ? service.seo_description_en : service.seo_description_id;
   const structuredData = useMemo(() => ({
     '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
-      { '@type': 'ListItem', position: 1, name: lang === 'en' ? 'Home' : 'Beranda', item: absoluteUrl('/') },
-      { '@type': 'ListItem', position: 2, name: lang === 'en' ? 'Services' : 'Layanan', item: absoluteUrl('/services/') },
-      { '@type': 'ListItem', position: 3, name: copy.title, item: absoluteUrl(pathname) },
+      { '@type': 'ListItem', position: 1, name: lang === 'en' ? 'Home' : 'Beranda', item: localizedAbsoluteUrl('/', lang) },
+      { '@type': 'ListItem', position: 2, name: lang === 'en' ? 'Services' : 'Layanan', item: localizedAbsoluteUrl('/services/', lang) },
+      { '@type': 'ListItem', position: 3, name: copy.title, item: localizedAbsoluteUrl(pathname, lang) },
     ],
   }), [copy.title, lang, pathname]);
   usePageMeta({ title: metaTitle, description: metaDescription, pathname, image: heroImage, imageAlt: copy.title, structuredData, noIndex: !validSlug, lang });
 
-  if (!validSlug) return <Navigate to="/services/" replace />;
+  if (!validSlug) return <Navigate to={localizedPublicPath('/services/', lang)} replace />;
 
   return <article className="public-surface text-neutral-900">
     <header className="brand-surface-dark public-dark relative isolate min-h-[32rem] overflow-hidden text-white">

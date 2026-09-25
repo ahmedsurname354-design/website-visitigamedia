@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ArrowRight, LoaderCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { LocalizedLink as Link } from '@/components/LocalizedLink';
 import { listPublicNews } from '@/lib/adminApi';
 import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
 import type { NewsRecord } from '@/types/admin';

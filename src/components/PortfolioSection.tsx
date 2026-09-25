@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { LocalizedLink as Link } from '@/components/LocalizedLink';
 import { useTranslation } from '@/i18n';
 import { listPublicPortfolios } from '@/lib/adminApi';
 import { getPrerenderData } from '@/lib/prerenderData';

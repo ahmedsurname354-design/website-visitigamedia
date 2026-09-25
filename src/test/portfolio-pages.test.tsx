@@ -33,10 +33,10 @@ describe('portfolio gallery', () => {
 
   it('links cards to SEO detail URLs and filters the gallery', async () => {
     render(<LanguageProvider><MemoryRouter><PortfolioSection /></MemoryRouter></LanguageProvider>);
-    expect(await screen.findByRole('link', { name: /Outdoor Project/i })).toHaveAttribute('href', '/portfolio/outdoor-project/');
+    expect(await screen.findByRole('link', { name: /Outdoor Project/i })).toHaveAttribute('href', '/id/portfolio/outdoor-project/');
     fireEvent.click(screen.getByRole('button', { name: 'Indoor Media' }));
     expect(screen.queryByRole('link', { name: /Outdoor Project/i })).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Indoor Project/i })).toHaveAttribute('href', '/portfolio/indoor-project/');
+    expect(screen.getByRole('link', { name: /Indoor Project/i })).toHaveAttribute('href', '/id/portfolio/indoor-project/');
     expect(screen.queryByRole('region', { name: 'Proyek pilihan' })).not.toBeInTheDocument();
   });
 });

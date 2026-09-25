@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, type ReactNode } from 'react';
-import { BrowserRouter as Router, Outlet, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Outlet, Routes, Route, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { LazyMotion, domAnimation, MotionConfig } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -9,6 +9,7 @@ import HomePage from '@/pages/HomePage';
 import { publicPageLoaders } from '@/lib/publicRoutes';
 import { canonicalPublicPath } from '@/lib/seo';
 import { writeLocalStorage } from '@/lib/safeStorage';
+import { getPathLanguage, localizedPublicPath, stripLanguagePrefix } from '@/lib/localizedRoutes';
 const AboutPage = lazy(publicPageLoaders.about);
 const ServicesPage = lazy(publicPageLoaders.services);
 const ServiceLandingPage = lazy(publicPageLoaders.serviceLanding);
@@ -37,7 +38,8 @@ function PublicLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   useEffect(() => {
-    const canonicalPath = canonicalPublicPath(location.pathname);
+    const language = getPathLanguage(location.pathname) ?? 'id';
+    const canonicalPath = localizedPublicPath(canonicalPublicPath(stripLanguagePrefix(location.pathname)), language);
     if (location.pathname !== canonicalPath) {
       void navigate({ pathname: canonicalPath, search: location.search, hash: location.hash }, { replace: true });
     }
@@ -53,6 +55,17 @@ function PublicLayout() {
     </main>
     <Footer />
   </div>;
+}
+
+function LocalizedPublicLayout() {
+  const { locale } = useParams();
+  if (locale !== 'id' && locale !== 'en') return <Navigate to="/id/" replace />;
+  return <PublicLayout />;
+}
+
+function LegacyPublicRedirect() {
+  const location = useLocation();
+  return <Navigate to={{ pathname: localizedPublicPath(location.pathname, 'id'), search: location.search, hash: location.hash }} replace />;
 }
 
 function AnimatedRoutes() {
@@ -72,20 +85,21 @@ function AnimatedRoutes() {
   return (
     <Suspense fallback={<RouteLoadingFallback />}>
           <Routes location={location}>
-            <Route element={<PublicLayout />}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/services" element={<ServicesPage />} />
-              <Route path="/services/:serviceSlug" element={<ServiceLandingPage />} />
-              <Route path="/product" element={<ProductPage />} />
-              <Route path="/portfolio" element={<PortfolioPage />} />
-              <Route path="/portfolio/:slug" element={<PortfolioDetailPage />} />
-              <Route path="/video" element={<VideoPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/faq" element={<FAQPage />} />
-              <Route path="/privacy" element={<PrivacyPage />} />
-              <Route path="/news" element={<NewsPage />} />
-              <Route path="/news/:id" element={<NewsDetailPage />} />
+            <Route path="/:locale" element={<LocalizedPublicLayout />}>
+              <Route index element={<HomePage />} />
+              <Route path="about" element={<AboutPage />} />
+              <Route path="services" element={<ServicesPage />} />
+              <Route path="services/:serviceSlug" element={<ServiceLandingPage />} />
+              <Route path="product" element={<ProductPage />} />
+              <Route path="portfolio" element={<PortfolioPage />} />
+              <Route path="portfolio/:slug" element={<PortfolioDetailPage />} />
+              <Route path="video" element={<VideoPage />} />
+              <Route path="contact" element={<ContactPage />} />
+              <Route path="faq" element={<FAQPage />} />
+              <Route path="privacy" element={<PrivacyPage />} />
+              <Route path="news" element={<NewsPage />} />
+              <Route path="news/:id" element={<NewsDetailPage />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Route>
             <Route path="/admin" element={<AdminAuthBoundary />}>
               <Route path="login" element={<LoginPage />} />
@@ -100,9 +114,7 @@ function AnimatedRoutes() {
                 </Route>
               </Route>
             </Route>
-            <Route element={<PublicLayout />}>
-              <Route path="*" element={<NotFoundPage />} />
-            </Route>
+            <Route path="*" element={<LegacyPublicRedirect />} />
           </Routes>
     </Suspense>
   );

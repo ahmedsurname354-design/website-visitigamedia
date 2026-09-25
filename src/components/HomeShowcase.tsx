@@ -1,5 +1,5 @@
 import { ArrowRight, Check, Monitor, PanelsTopLeft, Layers3, Grid2x2Plus } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { LocalizedLink as Link } from '@/components/LocalizedLink';
 import { useMotionPolicy } from '@/hooks/useMotionPolicy';
 import { m as motion } from 'framer-motion';
 import { useTranslation } from '@/i18n';

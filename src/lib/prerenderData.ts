@@ -17,6 +17,7 @@ declare global {
   interface Window {
     __VISITIGA_PRERENDER_DATA__?: PrerenderData;
     __VISITIGA_PRERENDER_MODE__?: boolean;
+    __VISITIGA_SITE_URL__?: string;
   }
 }
 

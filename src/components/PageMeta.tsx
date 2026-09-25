@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from '@/i18n';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { absoluteUrl, canonicalPublicPath, getStaticSeo, normalizePublicPath } from '@/lib/seo';
+import { absoluteUrl, canonicalPublicPath, getStaticSeo, localizedAbsoluteUrl, normalizePublicPath } from '@/lib/seo';
 import { isServiceLandingSlug } from '@/lib/serviceLanding';
 
 export default function PageMeta() {
@@ -25,9 +25,9 @@ export default function PageMeta() {
     const breadcrumbs = path !== '/' && currentName ? {
       '@context': 'https://schema.org', '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: lang === 'en' ? 'Home' : 'Beranda', item: absoluteUrl('/') },
-        ...(isServiceLanding ? [{ '@type': 'ListItem', position: 2, name: lang === 'en' ? 'Services' : 'Layanan', item: absoluteUrl('/services/') }] : []),
-        { '@type': 'ListItem', position: isServiceLanding ? 3 : 2, name: currentName, item: absoluteUrl(canonicalPublicPath(path)) },
+        { '@type': 'ListItem', position: 1, name: lang === 'en' ? 'Home' : 'Beranda', item: localizedAbsoluteUrl('/', lang) },
+        ...(isServiceLanding ? [{ '@type': 'ListItem', position: 2, name: lang === 'en' ? 'Services' : 'Layanan', item: localizedAbsoluteUrl('/services/', lang) }] : []),
+        { '@type': 'ListItem', position: isServiceLanding ? 3 : 2, name: currentName, item: localizedAbsoluteUrl(canonicalPublicPath(path), lang) },
       ],
     } : undefined;
     if (path === '/faq') {
@@ -39,8 +39,8 @@ export default function PageMeta() {
     }
     if (path === '/') {
       return [
-        { '@context': 'https://schema.org', '@type': 'Organization', '@id': `${absoluteUrl('/')}#organization`, name: 'Visitiga Media', url: absoluteUrl('/'), logo: absoluteUrl('/social-preview.png'), email: 'marcomm@visitiga.com', telephone: '+62 822 5878 8780' },
-        { '@context': 'https://schema.org', '@type': 'WebSite', '@id': `${absoluteUrl('/')}#website`, name: 'Visitiga Media', url: absoluteUrl('/'), publisher: { '@id': `${absoluteUrl('/')}#organization` }, inLanguage: lang === 'en' ? 'en-US' : 'id-ID' },
+        { '@context': 'https://schema.org', '@type': 'Organization', '@id': `${localizedAbsoluteUrl('/', lang)}#organization`, name: 'Visitiga Media', url: localizedAbsoluteUrl('/', lang), logo: absoluteUrl('/social-preview.png'), email: 'marcomm@visitiga.com', telephone: '+62 822 5878 8780' },
+        { '@context': 'https://schema.org', '@type': 'WebSite', '@id': `${localizedAbsoluteUrl('/', lang)}#website`, name: 'Visitiga Media', url: localizedAbsoluteUrl('/', lang), publisher: { '@id': `${localizedAbsoluteUrl('/', lang)}#organization` }, inLanguage: lang === 'en' ? 'en-US' : 'id-ID' },
       ];
     }
     return breadcrumbs;

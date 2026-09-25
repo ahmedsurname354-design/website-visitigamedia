@@ -15,6 +15,9 @@ describe('public page essentials', () => {
     render(providers(<PageMeta />, '/faq'));
     await waitFor(() => expect(document.title).toContain('FAQ'));
     expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute('href', expect.stringMatching(/\/faq\/$/));
+    expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute('href', expect.stringMatching(/\/id\/faq\/$/));
+    expect(document.querySelector('link[rel="alternate"][hreflang="en"]')).toHaveAttribute('href', expect.stringMatching(/\/en\/faq\/$/));
+    expect(document.querySelector('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute('href', expect.stringMatching(/\/id\/faq\/$/));
     expect(document.querySelector('meta[name="description"]')).toHaveAttribute('content', expect.stringContaining('LED'));
     expect(document.querySelector('meta[property="og:site_name"]')).toHaveAttribute('content', 'Visitiga Media');
     expect(document.querySelector('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
@@ -33,12 +36,12 @@ describe('public page essentials', () => {
     render(providers(<><PageMeta /><NotFoundPage /></>, '/missing-page'));
     expect(await screen.findByRole('heading', { name: 'Halaman tidak ditemukan.' })).toBeInTheDocument();
     expect(document.querySelector('meta[name="robots"]')).toHaveAttribute('content', 'noindex, follow');
-    expect(screen.getByRole('link', { name: /Kembali ke Beranda/ })).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: /Kembali ke Beranda/ })).toHaveAttribute('href', '/id/');
   });
 
   it('requires privacy consent on the contact form', () => {
     render(providers(<CTASection />));
     expect(screen.getByRole('checkbox')).toBeRequired();
-    expect(screen.getByRole('link', { name: 'Kebijakan Privasi' })).toHaveAttribute('href', '/privacy');
+    expect(screen.getByRole('link', { name: 'Kebijakan Privasi' })).toHaveAttribute('href', '/id/privacy/');
   });
 });

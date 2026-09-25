@@ -1,14 +1,16 @@
 import NewsComments from '@/components/NewsComments';
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Check, Facebook, Link as LinkIcon, Linkedin, LoaderCircle, Mail } from 'lucide-react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
+import { LocalizedLink as Link } from '@/components/LocalizedLink';
 import DOMPurify from 'dompurify';
 import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
 import { getPublicNews, listPublicNews } from '@/lib/adminApi';
 import type { NewsRecord } from '@/types/admin';
 import { useTranslation } from '@/i18n';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { absoluteUrl, canonicalPublicPath } from '@/lib/seo';
+import { absoluteUrl, canonicalPublicPath, localizedAbsoluteUrl } from '@/lib/seo';
+import { localizedPublicPath } from '@/lib/localizedRoutes';
 import LightReveal from '@/components/LightReveal';
 import { getPrerenderData } from '@/lib/prerenderData';
 
@@ -68,11 +70,11 @@ export default function NewsDetailPage() {
     lang,
     noIndex: !article,
     structuredData: article ? [
-      { '@context': 'https://schema.org', '@type': 'Article', headline: article.title, description: seoDescription || article.excerpt, image: article.cover_image.startsWith('http') ? article.cover_image : absoluteUrl(article.cover_image), datePublished: article.published_at, dateModified: article.updated_at, mainEntityOfPage: absoluteUrl(canonicalPublicPath(`/news/${article.slug}`)), author: { '@type': 'Person', name: article.author }, publisher: { '@type': 'Organization', name: 'Visitiga Media', logo: { '@type': 'ImageObject', url: absoluteUrl('/social-preview.png') } }, ...(article.target_keyword?.trim() ? { keywords: article.target_keyword.trim() } : {}) },
+      { '@context': 'https://schema.org', '@type': 'Article', headline: article.title, description: seoDescription || article.excerpt, image: article.cover_image.startsWith('http') ? article.cover_image : absoluteUrl(article.cover_image), datePublished: article.published_at, dateModified: article.updated_at, mainEntityOfPage: localizedAbsoluteUrl(canonicalPublicPath(`/news/${article.slug}`), lang), author: { '@type': 'Person', name: article.author }, publisher: { '@type': 'Organization', name: 'Visitiga Media', logo: { '@type': 'ImageObject', url: absoluteUrl('/social-preview.png') } }, ...(article.target_keyword?.trim() ? { keywords: article.target_keyword.trim() } : {}) },
       { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
-        { '@type': 'ListItem', position: 1, name: en ? 'Home' : 'Beranda', item: absoluteUrl('/') },
-        { '@type': 'ListItem', position: 2, name: en ? 'News' : 'Berita', item: absoluteUrl(canonicalPublicPath('/news')) },
-        { '@type': 'ListItem', position: 3, name: article.title, item: absoluteUrl(canonicalPublicPath(`/news/${article.slug}`)) },
+        { '@type': 'ListItem', position: 1, name: en ? 'Home' : 'Beranda', item: localizedAbsoluteUrl('/', lang) },
+        { '@type': 'ListItem', position: 2, name: en ? 'News' : 'Berita', item: localizedAbsoluteUrl(canonicalPublicPath('/news'), lang) },
+        { '@type': 'ListItem', position: 3, name: article.title, item: localizedAbsoluteUrl(canonicalPublicPath(`/news/${article.slug}`), lang) },
       ] },
     ] : undefined,
   });
@@ -125,7 +127,7 @@ export default function NewsDetailPage() {
     );
   }
 
-  if (!article && !loadError) return <Navigate to="/news" replace />;
+  if (!article && !loadError) return <Navigate to={localizedPublicPath('/news/', lang)} replace />;
 
   if (!article) {
     return (

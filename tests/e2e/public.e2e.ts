@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-const publicRoutes = ['/', '/about', '/services', '/product', '/portfolio', '/video', '/contact', '/news', '/faq', '/privacy'];
+const publicRoutes = ['/id/', '/id/about/', '/id/services/', '/id/product/', '/id/portfolio/', '/id/video/', '/id/contact/', '/id/news/', '/id/faq/', '/id/privacy/'];
 
 test('all public routes activate without browser or network errors', async ({ page }) => {
   const problems: string[] = [];
@@ -15,7 +15,7 @@ test('all public routes activate without browser or network errors', async ({ pa
 
 test('canonical public URLs stay indexable after hydration', async ({ page }) => {
   for (const route of publicRoutes) {
-    const canonicalPath = route === '/' ? route : `${route}/`;
+    const canonicalPath = route;
     await page.goto(canonicalPath);
     await expect(page.locator('#root')).toBeVisible();
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'index, follow');
@@ -25,21 +25,22 @@ test('canonical public URLs stay indexable after hydration', async ({ page }) =>
 });
 
 test('navigation, language, article, 404, and admin redirect remain functional', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/id/');
   await page.getByRole('link', { name: 'Tentang Kami', exact: true }).first().click();
-  await expect(page).toHaveURL(/\/about\/$/);
+  await expect(page).toHaveURL(/\/id\/about\/$/);
   await page.getByRole('button', { name: 'Ganti bahasa' }).first().click();
+  await expect(page).toHaveURL(/\/en\/about\/$/);
   await expect(page.getByRole('link', { name: 'About Us', exact: true }).first()).toBeVisible();
-  await page.goto('/news');
+  await page.goto('/id/news/');
   const article = page.getByRole('link', { name: /Baca selengkapnya|Read more/ }).first();
   if (await article.count()) {
     await article.click();
-    await expect(page).toHaveURL(/\/news\/[^/]+\/$/);
+    await expect(page).toHaveURL(/\/id\/news\/[^/]+\/$/);
     await expect(page.locator('article h1')).toBeVisible();
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'index, follow');
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /\/news\/[^/]+\/$/);
   }
-  await page.goto('/route-tidak-ada');
+  await page.goto('/id/route-tidak-ada/');
   await expect(page.getByRole('heading', { name: /Halaman tidak ditemukan|Page not found/ })).toBeVisible();
   await page.goto('/admin');
   await expect(page).toHaveURL(/\/admin\/login$/);
@@ -47,7 +48,7 @@ test('navigation, language, article, 404, and admin redirect remain functional',
 
 test('contact form handles a successful RPC response', async ({ page }) => {
   await page.route('**/rest/v1/rpc/submit_contact_message', (route) => route.fulfill({ status: 204, body: '' }));
-  await page.goto('/contact');
+  await page.goto('/id/contact/');
   await page.getByLabel('Nama').fill('Pengguna Test');
   await page.getByLabel('Email').fill('test@example.com');
   await page.getByLabel('Kebutuhan Anda').fill('Membutuhkan konsultasi LED untuk pengujian website.');
@@ -59,21 +60,21 @@ test('contact form handles a successful RPC response', async ({ page }) => {
 test('portfolio gallery and detail URLs work on desktop and mobile', async ({ page }) => {
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 844 });
-    await page.goto('/portfolio/');
+    await page.goto('/id/portfolio/');
     const gallery = page.locator('#root #portfolio');
     await expect(gallery).toBeVisible();
     await expect(gallery.getByRole('heading', { name: /Proyek|Projects/ })).toBeVisible();
     await gallery.getByRole('button', { name: 'Lihat semua' }).click();
-    const card = gallery.locator('.grid a[href^="/portfolio/"]').first();
+    const card = gallery.locator('.grid a[href^="/id/portfolio/"]').first();
     await expect(card).toBeVisible();
     const href = await card.getAttribute('href');
     await card.click();
-    await expect(page).toHaveURL(/\/portfolio\/[^/]+\/$/);
+    await expect(page).toHaveURL(/\/id\/portfolio\/[^/]+\/$/);
     await expect(page.locator('#main-content article h1')).toBeVisible();
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', new RegExp(`${href?.replaceAll('/', '\\/')}$`));
     await page.goto(href!);
     await expect(page.locator('#main-content article h1')).toBeVisible();
     await page.getByRole('link', { name: 'Kembali ke portofolio' }).click();
-    await expect(page).toHaveURL(/\/portfolio\/$/);
+    await expect(page).toHaveURL(/\/id\/portfolio\/$/);
   }
 });

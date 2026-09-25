@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { LocalizedNavLink as NavLink } from '@/components/LocalizedLink';
 import { m as motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
 import { useMotionPolicy } from '@/hooks/useMotionPolicy';
@@ -24,7 +25,7 @@ export default function Navbar() {
   const location = useLocation();
   const { reducedMotion } = useMotionPolicy();
   const mobileToggle = useRef<HTMLButtonElement>(null);
-  const solid = location.pathname !== '/' || scrolled || mobileOpen;
+  const solid = !/^\/(?:id|en)\/?$/.test(location.pathname) || scrolled || mobileOpen;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);

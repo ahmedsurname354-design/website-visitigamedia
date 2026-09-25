@@ -1,5 +1,5 @@
 import { ArrowLeft, Home } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { LocalizedLink as Link } from '@/components/LocalizedLink';
 import { useTranslation } from '@/i18n';
 import LightReveal from '@/components/LightReveal';
 
