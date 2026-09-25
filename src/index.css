@@ -5,7 +5,7 @@
 :root {
   --brand-orange: #ff6a00;
   --brand-orange-hover: #e85f00;
-  --brand-orange-ink: #bd4a00;
+  --brand-orange-ink: #b34100;
   --brand-on-orange: #211c18;
   --editorial-ink: #211c18;
   --editorial-muted: #6f6258;
@@ -134,7 +134,7 @@ body {
 .editorial-story-grid { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: clamp(3rem, 8vw, 8rem); }
 .editorial-story-image { position: relative; }
 .editorial-story-image img { width: 100%; min-height: 34rem; object-fit: cover; border-radius: var(--editorial-radius); box-shadow: var(--editorial-shadow); }
-.editorial-story-image > span { position: absolute; right: -1.25rem; bottom: -1.25rem; width: 9.5rem; padding: 1.4rem; border-radius: 1rem; color: #fff; background: var(--editorial-accent); font-size: 2.5rem; font-weight: 650; letter-spacing: -.06em; }
+.editorial-story-image > span { position: absolute; right: -1.25rem; bottom: -1.25rem; width: 9.5rem; padding: 1.4rem; border-radius: 1rem; color: var(--brand-on-orange); background: var(--brand-orange); font-size: 2.5rem; font-weight: 650; letter-spacing: -.06em; }
 .editorial-story-image small { display: block; margin-top: .35rem; font-size: .7rem; font-weight: 650; letter-spacing: .04em; }
 .editorial-story-copy > p:not(.editorial-eyebrow) { max-width: 39rem; margin-top: 1.8rem; color: var(--editorial-muted); font-size: 1rem; line-height: 1.8; }
 .editorial-checks { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .9rem 1.5rem; margin-block: 2rem; }
@@ -561,6 +561,7 @@ img, video { max-width: 100%; }
 .site-footer .border-white\/5 { border-color: rgb(255 255 255 / .12) !important; }
 .site-footer .bg-white\/5 { background-color: rgb(255 255 255 / .08) !important; }
 .editorial-section--dark .editorial-eyebrow { color: var(--brand-orange); }
+.public-site :is(.editorial-section:not(.editorial-section--dark), .journal-page) .editorial-eyebrow { color: var(--brand-orange-ink); }
 .public-site :is(.text-orange-300, .text-orange-400, .text-orange-500, .text-orange-600, .text-orange-700, .text-orange-800) { color: var(--brand-orange-ink) !important; }
 .public-site :is(.bg-orange-400, .bg-orange-500, .bg-orange-600, .bg-orange-700, .bg-orange-800) { background-color: var(--brand-orange) !important; }
 .public-site :is(.bg-orange-400, .bg-orange-500, .bg-orange-600, .bg-orange-700, .bg-orange-800):is(.text-white, .text-black) { color: var(--brand-on-orange) !important; }
@@ -574,6 +575,7 @@ img, video { max-width: 100%; }
 .public-site .brand-surface-dark :is(h1, h2, h3, p, a:not(.brand-button)) { color: #fff !important; }
 .public-site .brand-surface-dark :is(.text-orange-300, .text-orange-400, .text-orange-500, .text-orange-600, .text-orange-700) { color: var(--brand-orange) !important; }
 .public-site .brand-surface-dark .hero-editorial__accent { color: var(--brand-orange) !important; }
+.public-site .brand-surface-dark a.editorial-button--primary { color: var(--brand-on-orange) !important; }
 .public-site .brand-panel { color: var(--brand-on-orange); background: linear-gradient(135deg, var(--brand-orange), #ff8533) !important; }
 .public-site .brand-panel > .relative > :is(h1, h2, p),
 .public-site .brand-panel form :is(label, .text-white, .text-white\/60) { color: var(--brand-on-orange) !important; }
