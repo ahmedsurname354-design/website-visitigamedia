@@ -24,14 +24,14 @@ export default function NewsPage() {
   }, [en]);
 
   return (
-    <section className="journal-page min-h-screen px-4 pb-24 pt-32 text-[#241811] sm:px-6 sm:pt-40 lg:px-8">
+    <section className="journal-page public-surface min-h-screen px-4 pb-24 pt-32 sm:px-6 sm:pt-40 lg:px-8">
       <div className="mx-auto max-w-[1344px]">
         <LightReveal>
           <p className="editorial-eyebrow">Visitiga Journal</p>
           <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight sm:text-6xl">
             {en ? 'Latest ' : 'Berita '}<span className="text-orange-500">{en ? 'news.' : 'terbaru.'}</span>
           </h1>
-          <p className="mt-4 max-w-2xl text-[#735c4d]">{en ? 'The latest articles and updates from Visitiga Media.' : 'Artikel dan kabar terbaru dari Visitiga Media.'}</p>
+          <p className="public-muted mt-4 max-w-2xl">{en ? 'The latest articles and updates from Visitiga Media.' : 'Artikel dan kabar terbaru dari Visitiga Media.'}</p>
         </LightReveal>
 
         {loading ? (
@@ -46,7 +46,7 @@ export default function NewsPage() {
           <div className="journal-grid mt-12 grid gap-7 md:grid-cols-2 lg:grid-cols-3">
             {articles.map((article, index) => (
               <LightReveal key={article.id} delay={Math.min(index * 0.045, 0.18)} className="h-full">
-              <article className="journal-card h-full overflow-hidden border border-[#ead5c1] bg-white shadow-sm">
+              <article className="journal-card public-card h-full overflow-hidden border shadow-sm">
                 <img
                   src={optimizedImageUrl(article.cover_image, 800)}
                   onError={({ currentTarget }) => restoreOriginalImage(currentTarget, article.cover_image)}
@@ -54,16 +54,16 @@ export default function NewsPage() {
                   loading={index === 0 ? 'eager' : 'lazy'}
                   fetchPriority={index === 0 ? 'high' : 'auto'}
                   decoding="async"
-                  className="aspect-[16/9] w-full bg-[#f3e5d7] object-cover"
+                  className="public-media-placeholder aspect-[16/9] w-full object-cover"
                 />
                 <div className="p-6">
                   <p className="text-xs font-bold uppercase tracking-[.16em] text-orange-600">{article.category}</p>
                   <h2 className="mt-3 text-2xl font-black leading-tight">{article.title}</h2>
-                  <p className="mt-3 line-clamp-3 text-sm leading-6 text-[#735c4d]">{article.excerpt}</p>
-                  <p className="mt-5 text-xs text-[#735c4d]">
+                  <p className="public-muted mt-3 line-clamp-3 text-sm leading-6">{article.excerpt}</p>
+                  <p className="public-muted mt-5 text-xs">
                     {article.author} · {new Date(article.published_at!).toLocaleDateString(en ? 'en-US' : 'id-ID')}
                   </p>
-                  <Link to={`/news/${article.slug}`} className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-orange-600 hover:text-orange-700">
+                  <Link to={`/news/${article.slug}`} className="public-link mt-5 inline-flex items-center gap-2 text-sm font-bold">
                     {en ? 'Read more' : 'Baca selengkapnya'} <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>

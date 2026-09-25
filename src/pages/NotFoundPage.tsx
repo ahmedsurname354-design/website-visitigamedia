@@ -13,7 +13,7 @@ export default function NotFoundPage() {
       <LightReveal className="editorial-container max-w-3xl">
         <p className="editorial-eyebrow">{copy.eyebrow}</p>
         <h1 className="editorial-title mx-auto">{copy.title}</h1>
-        <p className="mx-auto mt-6 max-w-xl leading-7 text-[#6f6258]">{copy.body}</p>
+        <p className="public-muted mx-auto mt-6 max-w-xl leading-7">{copy.body}</p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link to="/" className="not-found-action editorial-button editorial-button--primary"><Home aria-hidden="true" />{copy.home}</Link>
           <Link to="/services" className="not-found-action editorial-button editorial-button--outline"><ArrowLeft aria-hidden="true" />{copy.services}</Link>
