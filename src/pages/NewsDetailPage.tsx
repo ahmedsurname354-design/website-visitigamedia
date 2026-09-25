@@ -146,7 +146,7 @@ export default function NewsDetailPage() {
   const encodedTitle = encodeURIComponent(article.title);
   const shareLinks = [
     { label: 'Bagikan ke LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`, icon: <Linkedin className="h-4 w-4" /> },
-    { label: 'Bagikan ke WhatsApp', href: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`, icon: <span className="text-[10px] font-black">WA</span> },
+    { label: 'Bagikan ke WhatsApp (WA)', href: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`, icon: <span className="text-[10px] font-black">WA</span> },
     { label: 'Bagikan ke X', href: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`, icon: <span className="text-sm font-black">X</span> },
     { label: 'Bagikan ke Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`, icon: <Facebook className="h-4 w-4" /> },
     { label: 'Bagikan lewat email', href: `mailto:?subject=${encodedTitle}&body=${encodedUrl}`, icon: <Mail className="h-4 w-4" /> },
@@ -213,7 +213,7 @@ export default function NewsDetailPage() {
                   {relatedArticles.map((related) => (
                     <Link key={related.id} to={`/news/${related.slug}`} className="related-article-link group grid grid-cols-[6.5rem_minmax(0,1fr)] gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500">
                       <img src={optimizedImageUrl(related.cover_image, 600)} onError={({ currentTarget }) => restoreOriginalImage(currentTarget, related.cover_image)} alt="" loading="lazy" decoding="async" className="aspect-[4/3] w-full rounded-xl bg-[#f3e5d7] object-cover" />
-                      <div className="min-w-0 py-0.5"><h3 className="line-clamp-3 text-sm font-bold leading-5 transition group-hover:text-orange-600">{related.title}</h3><p className="mt-2 truncate text-xs text-[#8b7161]">{related.category}</p></div>
+                      <div className="min-w-0 py-0.5"><h3 className="line-clamp-3 text-sm font-bold leading-5 transition group-hover:text-orange-600">{related.title}</h3><p className="mt-2 truncate text-xs text-[#735c4d]">{related.category}</p></div>
                     </Link>
                   ))}
                 </div>
