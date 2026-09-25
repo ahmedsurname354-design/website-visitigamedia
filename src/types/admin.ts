@@ -94,6 +94,44 @@ export interface ServiceContent {
 
 export type ServiceContentInput = Omit<ServiceContent, 'id' | 'updated_at'>;
 
+export type ServiceLandingSlug = 'led-indoor' | 'videotron-outdoor' | 'rental-led' | 'media-konvensional';
+
+export interface ServiceLandingLocaleContent {
+  eyebrow: string;
+  title: string;
+  description: string;
+  intro_eyebrow: string;
+  intro_title: string;
+  intro: string;
+  considerations_title: string;
+  considerations: string[];
+  process_eyebrow: string;
+  process_title: string;
+  process: string[];
+  portfolio_eyebrow: string;
+  portfolio_title: string;
+  portfolio_link_text: string;
+  cta_title: string;
+  cta_description: string;
+  cta_button_text: string;
+  back_text: string;
+}
+
+export interface ServiceLandingContent {
+  slug: ServiceLandingSlug;
+  hero_image_url: string;
+  content_id: ServiceLandingLocaleContent;
+  content_en: ServiceLandingLocaleContent;
+  seo_title_id: string;
+  seo_description_id: string;
+  seo_title_en: string;
+  seo_description_en: string;
+  related_portfolio_ids: string[];
+  updated_at: string;
+}
+
+export type ServiceLandingInput = Omit<ServiceLandingContent, 'updated_at'>;
+
 export type LeadStatus = 'new' | 'contacted' | 'completed' | 'spam';
 
 export interface ContactLead {

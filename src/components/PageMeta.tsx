@@ -45,6 +45,6 @@ export default function PageMeta() {
     }
     return breadcrumbs;
   }, [dict.faq.items, isServiceLanding, lang, path]);
-  usePageMeta({ ...meta, pathname: canonicalPublicPath(path), structuredData, noIndex: notFound, lang, disabled: isNewsDetail || isCaseStudy });
+  usePageMeta({ ...meta, pathname: canonicalPublicPath(path), structuredData, noIndex: notFound, lang, disabled: isNewsDetail || isCaseStudy || isServiceLanding });
   return null;
 }

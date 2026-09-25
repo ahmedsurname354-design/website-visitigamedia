@@ -22,7 +22,7 @@ describe('public page essentials', () => {
     expect(schemas).toEqual(expect.arrayContaining([expect.objectContaining({ '@type': 'FAQPage' }), expect.objectContaining({ '@type': 'BreadcrumbList' })]));
   });
 
-  it.each(['/about', '/services', '/services/led-indoor', '/services/videotron-outdoor', '/services/rental-led', '/services/media-konvensional', '/product', '/portfolio', '/video', '/contact', '/news', '/faq', '/privacy'])('keeps %s/ indexable after hydration', async (path) => {
+  it.each(['/about', '/services', '/product', '/portfolio', '/video', '/contact', '/news', '/faq', '/privacy'])('keeps %s/ indexable after hydration', async (path) => {
     render(providers(<PageMeta />, `${path}/`));
     await waitFor(() => expect(document.querySelector('meta[name="robots"]')).toHaveAttribute('content', 'index, follow'));
     expect(document.title).not.toContain('Tidak Ditemukan');

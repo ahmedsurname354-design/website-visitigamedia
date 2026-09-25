@@ -4,6 +4,7 @@ import { getServiceContent, saveServiceContent } from '@/lib/adminApi';
 import { defaultServiceContent } from '@/lib/serviceContent';
 import { supabase } from '@/lib/supabase';
 import type { ServiceContentInput } from '@/types/admin';
+import { ServiceLandingManager } from '@/components/admin/ServiceLandingManager';
 
 export default function ServicesManagerPage() {
   const [content, setContent] = useState<ServiceContentInput>(defaultServiceContent);
@@ -54,6 +55,7 @@ export default function ServicesManagerPage() {
       <Section title="Media showreel"><div className="grid gap-5 lg:grid-cols-2"><VideoUpload value={content.video_mp4_url} onChange={persistUploadedVideo} /><Field name="video_poster_url" label="URL poster video" initial={content.video_poster_url} /></div>{content.video_mp4_url && <video key={content.video_mp4_url} controls preload="metadata" poster={content.video_poster_url} className="mt-5 aspect-video w-full max-w-2xl rounded-xl bg-black"><source src={content.video_mp4_url} type="video/mp4" /></video>}</Section>
       <div className="sticky bottom-4 flex justify-end"><button disabled={saving} className="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-5 py-3 text-sm font-bold text-white shadow-lg hover:bg-orange-600 disabled:opacity-50">{saving ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}{saving ? 'Menyimpan…' : 'Simpan perubahan'}</button></div>
     </form>
+    <ServiceLandingManager />
   </div>;
 }
 

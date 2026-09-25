@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
-import type { ContactLead, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, PortfolioSlugAlias, Product, ProductCatalogue, ProductInput, ServiceContent, ServiceContentInput } from '@/types/admin';
+import type { ContactLead, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, PortfolioSlugAlias, Product, ProductCatalogue, ProductInput, ServiceContent, ServiceContentInput, ServiceLandingContent, ServiceLandingInput, ServiceLandingSlug } from '@/types/admin';
 
 function client(): SupabaseClient {
   if (!supabase) throw new Error('Supabase belum dikonfigurasi.');
@@ -160,6 +160,54 @@ export async function saveServiceContent(input: ServiceContentInput): Promise<Se
   const { data, error } = await client().from('service_content').upsert({ id: 1, ...input }).select('*').single();
   if (error) throw error;
   return data as ServiceContent;
+}
+
+type ServiceLandingRow = Omit<ServiceLandingContent, 'related_portfolio_ids'> & {
+  service_landing_portfolios?: { portfolio_id: string; position: number }[];
+};
+
+function mapServiceLanding(row: ServiceLandingRow): ServiceLandingContent {
+  return {
+    ...row,
+    related_portfolio_ids: [...(row.service_landing_portfolios ?? [])]
+      .sort((a, b) => a.position - b.position)
+      .map((item) => item.portfolio_id),
+  };
+}
+
+const serviceLandingSelect = '*,service_landing_portfolios(portfolio_id,position)';
+
+export async function listServiceLandings(): Promise<ServiceLandingContent[]> {
+  const { data, error } = await client().from('service_landings').select(serviceLandingSelect).order('slug');
+  if (error) throw error;
+  return (data as ServiceLandingRow[]).map(mapServiceLanding);
+}
+
+export async function getServiceLanding(slug: ServiceLandingSlug): Promise<ServiceLandingContent | null> {
+  const { data, error } = await client().from('service_landings').select(serviceLandingSelect).eq('slug', slug).maybeSingle();
+  if (error) throw error;
+  return data ? mapServiceLanding(data as ServiceLandingRow) : null;
+}
+
+export async function saveServiceLanding(input: ServiceLandingInput): Promise<ServiceLandingContent> {
+  if (input.related_portfolio_ids.length > 3) throw new Error('Maksimal 3 portofolio terkait.');
+  if (new Set(input.related_portfolio_ids).size !== input.related_portfolio_ids.length) throw new Error('Portofolio terkait tidak boleh duplikat.');
+  if (input.hero_image_url) assertSafeMediaUrl(input.hero_image_url, 'URL gambar hero');
+  const { error } = await client().rpc('save_service_landing', {
+    p_slug: input.slug,
+    p_hero_image_url: input.hero_image_url,
+    p_content_id: input.content_id,
+    p_content_en: input.content_en,
+    p_seo_title_id: input.seo_title_id,
+    p_seo_description_id: input.seo_description_id,
+    p_seo_title_en: input.seo_title_en,
+    p_seo_description_en: input.seo_description_en,
+    p_portfolio_ids: input.related_portfolio_ids,
+  });
+  if (error) throw error;
+  const saved = await getServiceLanding(input.slug);
+  if (!saved) throw new Error('Konten detail layanan tidak ditemukan setelah disimpan.');
+  return saved;
 }
 
 export async function listContactLeads(): Promise<ContactLead[]> {
