@@ -61,9 +61,9 @@ export default function Navbar() {
 
   return (
     <motion.nav
-      initial={reducedMotion ? false : { y: -12, opacity: 0 }}
+      initial={false}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: reducedMotion ? 0 : 0.32 }}
+      transition={{ duration: 0 }}
       className={`site-navbar fixed top-0 left-0 right-0 z-40 transition-colors duration-200 ${
         solid ? 'site-navbar--solid theme-navbar backdrop-blur-md py-2.5' : 'site-navbar--transparent bg-transparent py-3 sm:py-4'
       }`}

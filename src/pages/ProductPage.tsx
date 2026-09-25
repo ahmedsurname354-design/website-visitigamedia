@@ -11,8 +11,8 @@ export default function ProductPage() {
     <section className="product-page min-h-screen py-32 md:py-40">
       <div className="mx-auto max-w-[1536px] px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={reducedMotion ? false : { opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={reducedMotion ? false : { y: 12 }}
+          animate={{ y: 0 }}
           transition={{ duration: reducedMotion ? 0 : 0.32 }}
           className="mb-14 max-w-2xl"
         >
