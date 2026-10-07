@@ -13,9 +13,9 @@ import iims from '@/assets/clients/iims.webp';
 
 const serviceIcons = [Monitor, PanelsTopLeft, Layers3, Grid2x2Plus];
 const projects = [
-  { image: '/portfolio/outdoor/outdoor-13.webp', title: 'Mandalika International Circuit', category: 'Outdoor LED' },
-  { image: '/portfolio/indoor-9.webp', title: 'Plaza Indonesia', category: 'Indoor Display' },
-  { image: '/portfolio/rental/rental-8.webp', title: 'MotoGP Mandalika 2025', category: 'Rental LED' },
+  { image: '/portfolio/outdoor/outdoor-13.webp', fallbackImage: '/portfolio/outdoor/outdoor-13.jpg', title: 'Mandalika International Circuit', category: 'Outdoor LED' },
+  { image: '/portfolio/indoor-9.webp', fallbackImage: '/portfolio/indoor-9.jpg', title: 'Plaza Indonesia', category: 'Indoor Display' },
+  { image: '/portfolio/rental/rental-8.webp', fallbackImage: '/portfolio/rental/rental-8.jpg', title: 'MotoGP Mandalika 2025', category: 'Rental LED' },
 ];
 const clients = [wonderfulIndonesia, pertamina, motogp, ugm, mandalika, iims];
 
@@ -64,7 +64,7 @@ export default function HomeShowcase() {
           <div className="featured-work-grid">
             {projects.map((project, index) => (
               <Link key={project.title} to="/portfolio" className={`featured-work-card featured-work-card--${index + 1}`}>
-                <img src={project.image} alt={project.title} loading="lazy" decoding="async" />
+                <img src={project.image} onError={({ currentTarget }) => { currentTarget.onerror = null; currentTarget.src = project.fallbackImage; }} alt={project.title} loading="lazy" decoding="async" />
                 <span className="featured-work-overlay" />
                 <span className="featured-work-meta"><small>{project.category}</small><strong>{project.title}</strong></span>
               </Link>
