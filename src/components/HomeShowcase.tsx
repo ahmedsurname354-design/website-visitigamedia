@@ -14,7 +14,7 @@ import iims from '@/assets/clients/iims.webp';
 const serviceIcons = [Monitor, PanelsTopLeft, Layers3, Grid2x2Plus];
 const projects = [
   { image: '/portfolio/outdoor/outdoor-13.webp', fallbackImage: '/portfolio/outdoor/outdoor-13.jpg', title: 'Mandalika International Circuit', category: 'Outdoor LED' },
-  { image: '/portfolio/indoor-9.webp', fallbackImage: '/portfolio/indoor-9.jpg', title: 'Plaza Indonesia', category: 'Indoor Display' },
+  { image: '/portfolio/indoor/indoor-9.webp', fallbackImage: '/portfolio/indoor/indoor-9.jpg', title: 'Plaza Indonesia', category: 'Indoor Display' },
   { image: '/portfolio/rental/rental-8.webp', fallbackImage: '/portfolio/rental/rental-8.jpg', title: 'MotoGP Mandalika 2025', category: 'Rental LED' },
 ];
 const clients = [wonderfulIndonesia, pertamina, motogp, ugm, mandalika, iims];
