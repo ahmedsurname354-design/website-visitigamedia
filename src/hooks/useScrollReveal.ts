@@ -11,6 +11,7 @@ export function useScrollReveal() {
     // never feels delayed while scrolling.
     margin: '0px 0px 80px 0px',
     amount: 'some',
+    initial: reducedMotion,
   });
-  return { ref, isInView: reducedMotion || isInView, reducedMotion };
+  return { ref, isInView, reducedMotion };
 }
