@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { LoaderCircle, Save } from 'lucide-react';
 import { getHomepageContent, listPortfolios, saveHomepageContent } from '@/lib/adminApi';
+import { translateContent } from '@/lib/translation';
 import { defaultHomepageContent } from '@/lib/homepageContent';
 import { ImageUploadField } from '@/components/admin/ImageUploadField';
 import { AdminAlert, AdminPageHeader } from '@/components/admin/AdminUi';
@@ -29,10 +30,12 @@ export default function HomepageManagerPage() {
   const submit = async (form: FormData) => {
     setSaving(true); setError(''); setMessage('');
     try {
+      setMessage('Menerjemahkan ke Bahasa Indonesia…');
+      const englishContent = readLocale(form, 'en');
       const next: HomepageContentInput = {
         hero_image_url: String(form.get('hero_image_url') ?? '').trim(),
         about_image_url: String(form.get('about_image_url') ?? '').trim(),
-        content_id: readLocale(form, 'id'), content_en: readLocale(form, 'en'), featured_portfolio_ids: selectedProjects,
+        content_id: await translateContent(englishContent), content_en: englishContent, featured_portfolio_ids: selectedProjects,
       };
       const saved = await saveHomepageContent(next);
       setContent(saved); setMessage('Konten beranda berhasil disimpan.');
@@ -44,8 +47,8 @@ export default function HomepageManagerPage() {
   return <div className="mx-auto max-w-7xl"><AdminPageHeader title="Beranda" description="Kelola seluruh teks, media, statistik, layanan unggulan, proyek, dan CTA homepage." />{error && <AdminAlert>{error}</AdminAlert>}{message && <p role="status" className="mb-5 rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{message}</p>}
     <form onSubmit={(event) => { event.preventDefault(); void submit(new FormData(event.currentTarget)); }} className="space-y-7">
       <Section title="Media beranda"><div className="grid gap-5 lg:grid-cols-2"><ImageUploadField name="hero_image_url" label="Gambar Hero" initial={content.hero_image_url} folder="homepage" /><ImageUploadField name="about_image_url" label="Gambar bagian Tentang" initial={content.about_image_url} folder="homepage" allowClear /></div></Section>
-      <LocalePanel locale="id" content={content.content_id} />
       <LocalePanel locale="en" content={content.content_en} />
+      <TranslationPreview content={content.content_id} />
       <Section title="Proyek unggulan beranda"><p className="mb-4 text-sm text-slate-500">Pilih maksimal tiga proyek dari Portofolio. Urutan pilihan menjadi urutan tampil.</p><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{portfolios.map((item) => <label key={item.id} className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 ${selectedProjects.includes(item.id) ? 'border-orange-500 bg-orange-50' : 'border-slate-200'}`}><input type="checkbox" checked={selectedProjects.includes(item.id)} onChange={() => toggleProject(item.id)} /><img src={item.image_url} alt="" className="size-12 rounded object-cover" /><span className="min-w-0"><strong className="block truncate text-sm">{item.title}</strong><small className="block truncate text-xs text-slate-500">{item.category}</small></span></label>)}</div></Section>
       <div className="sticky bottom-4 flex justify-end"><button disabled={saving} className="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-5 py-3 text-sm font-bold text-white shadow-lg hover:bg-orange-600 disabled:opacity-50">{saving ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}{saving ? 'Menyimpan...' : 'Simpan perubahan'}</button></div>
     </form>
@@ -73,6 +76,10 @@ function LocalePanel({ locale, content }: { locale: 'id' | 'en'; content: Homepa
     <Field name={`${locale}_about_label`} label="Tentang — Label kecil" initial={content.about.sectionLabel} /><Field name={`${locale}_about_heading`} label="Tentang — Judul" initial={content.about.heading} /><Area name={`${locale}_about_subtitle`} label="Tentang — Deskripsi" initial={content.about.subtitle} /><Field name={`${locale}_about_button`} label="Tentang — Teks tombol" initial={content.about.buttonLabel} /><Field name={`${locale}_about_clients`} label="Tentang — Teks logo klien" initial={content.about.clientProofLabel} />{Array.from({ length: 4 }, (_, index) => <Field key={index} name={`${locale}_about_feature_${index}`} label={`Tentang — Keunggulan ${index + 1}`} initial={content.about.features[index] ?? ''} />)}
     <div className="lg:col-span-2"><h4 className="mb-3 font-black">CTA</h4><div className="grid gap-4 sm:grid-cols-2"><Field name={`${locale}_cta_title`} label="Judul" initial={content.cta.title} /><Field name={`${locale}_cta_subtitle`} label="Deskripsi" initial={content.cta.subtitle} /><Field name={`${locale}_cta_call`} label="Teks tombol WhatsApp" initial={content.cta.callNow} /><Field name={`${locale}_cta_email`} label="Teks tombol email" initial={content.cta.emailUs} /><Field name={`${locale}_cta_phone`} label="Nomor WhatsApp" initial={content.cta.phoneInfo} /><Field name={`${locale}_cta_email_address`} label="Alamat email" initial={content.cta.emailInfo} /><Field name={`${locale}_cta_location`} label="Alamat kantor" initial={content.cta.locationInfo} /></div></div>
   </div></Section>;
+}
+
+function TranslationPreview({ content }: { content: HomepageLocaleContent }) {
+  return <details className="rounded-2xl border border-slate-200 bg-slate-50 p-5"><summary className="cursor-pointer text-lg font-black text-slate-900">Preview Bahasa Indonesia (otomatis)</summary><p className="mt-2 text-sm text-slate-500">Versi Indonesia dibuat otomatis saat menyimpan konten English.</p><pre className="mt-4 max-h-96 overflow-auto whitespace-pre-wrap rounded-xl bg-white p-4 text-xs leading-6 text-slate-700">{JSON.stringify(content, null, 2)}</pre></details>;
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) { return <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"><h3 className="mb-5 text-lg font-black text-slate-900">{title}</h3>{children}</section>; }

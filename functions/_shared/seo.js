@@ -64,7 +64,7 @@ export function renderSeoDocument(shell, { lang, route, title, description, imag
   html = replaceMeta(html, /<meta name="twitter:title" content="[^"]*"\s*\/>/i, `<meta name="twitter:title" content="${escapeHtml(title)}" />`);
   html = replaceMeta(html, /<meta name="twitter:description" content="[^"]*"\s*\/>/i, `<meta name="twitter:description" content="${escapeHtml(description)}" />`);
   html = replaceMeta(html, /<meta name="twitter:image" content="[^"]*"\s*\/>/i, `<meta name="twitter:image" content="${escapeHtml(imageUrl)}" />`);
-  const alternates = `  <link rel="alternate" hreflang="id" href="${escapeHtml(idUrl)}" />\n  <link rel="alternate" hreflang="en" href="${escapeHtml(enUrl)}" />\n  <link rel="alternate" hreflang="x-default" href="${escapeHtml(idUrl)}" />`;
+  const alternates = `  <link rel="alternate" hreflang="id" href="${escapeHtml(idUrl)}" />\n  <link rel="alternate" hreflang="en" href="${escapeHtml(enUrl)}" />\n  <link rel="alternate" hreflang="x-default" href="${escapeHtml(enUrl)}" />`;
   html = html.replace(/\s*<link rel="alternate" hreflang="(?:id|en|x-default)"[^>]*\/>/gi, '');
   html = html.replace('</head>', `${alternates}\n</head>`);
   const bootstrap = JSON.stringify({ route: `/${lang}${route}`, ...data }).replace(/</g, '\\u003c');

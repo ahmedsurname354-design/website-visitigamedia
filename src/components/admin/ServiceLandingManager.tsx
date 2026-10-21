@@ -4,6 +4,7 @@ import { getServiceLanding, listPortfolios, saveServiceLanding } from '@/lib/adm
 import { defaultServiceLandings, serviceLandingSlugs } from '@/lib/serviceLanding';
 import { ImageUploadField } from '@/components/admin/ImageUploadField';
 import type { Portfolio, ServiceLandingContent, ServiceLandingLocaleContent, ServiceLandingSlug } from '@/types/admin';
+import { translateContent } from '@/lib/translation';
 
 const labels: Record<ServiceLandingSlug, string> = {
   'led-indoor': 'LED Indoor', 'videotron-outdoor': 'Videotron Outdoor', 'rental-led': 'Rental LED', 'media-konvensional': 'Media Konvensional',
@@ -48,8 +49,9 @@ export function ServiceLandingManager() {
     setSaving(true); setError(''); setMessage('');
     try {
       const related = ['portfolio_1', 'portfolio_2', 'portfolio_3'].map((name) => value(form, name)).filter(Boolean);
-      const contentId = localeFromForm(form, 'id');
       const contentEn = localeFromForm(form, 'en');
+      setMessage('Menerjemahkan ke Bahasa Indonesia…');
+      const contentId = await translateContent(contentEn);
       if (!contentId.considerations.length || !contentId.process.length || !contentEn.considerations.length || !contentEn.process.length) throw new Error('Daftar pertimbangan dan tahapan harus berisi minimal satu item pada setiap bahasa.');
       const saved = await saveServiceLanding({
         slug, hero_image_url: value(form, 'hero_image_url'), content_id: contentId, content_en: contentEn,
@@ -68,8 +70,8 @@ export function ServiceLandingManager() {
     {loading ? <div className="rounded-2xl border border-slate-200 bg-white py-16 text-center text-sm text-slate-500"><LoaderCircle className="mr-2 inline h-5 w-5 animate-spin" />Memuat detail layanan...</div> :
       <form key={`${slug}-${landing.updated_at}`} onSubmit={(event) => { event.preventDefault(); void submit(new FormData(event.currentTarget)); }} className="space-y-7">
         <Panel title="Gambar hero"><ImageUploadField name="hero_image_url" label="Gambar hero (opsional)" initial={landing.hero_image_url} folder="services" allowClear /><p className="text-xs text-slate-500 sm:col-span-2">Jika kosong, gambar portofolio terkait urutan pertama akan digunakan.</p></Panel>
-        <LocalePanel locale="id" title="Konten Bahasa Indonesia" content={landing.content_id} />
         <LocalePanel locale="en" title="English content" content={landing.content_en} />
+        <TranslationPreview content={landing.content_id} />
         <Panel title="Portofolio terkait (maksimal 3)"><PortfolioSelects projects={portfolios} selected={landing.related_portfolio_ids} /></Panel>
         <Panel title="SEO"><Field name="seo_title_id" label="Meta title — Indonesia" initial={landing.seo_title_id} /><Area name="seo_description_id" label="Meta description — Indonesia" initial={landing.seo_description_id} /><Field name="seo_title_en" label="Meta title — English" initial={landing.seo_title_en} /><Area name="seo_description_en" label="Meta description — English" initial={landing.seo_description_en} /></Panel>
         <div className="sticky bottom-4 flex justify-end"><button disabled={saving} className="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-5 py-3 text-sm font-bold text-white shadow-lg hover:bg-orange-600 disabled:opacity-50">{saving ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}{saving ? 'Menyimpan...' : 'Simpan halaman detail'}</button></div>
@@ -97,6 +99,8 @@ function PortfolioSelects({ projects, selected }: { projects: Portfolio[]; selec
   const [values, setValues] = useState([selected[0] ?? '', selected[1] ?? '', selected[2] ?? '']);
   return <div className="grid gap-4 sm:col-span-2 sm:grid-cols-3">{values.map((current, index) => <label key={index} className="text-sm font-medium text-slate-700">Urutan {index + 1}<select name={`portfolio_${index + 1}`} value={current} onChange={(event) => setValues((items) => items.map((item, itemIndex) => itemIndex === index ? event.target.value : item))} className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 outline-none focus:border-orange-500"><option value="">Tidak dipilih</option>{projects.map((project) => <option key={project.id} value={project.id} disabled={values.some((value, valueIndex) => valueIndex !== index && value === project.id)}>{project.title}</option>)}</select></label>)}</div>;
 }
+
+function TranslationPreview({ content }: { content: ServiceLandingLocaleContent }) { return <details className="rounded-2xl border border-slate-200 bg-slate-50 p-5"><summary className="cursor-pointer font-black text-slate-900">Preview Bahasa Indonesia (otomatis)</summary><pre className="mt-4 max-h-80 overflow-auto whitespace-pre-wrap rounded-xl bg-white p-4 text-xs leading-6 text-slate-700">{JSON.stringify(content, null, 2)}</pre></details>; }
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) { return <section className="grid gap-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:grid-cols-2 sm:p-6"><h3 className="text-lg font-black text-slate-900 sm:col-span-2">{title}</h3>{children}</section>; }
 function Field({ name, label, initial }: { name: string; label: string; initial: string }) { return <label className="text-sm font-medium text-slate-700">{label}<input name={name} required defaultValue={initial} className="mt-2 w-full rounded-xl border border-slate-300 px-3 py-2.5 outline-none focus:border-orange-500" /></label>; }

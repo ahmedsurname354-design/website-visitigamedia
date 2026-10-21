@@ -10,6 +10,7 @@ import ugm from '@/assets/clients/ugm.webp';
 import mandalika from '@/assets/clients/mandalika.webp';
 import iims from '@/assets/clients/iims.webp';
 import type { HomepageContent, Portfolio } from '@/types/admin';
+import { localizedPortfolio } from '@/lib/contentLocale';
 
 const serviceIcons = [Monitor, PanelsTopLeft, Layers3, Grid2x2Plus];
 const fallbackProjects = [
@@ -23,7 +24,7 @@ export default function HomeShowcase({ content, portfolios }: { content: Homepag
   const { ref: servicesRef, isInView: servicesInView } = useScrollReveal();
   const { lang } = useTranslation();
   const locale = lang === 'id' ? content.content_id : content.content_en;
-  const projects = content.featured_portfolio_ids.map((id) => portfolios.find((item) => item.id === id)).filter((item): item is Portfolio => Boolean(item)).slice(0, 3);
+  const projects = content.featured_portfolio_ids.map((id) => portfolios.find((item) => item.id === id)).filter((item): item is Portfolio => Boolean(item)).map((item) => localizedPortfolio(item, lang)).slice(0, 3);
   const visibleProjects = projects.length > 0 ? projects : fallbackProjects;
 
   return <>

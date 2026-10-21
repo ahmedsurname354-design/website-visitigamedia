@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
+import { translateContent } from '@/lib/translation';
 import type { ContactLead, HomepageContent, HomepageContentInput, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, PortfolioSlugAlias, Product, ProductCatalogue, ProductInput, ServiceContent, ServiceContentInput, ServiceLandingContent, ServiceLandingInput, ServiceLandingSlug } from '@/types/admin';
 
 function client(): SupabaseClient {
@@ -65,7 +66,10 @@ export async function listPortfolioAliases(): Promise<PortfolioSlugAlias[]> {
 
 export async function savePortfolio(input: PortfolioInput, id?: string): Promise<void> {
   assertSafeMediaUrl(input.image_url, 'URL gambar project');
-  const query = id ? client().from('portfolios').update(input).eq('id', id) : client().from('portfolios').insert(input);
+  const contentEn = { title: input.title, client: input.client, category: input.category, description: input.description, overview: input.overview, challenge: input.challenge, solution: input.solution, seo_title: input.seo_title, seo_description: input.seo_description };
+  const contentId = await translateContent(contentEn);
+  const payload = { ...input, content_en: contentEn, content_id: contentId };
+  const query = id ? client().from('portfolios').update(payload).eq('id', id) : client().from('portfolios').insert(payload);
   const { error } = await query;
   if (error) throw error;
 }
@@ -100,7 +104,10 @@ export async function saveNews(input: NewsInput, id?: string): Promise<void> {
   if ((input.seo_description?.length ?? 0) > 180) throw new Error('Meta description maksimal 180 karakter.');
   if ((input.cover_alt?.length ?? 0) > 180) throw new Error('Alt text cover maksimal 180 karakter.');
   if ((input.target_keyword?.length ?? 0) > 100) throw new Error('Target keyword maksimal 100 karakter.');
-  const query = id ? client().from('news').update(input).eq('id', id) : client().from('news').insert(input);
+  const contentEn = { title: input.title, content: input.content, author: input.author, category: input.category, excerpt: input.excerpt, seo_title: input.seo_title ?? '', seo_description: input.seo_description ?? '', cover_alt: input.cover_alt ?? '', target_keyword: input.target_keyword ?? '' };
+  const contentId = await translateContent(contentEn);
+  const payload = { ...input, content_en: contentEn, content_id: contentId };
+  const query = id ? client().from('news').update(payload).eq('id', id) : client().from('news').insert(payload);
   const { error } = await query;
   if (error?.code === '23505') throw new Error('Slug sudah digunakan oleh berita lain. Pilih slug yang berbeda.');
   if (error) throw error;
@@ -123,7 +130,10 @@ export async function listPublicProducts(): Promise<Product[]> {
 
 export async function saveProduct(input: ProductInput, id?: string): Promise<void> {
   assertSafeMediaUrl(input.image_url, 'URL gambar produk');
-  const query = id ? client().from('products').update(input).eq('id', id) : client().from('products').insert(input);
+  const contentEn = { name: input.name, category: input.category, description: input.description, label: input.label };
+  const contentId = await translateContent(contentEn);
+  const payload = { ...input, content_en: contentEn, content_id: contentId };
+  const query = id ? client().from('products').update(payload).eq('id', id) : client().from('products').insert(payload);
   const { error } = await query;
   if (error) throw error;
 }
@@ -170,7 +180,8 @@ export async function getProductCatalogue(): Promise<ProductCatalogue | null> {
 
 export async function saveProductCatalogue(title: string, fileUrl: string): Promise<void> {
   assertSafeMediaUrl(fileUrl, 'URL katalog');
-  const { error } = await client().from('product_catalogue').upsert({ id: 1, title, file_url: fileUrl });
+  const translated = await translateContent({ title });
+  const { error } = await client().from('product_catalogue').upsert({ id: 1, title, title_en: title, title_id: translated.title, file_url: fileUrl });
   if (error) throw error;
 }
 
@@ -186,7 +197,9 @@ export async function saveServiceContent(input: ServiceContentInput): Promise<Se
   assertSafeMediaUrl(input.video_webm_url, 'URL video WebM');
   assertSafeMediaUrl(input.video_mp4_url, 'URL video MP4');
   assertSafeMediaUrl(input.video_poster_url, 'URL poster video');
-  const { data, error } = await client().from('service_content').upsert({ id: 1, ...input }).select('*').single();
+  const contentEn = { eyebrow: input.eyebrow, heading: input.heading, heading_accent: input.heading_accent, cards: input.cards, showreel_eyebrow: input.showreel_eyebrow, showreel_heading: input.showreel_heading, showreel_accent: input.showreel_accent, showreel_description: input.showreel_description, primary_button_text: input.primary_button_text, secondary_button_text: input.secondary_button_text };
+  const contentId = await translateContent(contentEn);
+  const { data, error } = await client().from('service_content').upsert({ id: 1, ...input, content_en: contentEn, content_id: contentId }).select('*').single();
   if (error) throw error;
   return data as ServiceContent;
 }

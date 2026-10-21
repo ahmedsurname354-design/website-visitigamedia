@@ -13,6 +13,7 @@ import { absoluteUrl, canonicalPublicPath, localizedAbsoluteUrl } from '@/lib/se
 import { localizedPublicPath } from '@/lib/localizedRoutes';
 import LightReveal from '@/components/LightReveal';
 import { getPrerenderData } from '@/lib/prerenderData';
+import { localizedNews } from '@/lib/contentLocale';
 
 const MAX_RELATED_ARTICLES = 6;
 const SERVICE_LINKS = [
@@ -57,24 +58,26 @@ export default function NewsDetailPage() {
   const [loadError, setLoadError] = useState('');
   const [relatedError, setRelatedError] = useState(false);
   const [copied, setCopied] = useState(false);
-  const seoTitle = article?.seo_title?.trim() || article?.title;
-  const seoDescription = article?.seo_description?.trim() || article?.excerpt;
+  const displayArticle = article ? localizedNews(article, lang) : article;
+  const displayArticles = useMemo(() => allArticles.map((item) => localizedNews(item, lang)), [allArticles, lang]);
+  const seoTitle = displayArticle?.seo_title?.trim() || displayArticle?.title;
+  const seoDescription = displayArticle?.seo_description?.trim() || displayArticle?.excerpt;
 
   usePageMeta({
     title: seoTitle ? `${seoTitle} — Visitiga` : (en ? 'News — Visitiga' : 'Berita — Visitiga'),
     description: seoDescription || (en ? 'Latest news and articles from Visitiga Media.' : 'Berita dan artikel terbaru dari Visitiga Media.'),
     pathname: canonicalPublicPath(slug ? `/news/${slug}` : '/news'),
-    image: article?.cover_image,
-    type: article ? 'article' : 'website',
-    imageAlt: article?.cover_alt?.trim() || article?.title,
+    image: displayArticle?.cover_image,
+    type: displayArticle ? 'article' : 'website',
+    imageAlt: displayArticle?.cover_alt?.trim() || displayArticle?.title,
     lang,
     noIndex: !article,
-    structuredData: article ? [
-      { '@context': 'https://schema.org', '@type': 'Article', headline: article.title, description: seoDescription || article.excerpt, image: article.cover_image.startsWith('http') ? article.cover_image : absoluteUrl(article.cover_image), datePublished: article.published_at, dateModified: article.updated_at, mainEntityOfPage: localizedAbsoluteUrl(canonicalPublicPath(`/news/${article.slug}`), lang), author: { '@type': 'Person', name: article.author }, publisher: { '@type': 'Organization', name: 'Visitiga Media', logo: { '@type': 'ImageObject', url: absoluteUrl('/social-preview.png') } }, ...(article.target_keyword?.trim() ? { keywords: article.target_keyword.trim() } : {}) },
+    structuredData: displayArticle ? [
+      { '@context': 'https://schema.org', '@type': 'Article', headline: displayArticle.title, description: seoDescription || displayArticle.excerpt, image: displayArticle.cover_image.startsWith('http') ? displayArticle.cover_image : absoluteUrl(displayArticle.cover_image), datePublished: displayArticle.published_at, dateModified: displayArticle.updated_at, mainEntityOfPage: localizedAbsoluteUrl(canonicalPublicPath(`/news/${displayArticle.slug}`), lang), author: { '@type': 'Person', name: displayArticle.author }, publisher: { '@type': 'Organization', name: 'Visitiga Media', logo: { '@type': 'ImageObject', url: absoluteUrl('/social-preview.png') } }, ...(displayArticle.target_keyword?.trim() ? { keywords: displayArticle.target_keyword.trim() } : {}) },
       { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
         { '@type': 'ListItem', position: 1, name: en ? 'Home' : 'Beranda', item: localizedAbsoluteUrl('/', lang) },
         { '@type': 'ListItem', position: 2, name: en ? 'News' : 'Berita', item: localizedAbsoluteUrl(canonicalPublicPath('/news'), lang) },
-        { '@type': 'ListItem', position: 3, name: article.title, item: localizedAbsoluteUrl(canonicalPublicPath(`/news/${article.slug}`), lang) },
+        { '@type': 'ListItem', position: 3, name: displayArticle.title, item: localizedAbsoluteUrl(canonicalPublicPath(`/news/${displayArticle.slug}`), lang) },
       ] },
     ] : undefined,
   });
@@ -113,8 +116,8 @@ export default function NewsDetailPage() {
   }, [en, slug, initialArticle]);
 
   const relatedArticles = useMemo(
-    () => (article ? getRelatedArticles(article, allArticles) : []),
-    [article, allArticles],
+    () => (displayArticle ? getRelatedArticles(displayArticle, displayArticles) : []),
+    [displayArticle, displayArticles],
   );
 
   if (article === undefined) {
@@ -143,9 +146,11 @@ export default function NewsDetailPage() {
     );
   }
 
+  if (!displayArticle) return <Navigate to={localizedPublicPath('/news/', lang)} replace />;
+
   const pageUrl = window.location.href;
   const encodedUrl = encodeURIComponent(pageUrl);
-  const encodedTitle = encodeURIComponent(article.title);
+  const encodedTitle = encodeURIComponent(displayArticle.title);
   const shareLinks = [
     { label: 'Bagikan ke LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`, icon: <Linkedin className="h-4 w-4" /> },
     { label: 'Bagikan ke WhatsApp (WA)', href: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`, icon: <span className="text-[10px] font-black">WA</span> },
@@ -174,21 +179,21 @@ export default function NewsDetailPage() {
         <div className="mt-5 grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] xl:gap-14">
           <main className="min-w-0">
             <LightReveal><header>
-              <p className="text-xs font-bold uppercase tracking-[.2em] text-orange-600">{article.category}</p>
-              <h1 className="mt-3 max-w-5xl text-3xl font-black leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.5rem]">{article.title}</h1>
+              <p className="text-xs font-bold uppercase tracking-[.2em] text-orange-600">{displayArticle.category}</p>
+              <h1 className="mt-3 max-w-5xl text-3xl font-black leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.5rem]">{displayArticle.title}</h1>
               <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[#735c4d]">
                 <span className="font-semibold text-[#3d2a20]">{article.author}</span><span aria-hidden="true">·</span><span>{article.category}</span>
                 {article.published_at && <><span aria-hidden="true">·</span><time dateTime={article.published_at}>{formatPublishedDate(article.published_at)}</time></>}
               </div>
-              {article.excerpt && <p className="mt-6 max-w-4xl text-base leading-7 text-[#735c4d] sm:text-lg sm:leading-8">{article.excerpt}</p>}
+              {displayArticle.excerpt && <p className="mt-6 max-w-4xl text-base leading-7 text-[#735c4d] sm:text-lg sm:leading-8">{displayArticle.excerpt}</p>}
             </header></LightReveal>
 
-            <LightReveal delay={0.04} className="mt-8"><img src={optimizedImageUrl(article.cover_image, 960)} srcSet={`${optimizedImageUrl(article.cover_image, 640)} 640w, ${optimizedImageUrl(article.cover_image, 960)} 960w, ${optimizedImageUrl(article.cover_image, 1400)} 1400w`} sizes="(min-width: 1280px) 896px, (min-width: 1024px) calc(100vw - 26rem), 100vw" onError={({ currentTarget }) => restoreOriginalImage(currentTarget, article.cover_image)} alt={article.cover_alt?.trim() || article.title} decoding="async" fetchPriority="high" className="news-detail-cover aspect-[16/9] w-full rounded-2xl bg-[#f3e5d7] object-cover shadow-sm" /></LightReveal>
+            <LightReveal delay={0.04} className="mt-8"><img src={optimizedImageUrl(displayArticle.cover_image, 960)} srcSet={`${optimizedImageUrl(displayArticle.cover_image, 640)} 640w, ${optimizedImageUrl(displayArticle.cover_image, 960)} 960w, ${optimizedImageUrl(displayArticle.cover_image, 1400)} 1400w`} sizes="(min-width: 1280px) 896px, (min-width: 1024px) calc(100vw - 26rem), 100vw" onError={({ currentTarget }) => restoreOriginalImage(currentTarget, displayArticle.cover_image)} alt={displayArticle.cover_alt?.trim() || displayArticle.title} decoding="async" fetchPriority="high" className="news-detail-cover aspect-[16/9] w-full rounded-2xl bg-[#f3e5d7] object-cover shadow-sm" /></LightReveal>
             <LightReveal delay={0.06} className="mt-9"><div
               className="max-w-4xl text-base leading-8 text-[#5d4030] sm:text-[1.05rem] [&_a]:font-semibold [&_a]:text-orange-700 [&_a]:underline [&_a]:decoration-orange-300 [&_a]:underline-offset-4 [&_blockquote]:my-8 [&_blockquote]:border-l-4 [&_blockquote]:border-orange-400 [&_blockquote]:bg-[#fff2e5] [&_blockquote]:px-5 [&_blockquote]:py-4 [&_blockquote]:italic [&_h1]:mb-4 [&_h1]:mt-9 [&_h1]:text-3xl [&_h1]:font-black [&_h2]:mb-4 [&_h2]:mt-9 [&_h2]:text-2xl [&_h2]:font-black [&_h3]:mb-3 [&_h3]:mt-7 [&_h3]:text-xl [&_h3]:font-bold [&_img]:my-8 [&_img]:h-auto [&_img]:max-w-full [&_img]:rounded-xl [&_li]:mb-2 [&_ol]:my-5 [&_ol]:list-decimal [&_ol]:pl-6 [&_p]:mb-5 [&_strong]:font-bold [&_strong]:text-[#35231a] [&_ul]:my-5 [&_ul]:list-disc [&_ul]:pl-6"
-              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content) }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(displayArticle.content) }}
             /></LightReveal>
-            <LightReveal className="public-divider mt-12 border-t pt-8"><NewsComments key={article.id} newsId={article.id} /></LightReveal>
+            <LightReveal className="public-divider mt-12 border-t pt-8"><NewsComments key={displayArticle.id} newsId={displayArticle.id} /></LightReveal>
           </main>
 
           <aside className="public-divider min-w-0 border-t pt-8 lg:sticky lg:top-28 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
@@ -224,7 +229,7 @@ export default function NewsDetailPage() {
             <section className="public-divider mt-7 border-t pt-7" aria-labelledby="service-links-heading">
               <h2 id="service-links-heading" className="text-xl font-black">{en ? 'Related services' : 'Layanan terkait'}</h2>
               <div className="mt-4 grid gap-2">
-                {getRelatedServices(article).map((service) => <Link key={service.path} to={service.path} className="public-card rounded-lg border px-4 py-3 text-sm font-semibold transition hover:border-orange-500 hover:text-orange-700">{service.title}</Link>)}
+                {getRelatedServices(displayArticle).map((service) => <Link key={service.path} to={service.path} className="public-card rounded-lg border px-4 py-3 text-sm font-semibold transition hover:border-orange-500 hover:text-orange-700">{service.title}</Link>)}
                 <Link to="/portfolio/" className="px-1 pt-2 text-sm font-semibold text-orange-700 underline underline-offset-4">{en ? 'View related projects' : 'Lihat portofolio proyek'}</Link>
               </div>
             </section>

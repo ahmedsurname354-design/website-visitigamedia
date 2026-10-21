@@ -26,11 +26,11 @@ describe('service landing content', () => {
 
   it('renders selected portfolios in admin order and uses the first image as hero fallback', async () => {
     const { container } = render(<LanguageProvider><MemoryRouter initialEntries={['/services/videotron-outdoor/']}><Routes><Route path="/services/:serviceSlug" element={<ServiceLandingPage />} /></Routes></MemoryRouter></LanguageProvider>);
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Videotron Outdoor');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Outdoor Videotron for Different Site Conditions');
     const projectHeadings = screen.getAllByRole('heading', { level: 3 }).map((heading) => heading.textContent);
     expect(projectHeadings).toEqual(['Project second', 'Project first', 'Project third']);
     expect(container.querySelector('header img')).toHaveAttribute('src', expect.stringContaining('/portfolio/second.webp'));
-    await waitFor(() => expect(document.title).toBe(defaultServiceLandings['videotron-outdoor'].seo_title_id));
+    await waitFor(() => expect(document.title).toBe(defaultServiceLandings['videotron-outdoor'].seo_title_en));
     expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute('href', expect.stringMatching(/\/services\/videotron-outdoor\/$/));
   });
 });

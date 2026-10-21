@@ -10,6 +10,7 @@ import { localizedPublicPath } from '@/lib/localizedRoutes';
 import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
 import { useTranslation } from '@/i18n';
 import type { Portfolio } from '@/types/admin';
+import { localizedPortfolio } from '@/lib/contentLocale';
 
 function clean(value: string) {
   return value.trim().startsWith('Tulis ') ? '' : value.trim();
@@ -56,6 +57,8 @@ export default function PortfolioDetailPage() {
   if (redirect) return <Navigate to={localizedPublicPath(redirect, lang)} replace />;
   if (project === undefined) return <div className="public-surface min-h-screen pt-36 text-center text-sm text-neutral-600" role="status">Memuat proyek...</div>;
   if (!project) return <div className="public-surface min-h-screen px-5 pt-36 text-center text-neutral-900"><h1 className="text-3xl font-bold">{error ? 'Proyek belum dapat dimuat' : 'Proyek tidak ditemukan'}</h1><Link to="/portfolio/" className="public-link mt-5 inline-block text-orange-700 underline">Kembali ke portofolio</Link></div>;
+  Object.assign(project, localizedPortfolio(project, lang));
+  related.forEach((item) => Object.assign(item, localizedPortfolio(item, lang)));
   const sections = [
     { title: lang === 'en' ? 'Overview' : 'Ringkasan', body: clean(project.overview) },
     { title: lang === 'en' ? 'Challenge' : 'Tantangan', body: clean(project.challenge) },

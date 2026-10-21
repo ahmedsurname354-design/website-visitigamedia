@@ -7,6 +7,7 @@ import type { NewsRecord } from '@/types/admin';
 import { useTranslation } from '@/i18n';
 import LightReveal from '@/components/LightReveal';
 import { getPrerenderData } from '@/lib/prerenderData';
+import { localizedNews } from '@/lib/contentLocale';
 
 export default function NewsPage() {
   const { lang } = useTranslation();
@@ -23,6 +24,7 @@ export default function NewsPage() {
       .finally(() => setLoading(false));
   }, [en]);
 
+  const localizedArticles = articles.map((article) => localizedNews(article, lang));
   return (
     <section className="journal-page public-surface min-h-screen px-4 pb-24 pt-32 sm:px-6 sm:pt-40 lg:px-8">
       <div className="mx-auto max-w-[1344px]">
@@ -44,7 +46,7 @@ export default function NewsPage() {
           <p className="mt-16 text-[#735c4d]">{en ? 'No news has been published yet.' : 'Belum ada berita yang dipublikasikan.'}</p>
         ) : (
           <div className="journal-grid mt-12 grid gap-7 md:grid-cols-2 lg:grid-cols-3">
-            {articles.map((article, index) => (
+            {localizedArticles.map((article, index) => (
               <LightReveal key={article.id} delay={Math.min(index * 0.045, 0.18)} className="h-full">
               <article className="journal-card public-card h-full overflow-hidden border shadow-sm">
                 <img

@@ -5,7 +5,9 @@
     <link rel="icon" type="image/png" href="/social-preview.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script>
-      if (location.pathname === '/') {
+      // The public homepage is served at /id/ and /en/ (the CI Lighthouse
+      // URLs use /id/), while / is also kept as a supported redirect entry.
+      if (/^\/(?:id|en)\/?$/.test(location.pathname) || location.pathname === '/') {
         const preload = document.createElement('link');
         preload.rel = 'preload';
         preload.as = 'image';

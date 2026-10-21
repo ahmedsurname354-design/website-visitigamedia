@@ -13,7 +13,11 @@ export interface Portfolio {
   seo_description: string;
   created_at: string;
   updated_at: string;
+  content_id?: PortfolioLocaleContent;
+  content_en?: PortfolioLocaleContent;
 }
+
+export interface PortfolioLocaleContent { title: string; client: string; category: string; description: string; overview: string; challenge: string; solution: string; seo_title: string; seo_description: string; }
 
 export type PortfolioInput = Pick<Portfolio, 'title' | 'slug' | 'image_url' | 'client' | 'category' | 'description' | 'overview' | 'challenge' | 'solution' | 'seo_title' | 'seo_description'>;
 
@@ -38,7 +42,11 @@ export interface NewsRecord {
   published_at: string | null;
   created_at: string;
   updated_at: string;
+  content_id?: NewsLocaleContent;
+  content_en?: NewsLocaleContent;
 }
+
+export interface NewsLocaleContent { title: string; content: string; author: string; category: string; excerpt: string; seo_title: string; seo_description: string; cover_alt: string; target_keyword: string; }
 
 export type NewsInput = Pick<NewsRecord, 'title' | 'slug' | 'cover_image' | 'content' | 'author' | 'category' | 'excerpt' | 'seo_title' | 'seo_description' | 'cover_alt' | 'target_keyword' | 'published_at'>;
 
@@ -54,7 +62,11 @@ export interface Product {
   sort_order: number;
   created_at: string;
   updated_at: string;
+  content_id?: ProductLocaleContent;
+  content_en?: ProductLocaleContent;
 }
+
+export interface ProductLocaleContent { name: string; category: string; description: string; label: string; }
 
 export type ProductInput = Pick<Product, 'name' | 'image_url' | 'category' | 'description' | 'label' | 'color' | 'accent' | 'sort_order'>;
 
@@ -85,6 +97,8 @@ export interface ProductCatalogue {
   title: string;
   file_url: string;
   updated_at: string;
+  title_id?: string;
+  title_en?: string;
 }
 
 export interface ServiceCard {
@@ -112,7 +126,11 @@ export interface ServiceContent {
   video_mp4_url: string;
   video_poster_url: string;
   updated_at: string;
+  content_id?: ServiceContentLocale;
+  content_en?: ServiceContentLocale;
 }
+
+export interface ServiceContentLocale { eyebrow: string; heading: string; heading_accent: string; cards: ServiceCard[]; showreel_eyebrow: string; showreel_heading: string; showreel_accent: string; showreel_description: string; primary_button_text: string; secondary_button_text: string; }
 
 export type ServiceContentInput = Omit<ServiceContent, 'id' | 'updated_at'>;
 

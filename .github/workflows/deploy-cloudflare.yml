@@ -61,6 +61,10 @@ jobs:
       - name: Run Lighthouse performance gates
         run: npm run test:lighthouse
 
+      - name: Verify Pages Functions are present
+        shell: bash
+        run: test -f functions/api/translate-content.js
+
       - name: Deploy production to Cloudflare Pages
         uses: cloudflare/wrangler-action@v4
         with:

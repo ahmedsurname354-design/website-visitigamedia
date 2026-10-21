@@ -388,11 +388,11 @@ const LanguageContext = createContext<TranslationContextValue | undefined>(undef
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLanguageState] = useState<Lang>(() => {
-    if (typeof window === 'undefined') return 'id';
+    if (typeof window === 'undefined') return 'en';
     const pathLanguage = getPathLanguage(window.location.pathname);
     if (pathLanguage) return pathLanguage;
     const stored = readLocalStorage('lang');
-    return stored === 'en' ? 'en' : 'id';
+    return stored === 'id' ? 'id' : 'en';
   });
 
   const setLang = (nextLanguage: Lang) => {

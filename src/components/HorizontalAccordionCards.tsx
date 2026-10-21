@@ -2,6 +2,8 @@ import { useEffect, useState, type CSSProperties } from 'react';
 import { listPublicProducts } from '@/lib/adminApi';
 import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
 import { getPrerenderData } from '@/lib/prerenderData';
+import { useTranslation } from '@/i18n';
+import { localizedProduct } from '@/lib/contentLocale';
 
 type AccordionItem = {
   title: string;
@@ -65,9 +67,10 @@ const fallbackItems: AccordionItem[] = [
 ];
 
 export default function HorizontalAccordionCards() {
+  const { lang } = useTranslation();
   const initialProducts = getPrerenderData()?.products;
   const [activeIndex, setActiveIndex] = useState(0);
-  const [items, setItems] = useState<AccordionItem[]>(() => initialProducts?.length ? initialProducts.map((product) => ({ title: product.name, label: product.label, description: product.description, image: product.image_url, color: product.color, accent: product.accent })) : fallbackItems);
+  const [items, setItems] = useState<AccordionItem[]>(() => initialProducts?.length ? initialProducts.map((raw) => { const product = localizedProduct(raw, lang); return { title: product.name, label: product.label, description: product.description, image: product.image_url, color: product.color, accent: product.accent }; }) : fallbackItems);
   const [requestedImages, setRequestedImages] = useState(() => new Set([0]));
 
   const activate = (index: number) => {
@@ -79,13 +82,13 @@ export default function HorizontalAccordionCards() {
     let active = true;
     void listPublicProducts().then((products) => {
       if (!active || products.length === 0) return;
-      setItems(products.map((product) => ({ title: product.name, label: product.label, description: product.description, image: product.image_url, color: product.color, accent: product.accent })));
+      setItems(products.map((raw) => { const product = localizedProduct(raw, lang); return { title: product.name, label: product.label, description: product.description, image: product.image_url, color: product.color, accent: product.accent }; }));
       setActiveIndex(0);
     }).catch(() => {
       // Static cards keep the public product page functional until Supabase is configured.
     });
     return () => { active = false; };
-  }, []);
+  }, [lang]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {

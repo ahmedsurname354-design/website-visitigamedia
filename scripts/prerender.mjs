@@ -116,7 +116,7 @@ async function snapshot(page, path, content, outputOverride) {
       const canonical = document.querySelector('link[rel="canonical"]');
       const robots = document.querySelector('meta[name="robots"]');
       return canonical?.href === expected && robots?.content === 'index, follow';
-    }, `${siteUrl}${canonicalRoute(path.startsWith('/id/') || path.startsWith('/en/') ? path : localizedRoute(path, 'id'))}`);
+    }, `${siteUrl}${canonicalRoute(path.startsWith('/id/') || path.startsWith('/en/') ? path : localizedRoute(path, 'en'))}`);
   }
   const routeData = dataForRoute(path, content);
   await page.evaluate((data) => {

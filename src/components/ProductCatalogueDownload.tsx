@@ -9,7 +9,7 @@ const FALLBACK_PDF = '/products/product-catalogue-2026.pdf';
 export default function ProductCatalogueDownload() {
   const { lang } = useTranslation();
   const initialCatalogue = getPrerenderData()?.catalogue;
-  const [title, setTitle] = useState(initialCatalogue?.title || (lang === 'id' ? 'Katalog Produk 2026' : 'Product Catalogue 2026'));
+  const [title, setTitle] = useState((lang === 'id' ? initialCatalogue?.title_id : initialCatalogue?.title_en) || initialCatalogue?.title || (lang === 'id' ? 'Katalog Produk 2026' : 'Product Catalogue 2026'));
   const [fileUrl, setFileUrl] = useState(initialCatalogue?.file_url || FALLBACK_PDF);
 
   useEffect(() => {
@@ -17,12 +17,12 @@ export default function ProductCatalogueDownload() {
     void getProductCatalogue()
       .then((catalogue) => {
         if (!active || !catalogue) return;
-        setTitle(catalogue.title);
+        setTitle(lang === 'id' ? (catalogue.title_id || catalogue.title) : (catalogue.title_en || catalogue.title));
         setFileUrl(catalogue.file_url);
       })
       .catch(() => undefined);
     return () => { active = false; };
-  }, []);
+  }, [lang]);
 
   const heading = lang === 'id' ? 'Unduh katalog produk' : 'Download the product catalogue';
   const description = lang === 'id'

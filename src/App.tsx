@@ -39,7 +39,7 @@ function PublicLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   useEffect(() => {
-    const language = getPathLanguage(location.pathname) ?? 'id';
+    const language = getPathLanguage(location.pathname) ?? 'en';
     const canonicalPath = localizedPublicPath(canonicalPublicPath(stripLanguagePrefix(location.pathname)), language);
     if (location.pathname !== canonicalPath) {
       void navigate({ pathname: canonicalPath, search: location.search, hash: location.hash }, { replace: true });
@@ -60,13 +60,13 @@ function PublicLayout() {
 
 function LocalizedPublicLayout() {
   const { locale } = useParams();
-  if (locale !== 'id' && locale !== 'en') return <Navigate to="/id/" replace />;
+  if (locale !== 'id' && locale !== 'en') return <Navigate to="/en/" replace />;
   return <PublicLayout />;
 }
 
 function LegacyPublicRedirect() {
   const location = useLocation();
-  return <Navigate to={{ pathname: localizedPublicPath(location.pathname, 'id'), search: location.search, hash: location.hash }} replace />;
+  return <Navigate to={{ pathname: localizedPublicPath(location.pathname, 'en'), search: location.search, hash: location.hash }} replace />;
 }
 
 function AnimatedRoutes() {

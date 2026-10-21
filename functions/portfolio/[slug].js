@@ -1,3 +1,3 @@
 export async function onRequestGet({ request, params }) {
-  return Response.redirect(new URL(`/id/portfolio/${params.slug}/`, request.url), 301);
+  return Response.redirect(new URL(`/en/portfolio/${params.slug}/`, request.url), 301);
 }

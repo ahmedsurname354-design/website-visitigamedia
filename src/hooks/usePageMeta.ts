@@ -35,7 +35,7 @@ function getSiteOrigin() {
   return canonical ? new URL(canonical).origin : window.location.origin;
 }
 
-export function usePageMeta({ title, description, pathname, image = '/social-preview.png', type = 'website', structuredData, noIndex = false, imageAlt, imageWidth, imageHeight, lang = 'id', disabled = false }: PageMeta) {
+export function usePageMeta({ title, description, pathname, image = '/social-preview.png', type = 'website', structuredData, noIndex = false, imageAlt, imageWidth, imageHeight, lang = 'en', disabled = false }: PageMeta) {
   useEffect(() => {
     if (disabled) return;
     const publicPath = stripLanguagePrefix(pathname);
@@ -94,7 +94,7 @@ export function usePageMeta({ title, description, pathname, image = '/social-pre
       defaultAlternate.hreflang = 'x-default';
       document.head.appendChild(defaultAlternate);
     }
-    defaultAlternate.href = `${siteOrigin}${localizedPublicPath(publicPath, 'id')}`;
+    defaultAlternate.href = `${siteOrigin}${localizedPublicPath(publicPath, 'en')}`;
 
     const scriptId = 'page-structured-data';
     document.getElementById(scriptId)?.remove();

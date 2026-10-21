@@ -20,8 +20,8 @@ describe('SEO build generator', () => {
     const redirects = buildRedirects([{ slug: 'existing-article' }]);
     expect(retired).toHaveLength(49);
     expect(new Set(retired).size).toBe(49);
-    expect(redirects).toContain('/portfolio/:slug/ /id/portfolio/:slug/ 301');
-    expect(redirects).toContain('/news/existing-article/ /id/news/existing-article/ 301');
+    expect(redirects).toContain('/portfolio/:slug/ /en/portfolio/:slug/ 301');
+    expect(redirects).toContain('/news/existing-article/ /en/news/existing-article/ 301');
     expect(redirects).toContain('/en/* /index.html 200');
   });
 

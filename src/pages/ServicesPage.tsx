@@ -4,8 +4,11 @@ import WebServiceSection from '@/components/WebServiceSection';
 import { getServiceContent } from '@/lib/adminApi';
 import type { ServiceContent } from '@/types/admin';
 import { getPrerenderData } from '@/lib/prerenderData';
+import { useTranslation } from '@/i18n';
+import { localizedServiceContent } from '@/lib/contentLocale';
 
 export default function ServicesPage() {
+  const { lang } = useTranslation();
   const [content, setContent] = useState<ServiceContent | null>(() => getPrerenderData()?.serviceContent ?? null);
   const [error, setError] = useState('');
 
@@ -29,11 +32,12 @@ export default function ServicesPage() {
       document.removeEventListener('visibilitychange', refreshWhenVisible);
     };
   }, []);
+  const displayContent = content ? localizedServiceContent(content, lang) : content;
   return (
     <>
       {error && <div role="alert" className="bg-amber-50 px-4 py-3 text-center text-sm text-amber-900">{error}</div>}
-      <ServicesSection content={content} />
-      <WebServiceSection content={content} />
+      <ServicesSection content={displayContent} />
+      <WebServiceSection content={displayContent} />
     </>
   );
 }

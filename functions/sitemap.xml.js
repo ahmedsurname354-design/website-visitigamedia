@@ -9,7 +9,7 @@ function languageUrl(siteUrl, route, language) {
 
 function entry(siteUrl, route, language, lastmod) {
   const alternates = LANGUAGES.map((alternate) => `\n    <xhtml:link rel="alternate" hreflang="${alternate}" href="${escapeHtml(languageUrl(siteUrl, route, alternate))}" />`).join('');
-  return `  <url>\n    <loc>${escapeHtml(languageUrl(siteUrl, route, language))}</loc>${alternates}\n    <xhtml:link rel="alternate" hreflang="x-default" href="${escapeHtml(languageUrl(siteUrl, route, 'id'))}" />${lastmod ? `\n    <lastmod>${escapeHtml(new Date(lastmod).toISOString())}</lastmod>` : ''}\n  </url>`;
+  return `  <url>\n    <loc>${escapeHtml(languageUrl(siteUrl, route, language))}</loc>${alternates}\n    <xhtml:link rel="alternate" hreflang="x-default" href="${escapeHtml(languageUrl(siteUrl, route, 'en'))}" />${lastmod ? `\n    <lastmod>${escapeHtml(new Date(lastmod).toISOString())}</lastmod>` : ''}\n  </url>`;
 }
 
 export async function onRequestGet({ request, env }) {
