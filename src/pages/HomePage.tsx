@@ -3,7 +3,6 @@ import HeroSection from '@/components/HeroSection';
 import StatsSection from '@/components/StatsSection';
 import CTASection from '@/components/CTASection';
 import HomeShowcase from '@/components/HomeShowcase';
-import { getPublicHomepageContent, listPublicPortfolios } from '@/lib/adminApi';
 import { getPrerenderData } from '@/lib/prerenderData';
 import { defaultHomepageContent } from '@/lib/homepageContent';
 import type { HomepageContent, Portfolio } from '@/types/admin';
@@ -14,7 +13,7 @@ export default function HomePage() {
   const [portfolios, setPortfolios] = useState<Portfolio[]>(initial?.portfolios ?? []);
 
   useEffect(() => {
-    void Promise.all([getPublicHomepageContent(), listPublicPortfolios()]).then(([content, items]) => {
+    void import('@/lib/adminApi').then(({ getPublicHomepageContent, listPublicPortfolios }) => Promise.all([getPublicHomepageContent(), listPublicPortfolios()])).then(([content, items]) => {
       if (content) setHomepage(content);
       setPortfolios(items);
     }).catch(() => undefined);
