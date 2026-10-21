@@ -1,15 +1,17 @@
 import { m as motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useTranslation } from '@/i18n';
+import type { HomepageContent } from '@/types/admin';
 
-export default function StatsSection() {
+export default function StatsSection({ content }: { content: HomepageContent }) {
   const { ref, isInView, reducedMotion } = useScrollReveal();
-  const { dict } = useTranslation();
+  const { lang } = useTranslation();
+  const stats = lang === 'id' ? content.content_id.stats : content.content_en.stats;
 
   return (
     <section ref={ref} className="stats-editorial relative border-y py-10 sm:py-12">
       <div className="mx-auto grid max-w-[1440px] grid-cols-2 px-5 sm:px-8 lg:grid-cols-4 lg:px-12">
-        {dict.stats.data.map((stat, i) => (
+        {stats.map((stat, i) => (
           <motion.div
             key={stat.label}
             initial={reducedMotion ? false : { opacity: 0, y: 12 }}

@@ -5,6 +5,7 @@ import { ArrowRight, Phone, Mail, MapPin } from 'lucide-react';
 import { LocalizedLink as Link } from '@/components/LocalizedLink';
 import { useTranslation, type Lang } from '@/i18n';
 import { readLocalStorage, writeLocalStorage } from '@/lib/safeStorage';
+import type { HomepageContent } from '@/types/admin';
 
 const submissionKeyName = 'visitiga_contact_submission_key';
 
@@ -41,7 +42,7 @@ function getContactErrorMessage(error: { code?: string; message?: string }, lang
   return en ? 'Your message was not sent. Check your connection and try again.' : 'Pesan belum terkirim. Periksa koneksi, lalu coba lagi.';
 }
 
-export default function CTASection({ variant = 'full' }: { variant?: 'compact' | 'full' }) {
+export default function CTASection({ variant = 'full', content }: { variant?: 'compact' | 'full'; content?: HomepageContent }) {
   const { ref, isInView, reducedMotion } = useScrollReveal();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -49,6 +50,9 @@ export default function CTASection({ variant = 'full' }: { variant?: 'compact' |
   const compact = variant === 'compact';
   const { lang, dict } = useTranslation();
   const en = lang === 'en';
+  const homepageCta = content ? (en ? content.content_en.cta : content.content_id.cta) : dict.cta;
+  const whatsappHref = `https://wa.me/${homepageCta.phoneInfo.replace(/\D/g, '')}`;
+  const emailHref = `mailto:${homepageCta.emailInfo}?subject=${encodeURIComponent(en ? 'Visitiga Media consultation' : 'Konsultasi Visitiga Media')}`;
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -110,30 +114,30 @@ export default function CTASection({ variant = 'full' }: { variant?: 'compact' |
 
           <div className="relative">
             {compact ? (
-              <h2 className="text-white font-bold text-3xl md:text-5xl leading-tight tracking-tight max-w-2xl mx-auto">{dict.cta.title}</h2>
+              <h2 className="text-white font-bold text-3xl md:text-5xl leading-tight tracking-tight max-w-2xl mx-auto">{homepageCta.title}</h2>
             ) : (
-              <h1 className="text-white font-bold text-3xl md:text-5xl leading-tight tracking-tight max-w-2xl mx-auto">{dict.cta.title}</h1>
+              <h1 className="text-white font-bold text-3xl md:text-5xl leading-tight tracking-tight max-w-2xl mx-auto">{homepageCta.title}</h1>
             )}
             <p className="text-white/80 text-lg mt-4 max-w-xl mx-auto">
-              {dict.cta.subtitle}
+              {homepageCta.subtitle}
             </p>
 
             <div className="flex flex-col items-stretch justify-center gap-3 mt-8 min-[440px]:flex-row min-[440px]:items-center sm:mt-10">
               <a
-                href="https://bit.ly/49NclAE"
+                href={whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group flex min-h-12 items-center justify-center gap-2 bg-black hover:bg-orange-950 text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
               >
                 <Phone className="w-4 h-4" />
-                {dict.cta.callNow}
+                {homepageCta.callNow}
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
               </a>
               <a
-                href="mailto:marcomm@visitiga.com?subject=Konsultasi%20Visitiga%20Media"
+                href={emailHref}
                 className="flex min-h-12 items-center justify-center bg-white/20 hover:bg-white/30 text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 hover:-translate-y-0.5"
               >
-                {dict.cta.emailUs}
+                {homepageCta.emailUs}
               </a>
             </div>
 
@@ -219,19 +223,19 @@ export default function CTASection({ variant = 'full' }: { variant?: 'compact' |
                 <div className="contact-info-card rounded-3xl p-4">
                   <div className="flex items-center gap-3 text-sm">
                     <Phone className="w-4 h-4 text-orange-400" />
-                    <span>+62 822 5878 8780</span>
+                    <span>{homepageCta.phoneInfo}</span>
                   </div>
                 </div>
                 <div className="contact-info-card rounded-3xl p-4">
-                  <a href="mailto:marcomm@visitiga.com?subject=Konsultasi%20Visitiga%20Media" className="flex items-center gap-3 text-sm transition-colors duration-200">
+                  <a href={emailHref} className="flex items-center gap-3 text-sm transition-colors duration-200">
                     <Mail className="w-4 h-4 text-orange-400" />
-                    <span>marcomm@visitiga.com</span>
+                    <span>{homepageCta.emailInfo}</span>
                   </a>
                 </div>
                 <div className="contact-info-card rounded-3xl p-4">
                   <div className="flex items-center gap-3 text-sm">
                     <MapPin className="w-4 h-4 text-orange-400" />
-                    <span>Jl. Setra Dago Barat No.9 Antapani, Bandung</span>
+                    <span>{homepageCta.locationInfo}</span>
                   </div>
                 </div>
               </div>
@@ -252,7 +256,7 @@ export default function CTASection({ variant = 'full' }: { variant?: 'compact' |
                 </div>
                 <div className="bg-black/90 p-4">
                   <p className="text-[11px] uppercase tracking-[0.3em] text-white/60">{en ? 'Head Office Location' : 'Lokasi Kantor Pusat'}</p>
-                  <p className="mt-3 text-white font-semibold text-sm">Jl. Setra Dago Barat No.9 Antapani, Bandung</p>
+                  <p className="mt-3 text-white font-semibold text-sm">{homepageCta.locationInfo}</p>
                   <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-orange-500 px-3 py-2 text-sm font-semibold text-black transition-colors duration-300 group-hover:bg-orange-400">
                     {en ? 'Open Map' : 'Buka di Peta'}
                   </p>

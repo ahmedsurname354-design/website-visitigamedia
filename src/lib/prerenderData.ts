@@ -1,4 +1,4 @@
-import type { NewsRecord, Portfolio, Product, ProductCatalogue, ServiceContent, ServiceLandingContent } from '@/types/admin';
+import type { HomepageContent, NewsRecord, Portfolio, Product, ProductCatalogue, ServiceContent, ServiceLandingContent } from '@/types/admin';
 import { normalizePublicPath } from '@/lib/seo';
 
 export interface PrerenderData {
@@ -9,6 +9,7 @@ export interface PrerenderData {
   portfolio?: Portfolio | null;
   products?: Product[];
   catalogue?: ProductCatalogue | null;
+  homepage?: HomepageContent | null;
   serviceContent?: ServiceContent | null;
   serviceLanding?: ServiceLandingContent | null;
 }

@@ -58,6 +58,28 @@ export interface Product {
 
 export type ProductInput = Pick<Product, 'name' | 'image_url' | 'category' | 'description' | 'label' | 'color' | 'accent' | 'sort_order'>;
 
+export interface HomepageStat { value: string; label: string; }
+export interface HomepageServiceCard { title: string; description: string; tags: string[]; action: string; }
+export interface HomepageLocaleContent {
+  hero: { eyebrow: string; trustNotice: string; titleLine1: string; titleLine2: string; titleLine3: string; subtitle: string; viewServices: string; viewPortfolio: string };
+  stats: HomepageStat[];
+  services: { sectionLabel: string; heading: string; linkLabel: string; cards: HomepageServiceCard[] };
+  about: { sectionLabel: string; heading: string; subtitle: string; features: string[]; buttonLabel: string; clientProofLabel: string };
+  cta: { title: string; subtitle: string; callNow: string; emailUs: string; phoneInfo: string; emailInfo: string; locationInfo: string };
+}
+
+export interface HomepageContent {
+  id: number;
+  hero_image_url: string;
+  about_image_url: string;
+  content_id: HomepageLocaleContent;
+  content_en: HomepageLocaleContent;
+  featured_portfolio_ids: string[];
+  updated_at: string;
+}
+
+export type HomepageContentInput = Omit<HomepageContent, 'id' | 'updated_at'>;
+
 export interface ProductCatalogue {
   id: number;
   title: string;

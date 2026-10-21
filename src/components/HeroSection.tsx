@@ -2,14 +2,16 @@ import { m as motion } from 'framer-motion';
 import { LocalizedLink as Link } from '@/components/LocalizedLink';
 import { ArrowRight, Play, ShieldCheck } from 'lucide-react';
 import { useTranslation } from '@/i18n';
+import type { HomepageContent } from '@/types/admin';
 import { preloadPublicRoute } from '@/lib/publicRoutes';
 
 import { useMotionPolicy } from '@/hooks/useMotionPolicy';
 
 const heroImg = '/hero-1600.webp';
 
-export default function HeroSection() {
-  const { t } = useTranslation();
+export default function HeroSection({ content }: { content: HomepageContent }) {
+  const { lang } = useTranslation();
+  const hero = lang === 'id' ? content.content_id.hero : content.content_en.hero;
   const { reducedMotion } = useMotionPolicy();
 
   return (
@@ -18,8 +20,8 @@ export default function HeroSection() {
         {/* Background image */}
         <div className="absolute inset-0">
           <img
-            src={heroImg}
-            srcSet="/hero-640.webp 640w, /hero-960.webp 960w, /hero-1600.webp 1600w"
+            src={content.hero_image_url || heroImg}
+            srcSet={content.hero_image_url === '/hero-1600.webp' ? '/hero-640.webp 640w, /hero-960.webp 960w, /hero-1600.webp 1600w' : undefined}
             sizes="100vw"
             alt="Tampilan LED di kota pada malam hari"
             width={1600}
@@ -40,8 +42,8 @@ export default function HeroSection() {
               <h1
                 className="hero-editorial__title text-white font-semibold text-[clamp(2.75rem,7vw,5.5rem)] leading-[.94] tracking-[-0.06em]"
               >
-                {t('hero.titleLine1')} <span className="hero-editorial__accent text-orange-500">{t('hero.titleLine2')}</span> <br />
-                {t('hero.titleLine3')}
+                {hero.titleLine1} <span className="hero-editorial__accent text-orange-500">{hero.titleLine2}</span> <br />
+                {hero.titleLine3}
               </h1>
             </div>
 
@@ -52,7 +54,7 @@ export default function HeroSection() {
                 transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.06 }}
                 className="text-white/70 text-base sm:text-lg mt-6 sm:mt-8 max-w-2xl leading-relaxed"
               >
-                {t('hero.subtitle')}
+                {hero.subtitle}
               </motion.p>
 
               <motion.div
@@ -68,7 +70,7 @@ export default function HeroSection() {
                   onTouchStart={() => void preloadPublicRoute('/services')}
                   className="editorial-button editorial-button--primary"
                 >
-                  {t('hero.viewServices')}
+                  {hero.viewServices}
                   <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
                 <Link
@@ -81,10 +83,10 @@ export default function HeroSection() {
                   <span className="w-12 h-12 rounded-full border border-white/30 group-hover:border-orange-500 flex items-center justify-center transition-colors duration-300">
                     <Play className="w-4 h-4 fill-current" />
                   </span>
-                  {t('hero.viewPortfolio')}
+                  {hero.viewPortfolio}
                 </Link>
               </motion.div>
-              <motion.div initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.18 }} className="hero-editorial__trust"><ShieldCheck /><span>{t('hero.trustNotice')}</span></motion.div>
+              <motion.div initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.18 }} className="hero-editorial__trust"><ShieldCheck /><span>{hero.trustNotice}</span></motion.div>
             </div>
           </div>
         </div>

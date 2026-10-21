@@ -394,19 +394,6 @@ img, video { max-width: 100%; }
   color: var(--brand-on-orange);
 }
 
-/* Original PDF pages rendered by PDF.js inside the StPageFlip catalogue. */
-.pdf-flipbook-page {
-  overflow: hidden;
-  background: #fffaf3;
-}
-
-.pdf-flipbook-page canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-}
-
 /* Horizontal Expanding Accordion Cards - Modernized */
 .accordion-cards {
   display: flex;

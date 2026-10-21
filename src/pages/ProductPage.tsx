@@ -1,7 +1,7 @@
 import { useMotionPolicy } from '@/hooks/useMotionPolicy';
 import { motion } from 'framer-motion';
 import HorizontalAccordionCards from '@/components/HorizontalAccordionCards';
-import ProductFlipbook from '@/components/ProductFlipbook';
+import ProductCatalogueDownload from '@/components/ProductCatalogueDownload';
 import { useTranslation } from '@/i18n';
 
 export default function ProductPage() {
@@ -28,7 +28,7 @@ export default function ProductPage() {
         </motion.div>
 
         <HorizontalAccordionCards />
-        <ProductFlipbook />
+        <ProductCatalogueDownload />
       </div>
     </section>
   );

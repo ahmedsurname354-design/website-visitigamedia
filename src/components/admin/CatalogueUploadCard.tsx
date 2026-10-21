@@ -20,10 +20,16 @@ async function removeOldCatalogues(activeFileName: string) {
     if (data.length < pageSize) break;
   }
 
-  if (oldPaths.length > 0) {
+  if (oldPaths.length === 0) return;
+
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
     const { error } = await storage.remove(oldPaths);
-    if (error) throw error;
+    if (!error) return;
+    lastError = error;
+    if (attempt < 3) await new Promise((resolve) => window.setTimeout(resolve, 500 * attempt));
   }
+  throw lastError;
 }
 
 export function CatalogueUploadCard() {
@@ -77,5 +83,5 @@ export function CatalogueUploadCard() {
     finally { setUploading(false); }
   };
 
-  return <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"><div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between"><div className="flex-1"><p className="text-xs font-bold uppercase tracking-wider text-orange-600">Katalog Interaktif</p><h2 className="mt-1 text-lg font-black text-slate-900">Ganti PDF katalog</h2><p className="mt-1 text-sm text-slate-500">Unggah PDF baru untuk mengganti katalog interaktif pada halaman Produk.</p><label className="mt-4 block max-w-lg text-sm font-medium text-slate-700">Judul katalog<input value={title} onChange={(event) => setTitle(event.target.value)} maxLength={120} className="mt-2 w-full rounded-xl border border-slate-300 px-3 py-2 outline-none focus:border-orange-500" /></label></div><div className="flex flex-wrap items-center gap-3">{fileUrl && <a href={fileUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"><FileText className="h-4 w-4" />Lihat PDF aktif</a>}<label className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-orange-500 px-4 py-2.5 text-sm font-bold text-white hover:bg-orange-600"><input type="file" accept="application/pdf,.pdf" className="sr-only" disabled={uploading || loading} onChange={(event) => void upload(event.target.files?.[0])} />{uploading || loading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}{uploading ? 'Mengunggah…' : 'Pilih PDF baru'}</label></div></div><p className="mt-3 text-xs text-slate-500">PDF maksimal 30 MB. Jumlah halaman terdeteksi otomatis.</p>{message && <p role="status" className="mt-3 text-sm font-medium text-emerald-600">{message}</p>}{error && <p role="alert" className="mt-3 text-sm font-medium text-red-600">{error}</p>}</section>;
+  return <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"><div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between"><div className="flex-1"><p className="text-xs font-bold uppercase tracking-wider text-orange-600">Katalog Produk</p><h2 className="mt-1 text-lg font-black text-slate-900">Ganti PDF katalog</h2><p className="mt-1 text-sm text-slate-500">Unggah PDF baru untuk mengganti katalog yang tersedia di halaman Produk. File PDF lama akan dibersihkan otomatis.</p><label className="mt-4 block max-w-lg text-sm font-medium text-slate-700">Judul katalog<input value={title} onChange={(event) => setTitle(event.target.value)} maxLength={120} className="mt-2 w-full rounded-xl border border-slate-300 px-3 py-2 outline-none focus:border-orange-500" /></label></div><div className="flex flex-wrap items-center gap-3">{fileUrl && <a href={fileUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"><FileText className="h-4 w-4" />Lihat PDF aktif</a>}<label className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-orange-500 px-4 py-2.5 text-sm font-bold text-white hover:bg-orange-600"><input type="file" accept="application/pdf,.pdf" className="sr-only" disabled={uploading || loading} onChange={(event) => void upload(event.target.files?.[0])} />{uploading || loading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}{uploading ? 'Mengunggah…' : 'Pilih PDF baru'}</label></div></div><p className="mt-3 text-xs text-slate-500">PDF maksimal 30 MB. File lama akan dihapus setelah PDF baru aktif.</p>{message && <p role="status" className="mt-3 text-sm font-medium text-emerald-600">{message}</p>}{error && <p role="alert" className="mt-3 text-sm font-medium text-red-600">{error}</p>}</section>;
 }

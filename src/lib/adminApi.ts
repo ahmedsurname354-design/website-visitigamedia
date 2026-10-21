@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
-import type { ContactLead, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, PortfolioSlugAlias, Product, ProductCatalogue, ProductInput, ServiceContent, ServiceContentInput, ServiceLandingContent, ServiceLandingInput, ServiceLandingSlug } from '@/types/admin';
+import type { ContactLead, HomepageContent, HomepageContentInput, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, PortfolioSlugAlias, Product, ProductCatalogue, ProductInput, ServiceContent, ServiceContentInput, ServiceLandingContent, ServiceLandingInput, ServiceLandingSlug } from '@/types/admin';
 
 function client(): SupabaseClient {
   if (!supabase) throw new Error('Supabase belum dikonfigurasi.');
@@ -131,6 +131,35 @@ export async function saveProduct(input: ProductInput, id?: string): Promise<voi
 export async function deleteProduct(id: string): Promise<void> {
   const { error } = await client().from('products').delete().eq('id', id);
   if (error) throw error;
+}
+
+function validateHomepageContent(input: HomepageContentInput) {
+  if (input.content_id.stats.length > 4 || input.content_en.stats.length > 4) throw new Error('Maksimal empat statistik per bahasa.');
+  if (input.content_id.services.cards.length > 4 || input.content_en.services.cards.length > 4) throw new Error('Maksimal empat kartu layanan per bahasa.');
+  if (input.featured_portfolio_ids.length > 3) throw new Error('Maksimal tiga proyek unggulan.');
+  assertSafeMediaUrl(input.hero_image_url, 'URL gambar hero');
+  if (input.about_image_url) assertSafeMediaUrl(input.about_image_url, 'URL gambar tentang');
+  for (const locale of [input.content_id, input.content_en]) {
+    if (!locale.cta.emailInfo.includes('@')) throw new Error('Email CTA tidak valid.');
+    if (locale.cta.phoneInfo.trim().length < 5) throw new Error('Nomor telepon CTA tidak valid.');
+  }
+}
+
+export async function getHomepageContent(): Promise<HomepageContent | null> {
+  const { data, error } = await client().from('homepage_content').select('*').eq('id', 1).maybeSingle();
+  if (error) throw error;
+  return data as HomepageContent | null;
+}
+
+export async function getPublicHomepageContent(): Promise<HomepageContent | null> {
+  return getHomepageContent();
+}
+
+export async function saveHomepageContent(input: HomepageContentInput): Promise<HomepageContent> {
+  validateHomepageContent(input);
+  const { data, error } = await client().from('homepage_content').upsert({ id: 1, ...input }).select('*').single();
+  if (error) throw error;
+  return data as HomepageContent;
 }
 
 export async function getProductCatalogue(): Promise<ProductCatalogue | null> {

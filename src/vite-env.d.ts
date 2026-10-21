@@ -1,16 +1,5 @@
 /// <reference types="vite/client" />
 
-declare module 'page-flip/dist/js/page-flip.module.js' {
-  export class PageFlip {
-    constructor(element: HTMLElement, settings: Record<string, unknown>);
-    loadFromHTML(items: HTMLElement[] | NodeListOf<HTMLElement>): void;
-    flipNext(): void;
-    flipPrev(): void;
-    destroy(): void;
-    on(event: 'flip', handler: (event: { data: number }) => void): void;
-  }
-}
-
 declare module 'summernote/dist/summernote-lite.js';
 
 interface JQuery<TElement = HTMLElement> {
