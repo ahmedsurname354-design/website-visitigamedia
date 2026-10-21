@@ -80,7 +80,10 @@ function AnimatedRoutes() {
 
   useEffect(() => {
     // Analytics must not pull the Supabase SDK into the critical render path.
-    void import('@/lib/analytics').then(({ recordPageView }) => recordPageView(location.pathname));
+    const timer = window.setTimeout(() => {
+      void import('@/lib/analytics').then(({ recordPageView }) => recordPageView(location.pathname));
+    }, 1200);
+    return () => window.clearTimeout(timer);
   }, [location.pathname]);
 
   return (
@@ -147,8 +150,13 @@ function App() {
 
   useEffect(() => {
     let dispose: (() => void) | undefined;
-    void import('@/lib/observability').then(({ initializeObservability }) => { dispose = initializeObservability(); });
-    return () => dispose?.();
+    const timer = window.setTimeout(() => {
+      void import('@/lib/observability').then(({ initializeObservability }) => { dispose = initializeObservability(); });
+    }, 1500);
+    return () => {
+      window.clearTimeout(timer);
+      dispose?.();
+    };
   }, []);
 
 
