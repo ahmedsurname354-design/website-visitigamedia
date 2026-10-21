@@ -28,10 +28,21 @@ export default function Navbar() {
   const solid = !/^\/(?:id|en)\/?$/.test(location.pathname) || scrolled || mobileOpen;
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 30);
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        const nextScrolled = window.scrollY > 30;
+        setScrolled((current) => current === nextScrolled ? current : nextScrolled);
+      });
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
   }, []);
 
   useEffect(() => setMobileOpen(false), [location.pathname]);
