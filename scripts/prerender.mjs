@@ -216,7 +216,7 @@ async function main() {
   await writeFile(join(distDir, 'admin', 'index.html'), adminShell, 'utf8');
   await writeFile(join(distDir, 'portfolio-fallback.html'), appShell, 'utf8');
   await writeFile(join(distDir, 'portfolio-edge-config.json'), JSON.stringify({ supabaseUrl, supabaseKey, siteUrl }), 'utf8');
-  await writeFile(join(distDir, '_routes.json'), JSON.stringify({ version: 1, include: ['/sitemap.xml', '/news/*', '/portfolio/*', '/id/news/*', '/en/news/*', '/id/portfolio/*', '/en/portfolio/*'], exclude: [] }), 'utf8');
+  await writeFile(join(distDir, '_routes.json'), JSON.stringify({ version: 1, include: ['/api/*', '/sitemap.xml', '/news/*', '/portfolio/*', '/id/news/*', '/en/news/*', '/id/portfolio/*', '/en/portfolio/*'], exclude: [] }), 'utf8');
   await writeFile(join(distDir, 'sitemap.xml'), buildSitemap(STATIC_ROUTES, articles, siteUrl, content.portfolios ?? []), 'utf8');
   await writeFile(join(distDir, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /admin\n\nSitemap: ${siteUrl}/sitemap.xml\n`, 'utf8');
   await validateOutput(routes);
