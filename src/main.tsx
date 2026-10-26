@@ -13,6 +13,7 @@ function RevealClientApp({ children }: { children: ReactNode }) {
     document.getElementById('prerender-swap-style')?.remove();
     document.documentElement.dataset.appReady = 'true';
     delete document.documentElement.dataset.prerendered;
+    delete window.__VISITIGA_PRERENDER_MODE__;
 
     const cleanup = window.setTimeout(() => {
       delete window.__VISITIGA_PRERENDER_DATA__;
