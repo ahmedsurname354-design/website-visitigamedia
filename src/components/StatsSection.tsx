@@ -6,7 +6,9 @@ import type { HomepageContent } from '@/types/admin';
 export default function StatsSection({ content }: { content: HomepageContent }) {
   const { ref, isInView, reducedMotion } = useScrollReveal();
   const { lang } = useTranslation();
-  const stats = lang === 'id' ? content.content_id.stats : content.content_en.stats;
+  const stats = (lang === 'id' ? content.content_id.stats : content.content_en.stats).map((stat) => (
+    stat.value === '24 jam sehari, 7 hari seminggu' ? { ...stat, value: '24/7' } : stat
+  ));
 
   return (
     <section ref={ref} className="stats-editorial relative border-y py-10 sm:py-12">
