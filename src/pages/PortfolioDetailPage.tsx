@@ -61,8 +61,6 @@ export default function PortfolioDetailPage() {
   related.forEach((item) => Object.assign(item, localizedPortfolio(item, lang)));
   const sections = [
     { title: lang === 'en' ? 'Overview' : 'Ringkasan', body: clean(project.overview) },
-    { title: lang === 'en' ? 'Challenge' : 'Tantangan', body: clean(project.challenge) },
-    { title: lang === 'en' ? 'Solution' : 'Solusi', body: clean(project.solution) },
   ].filter((item) => item.body);
   const nearby = related.filter((item) => item.id !== project.id && item.category === project.category).slice(0, 3);
   return <article className="public-surface min-h-screen pb-20 pt-24 text-neutral-900">

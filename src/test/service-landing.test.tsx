@@ -14,7 +14,7 @@ vi.mock('@/lib/adminApi', () => ({
 vi.mock('@/lib/prerenderData', () => ({ getPrerenderData: vi.fn() }));
 
 const projects: Portfolio[] = ['first', 'second', 'third'].map((id) => ({
-  id, slug: id, title: `Project ${id}`, image_url: `/portfolio/${id}.jpg`, client: 'Visitiga', category: 'Outdoor Media', description: '', overview: '', challenge: '', solution: '', seo_title: '', seo_description: '', created_at: '', updated_at: '',
+  id, slug: id, title: `Project ${id}`, image_url: `/portfolio/${id}.jpg`, client: 'Visitiga', category: 'Outdoor Media', description: '', overview: '', seo_title: '', seo_description: '', created_at: '', updated_at: '',
 }));
 
 describe('service landing content', () => {

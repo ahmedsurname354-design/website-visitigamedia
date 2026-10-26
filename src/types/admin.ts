@@ -7,8 +7,6 @@ export interface Portfolio {
   category: string;
   description: string;
   overview: string;
-  challenge: string;
-  solution: string;
   seo_title: string;
   seo_description: string;
   created_at: string;
@@ -17,9 +15,9 @@ export interface Portfolio {
   content_en?: PortfolioLocaleContent;
 }
 
-export interface PortfolioLocaleContent { title: string; client: string; category: string; description: string; overview: string; challenge: string; solution: string; seo_title: string; seo_description: string; }
+export interface PortfolioLocaleContent { title: string; client: string; category: string; description: string; overview: string; seo_title: string; seo_description: string; }
 
-export type PortfolioInput = Pick<Portfolio, 'title' | 'slug' | 'image_url' | 'client' | 'category' | 'description' | 'overview' | 'challenge' | 'solution' | 'seo_title' | 'seo_description'>;
+export type PortfolioInput = Pick<Portfolio, 'title' | 'slug' | 'image_url' | 'client' | 'category' | 'description' | 'overview' | 'seo_title' | 'seo_description'>;
 
 export interface PortfolioSlugAlias {
   old_slug: string;

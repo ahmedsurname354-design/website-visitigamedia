@@ -43,7 +43,6 @@ export default function PortfoliosPage() {
         title: title.trim(), slug: slug.trim(), image_url: String(form.get('image_url') ?? '').trim(),
         client: String(form.get('client') ?? '').trim(), category: String(form.get('category') ?? '').trim(),
         description: String(form.get('description') ?? '').trim(), overview: String(form.get('overview') ?? '').trim(),
-        challenge: String(form.get('challenge') ?? '').trim(), solution: String(form.get('solution') ?? '').trim(),
         seo_title: String(form.get('seo_title') ?? '').trim(), seo_description: String(form.get('seo_description') ?? '').trim(),
       };
       if (!input.image_url) throw new Error('Silakan unggah gambar proyek terlebih dahulu.');
@@ -80,7 +79,7 @@ export default function PortfoliosPage() {
       <InputField label="Klien" name="client" initial={editing?.client} /><InputField label="Kategori" name="category" initial={editing?.category} />
       <ImageUploadField label="Gambar proyek" name="image_url" initial={editing?.image_url} folder="portfolios" />
       <TextArea label="Deskripsi singkat" name="description" initial={editing?.description} required />
-      <TextArea label="Ringkasan" name="overview" initial={editing?.overview} /><TextArea label="Tantangan" name="challenge" initial={editing?.challenge} /><TextArea label="Solusi" name="solution" initial={editing?.solution} />
+      <TextArea label="Ringkasan" name="overview" initial={editing?.overview} />
       <details className="sm:col-span-2"><summary className="cursor-pointer font-semibold">SEO (opsional)</summary><div className="mt-4 grid gap-5"><InputField label="Meta title" name="seo_title" initial={editing?.seo_title} required={false} /><TextArea label="Meta description" name="seo_description" initial={editing?.seo_description} /></div></details>
     </ContentModal>}
   </div>;

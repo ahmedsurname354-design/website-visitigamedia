@@ -66,7 +66,7 @@ export async function listPortfolioAliases(): Promise<PortfolioSlugAlias[]> {
 
 export async function savePortfolio(input: PortfolioInput, id?: string): Promise<void> {
   assertSafeMediaUrl(input.image_url, 'URL gambar project');
-  const contentEn = { title: input.title, client: input.client, category: input.category, description: input.description, overview: input.overview, challenge: input.challenge, solution: input.solution, seo_title: input.seo_title, seo_description: input.seo_description };
+  const contentEn = { title: input.title, client: input.client, category: input.category, description: input.description, overview: input.overview, seo_title: input.seo_title, seo_description: input.seo_description };
   const contentId = await translateContent(contentEn);
   const payload = { ...input, content_en: contentEn, content_id: contentId };
   const query = id ? client().from('portfolios').update(payload).eq('id', id) : client().from('portfolios').insert(payload);
