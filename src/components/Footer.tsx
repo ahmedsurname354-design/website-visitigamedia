@@ -39,7 +39,9 @@ export default function Footer() {
       <div className="mx-auto max-w-[1536px] px-4 sm:px-6 lg:px-8">
         <div className="site-footer__top grid gap-12 mb-14 lg:grid-cols-5">
           <div className="lg:col-span-2">
-            <Logo className="h-20 mb-6" />
+            <div className="relative mb-6 size-20">
+              <Logo className="absolute inset-0 !size-20 !w-20" />
+            </div>
             <p className="text-white/50 text-sm leading-relaxed max-w-sm mb-6">{copy.description}</p>
             <div className="flex gap-3">
               {socials.map(({ label, Icon, href }) => <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} className="site-footer__social w-11 h-11 rounded-full bg-white/5 hover:bg-orange-500 flex items-center justify-center transition-colors duration-300"><Icon aria-hidden="true" className="w-4 h-4 text-white/70" /></a>)}
