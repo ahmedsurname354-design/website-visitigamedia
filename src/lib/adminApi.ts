@@ -66,6 +66,7 @@ export async function listPortfolioAliases(): Promise<PortfolioSlugAlias[]> {
 
 export async function savePortfolio(input: PortfolioInput, id?: string): Promise<void> {
   assertSafeMediaUrl(input.image_url, 'URL gambar project');
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(input.project_date) || Number.isNaN(new Date(`${input.project_date}T00:00:00Z`).getTime())) throw new Error('Tanggal proyek tidak valid.');
   const contentEn = { title: input.title, client: input.client, category: input.category, description: input.description, overview: input.overview, seo_title: input.seo_title, seo_description: input.seo_description };
   const contentId = await translateContent(contentEn);
   const payload = { ...input, content_en: contentEn, content_id: contentId };

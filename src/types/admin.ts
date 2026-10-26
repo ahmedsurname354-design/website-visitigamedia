@@ -4,6 +4,7 @@ export interface Portfolio {
   slug: string;
   image_url: string;
   client: string;
+  project_date: string;
   category: string;
   description: string;
   overview: string;
@@ -17,7 +18,7 @@ export interface Portfolio {
 
 export interface PortfolioLocaleContent { title: string; client: string; category: string; description: string; overview: string; seo_title: string; seo_description: string; }
 
-export type PortfolioInput = Pick<Portfolio, 'title' | 'slug' | 'image_url' | 'client' | 'category' | 'description' | 'overview' | 'seo_title' | 'seo_description'>;
+export type PortfolioInput = Pick<Portfolio, 'title' | 'slug' | 'image_url' | 'client' | 'project_date' | 'category' | 'description' | 'overview' | 'seo_title' | 'seo_description'>;
 
 export interface PortfolioSlugAlias {
   old_slug: string;

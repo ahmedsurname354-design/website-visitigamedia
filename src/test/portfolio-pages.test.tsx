@@ -12,7 +12,7 @@ const projects = [
   { id: '3', slug: 'other-project', title: 'Other Project', category: 'Indoor Media' },
 ].map((item) => ({
   image_url: '/image.jpg', description: 'Project photo',
-  client: 'Client', overview: '', seo_title: '', seo_description: '',
+  client: 'Client', project_date: '2026-10-12', overview: '', seo_title: '', seo_description: '',
   created_at: '2026-09-22T00:00:00Z', updated_at: '2026-09-22T00:00:00Z',
   ...item,
 })) as Portfolio[];

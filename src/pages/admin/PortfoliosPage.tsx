@@ -41,7 +41,7 @@ export default function PortfoliosPage() {
     try {
       const input: PortfolioInput = {
         title: title.trim(), slug: slug.trim(), image_url: String(form.get('image_url') ?? '').trim(),
-        client: String(form.get('client') ?? '').trim(), category: String(form.get('category') ?? '').trim(),
+        client: String(form.get('client') ?? '').trim(), project_date: String(form.get('project_date') ?? '').trim(), category: String(form.get('category') ?? '').trim(),
         description: String(form.get('description') ?? '').trim(), overview: String(form.get('overview') ?? '').trim(),
         seo_title: String(form.get('seo_title') ?? '').trim(), seo_description: String(form.get('seo_description') ?? '').trim(),
       };
@@ -76,7 +76,7 @@ export default function PortfoliosPage() {
       {modalError && <div className="sm:col-span-2"><AdminAlert>{modalError}</AdminAlert></div>}
       <label className="text-sm font-medium">Judul proyek<input required value={title} onChange={(event) => { setTitle(event.target.value); if (!slugEdited) setSlug(slugifyPortfolioTitle(event.target.value)); }} className="mt-2 w-full rounded-xl border border-slate-300 px-3 py-2" /></label>
       <label className="text-sm font-medium">Slug URL<input required value={slug} maxLength={100} pattern="[a-z0-9]+(-[a-z0-9]+)*" onChange={(event) => { setSlug(event.target.value); setSlugEdited(true); }} className="mt-2 w-full rounded-xl border border-slate-300 px-3 py-2" /><span className="mt-1 block text-xs text-slate-500">/portfolio/{slug || 'nama-proyek'}/</span></label>
-      <InputField label="Klien" name="client" initial={editing?.client} /><InputField label="Kategori" name="category" initial={editing?.category} />
+      <InputField label="Klien" name="client" initial={editing?.client} /><label className="text-sm font-medium">Tanggal proyek<input required type="date" name="project_date" defaultValue={editing?.project_date ?? ''} className="mt-2 w-full rounded-xl border border-slate-300 px-3 py-2" /></label><InputField label="Kategori" name="category" initial={editing?.category} />
       <ImageUploadField label="Gambar proyek" name="image_url" initial={editing?.image_url} folder="portfolios" />
       <TextArea label="Deskripsi singkat" name="description" initial={editing?.description} required />
       <TextArea label="Ringkasan" name="overview" initial={editing?.overview} />
