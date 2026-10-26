@@ -79,10 +79,10 @@ async function handlePost({ request, env }) {
   if (!nodes.length) return json({ content });
   const texts = nodes.map((node) => node.text);
   const endpoint = deepLKey.endsWith(':fx') ? 'https://api-free.deepl.com/v2/translate' : 'https://api.deepl.com/v2/translate';
-  const params = new URLSearchParams({ auth_key: deepLKey, source_lang: sourceLocale.toUpperCase(), target_lang: targetLocale.toUpperCase(), preserve_formatting: '1' });
+  const params = new URLSearchParams({ source_lang: sourceLocale.toUpperCase(), target_lang: targetLocale.toUpperCase(), preserve_formatting: '1' });
   texts.forEach((text) => params.append('text', text));
   if (texts.some(hasHtml)) params.set('tag_handling', 'html');
-  const response = await fetch(endpoint, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: params });
+  const response = await fetch(endpoint, { method: 'POST', headers: { authorization: `DeepL-Auth-Key ${deepLKey}`, 'content-type': 'application/x-www-form-urlencoded' }, body: params });
   if (!response.ok) {
     let providerMessage = '';
     try {
