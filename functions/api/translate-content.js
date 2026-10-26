@@ -31,10 +31,22 @@ function setAtPath(value, path, replacement) {
 
 function hasHtml(text) { return /<[^>]+>/.test(text); }
 
+function cleanSecret(value) {
+  if (typeof value !== 'string') return '';
+  const trimmed = value.trim();
+  const first = trimmed[0];
+  const last = trimmed[trimmed.length - 1];
+  return (trimmed.length > 1 && first === last && (first === '"' || first === "'"))
+    ? trimmed.slice(1, -1).trim()
+    : trimmed;
+}
+
 async function isAdmin(request, env) {
   const token = request.headers.get('authorization');
-  if (!token || !env.SUPABASE_URL || !env.SUPABASE_PUBLISHABLE_KEY) return false;
-  const response = await fetch(`${env.SUPABASE_URL.replace(/\/$/, '')}/auth/v1/user`, { headers: { apikey: env.SUPABASE_PUBLISHABLE_KEY, authorization: token } });
+  const supabaseUrl = cleanSecret(env.SUPABASE_URL);
+  const publishableKey = cleanSecret(env.SUPABASE_PUBLISHABLE_KEY);
+  if (!token || !supabaseUrl || !publishableKey) return false;
+  const response = await fetch(`${supabaseUrl.replace(/\/$/, '')}/auth/v1/user`, { headers: { apikey: publishableKey, authorization: token } });
   if (!response.ok) return false;
   const user = await response.json();
   return Boolean(user?.id && user.app_metadata?.role === 'admin');
@@ -45,13 +57,15 @@ export async function onRequestPost(context) {
     return await handlePost(context);
   } catch (error) {
     console.error('translate-content failed', error);
-    return json({ error: 'Translation function failed.' }, 500);
+    const detail = error instanceof Error && error.message ? `: ${error.message}` : '';
+    return json({ error: `Translation function failed${detail}` }, 500);
   }
 }
 
 async function handlePost({ request, env }) {
   if (!(await isAdmin(request, env))) return json({ error: 'Unauthorized.' }, 401);
-  if (!env.DEEPL_AUTH_KEY) return json({ error: 'Translation service is not configured.' }, 503);
+  const deepLKey = cleanSecret(env.DEEPL_AUTH_KEY);
+  if (!deepLKey) return json({ error: 'Translation service is not configured.' }, 503);
 
   const contentLength = Number(request.headers.get('content-length') || 0);
   if (contentLength > MAX_PAYLOAD_BYTES) return json({ error: 'Translation payload is too large.' }, 413);
@@ -64,8 +78,8 @@ async function handlePost({ request, env }) {
   if (nodes.length > MAX_TEXT_NODES) return json({ error: 'Too many text fields.' }, 413);
   if (!nodes.length) return json({ content });
   const texts = nodes.map((node) => node.text);
-  const endpoint = env.DEEPL_AUTH_KEY.endsWith(':fx') ? 'https://api-free.deepl.com/v2/translate' : 'https://api.deepl.com/v2/translate';
-  const params = new URLSearchParams({ auth_key: env.DEEPL_AUTH_KEY, source_lang: sourceLocale.toUpperCase(), target_lang: targetLocale.toUpperCase(), preserve_formatting: '1' });
+  const endpoint = deepLKey.endsWith(':fx') ? 'https://api-free.deepl.com/v2/translate' : 'https://api.deepl.com/v2/translate';
+  const params = new URLSearchParams({ auth_key: deepLKey, source_lang: sourceLocale.toUpperCase(), target_lang: targetLocale.toUpperCase(), preserve_formatting: '1' });
   texts.forEach((text) => params.append('text', text));
   if (texts.some(hasHtml)) params.set('tag_handling', 'html');
   const response = await fetch(endpoint, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: params });
