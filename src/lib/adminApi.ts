@@ -66,10 +66,15 @@ export async function listPortfolioAliases(): Promise<PortfolioSlugAlias[]> {
 
 export async function savePortfolio(input: PortfolioInput, id?: string): Promise<void> {
   assertSafeMediaUrl(input.image_url, 'URL gambar project');
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(input.project_date) || Number.isNaN(new Date(`${input.project_date}T00:00:00Z`).getTime())) throw new Error('Tanggal proyek tidak valid.');
+  const projectDate = input.project_date.trim();
+    const validProjectDate = projectDate === ''
+    || /^\d{4}$/.test(projectDate)
+    || /^\d{4}-(0[1-9]|1[0-2])$/.test(projectDate)
+      || (/^\d{4}-(0[1-9]|1[0-2])-([0-2]\d|3[01])$/.test(projectDate) && !Number.isNaN(new Date(`${projectDate}T00:00:00Z`).getTime()));
+  if (!validProjectDate) throw new Error('Tanggal proyek harus kosong, tahun, tahun-bulan, atau tanggal lengkap.');
   const contentEn = { title: input.title, client: input.client, category: input.category, description: input.description, overview: input.overview, seo_title: input.seo_title, seo_description: input.seo_description };
   const contentId = await translateContent(contentEn);
-  const payload = { ...input, content_en: contentEn, content_id: contentId };
+  const payload = { ...input, project_date: projectDate || null, content_en: contentEn, content_id: contentId };
   const query = id ? client().from('portfolios').update(payload).eq('id', id) : client().from('portfolios').insert(payload);
   const { error } = await query;
   if (error) throw error;
