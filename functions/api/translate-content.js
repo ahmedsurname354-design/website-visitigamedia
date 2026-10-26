@@ -40,7 +40,16 @@ async function isAdmin(request, env) {
   return Boolean(user?.id && user.app_metadata?.role === 'admin');
 }
 
-export async function onRequestPost({ request, env }) {
+export async function onRequestPost(context) {
+  try {
+    return await handlePost(context);
+  } catch (error) {
+    console.error('translate-content failed', error);
+    return json({ error: 'Translation function failed.' }, 500);
+  }
+}
+
+async function handlePost({ request, env }) {
   if (!(await isAdmin(request, env))) return json({ error: 'Unauthorized.' }, 401);
   if (!env.DEEPL_AUTH_KEY) return json({ error: 'Translation service is not configured.' }, 503);
 
@@ -70,7 +79,9 @@ export async function onRequestPost({ request, env }) {
   }
   const result = await response.json();
   if (!Array.isArray(result.translations) || result.translations.length !== nodes.length) return json({ error: 'Translation response is incomplete.' }, 502);
-  const translated = structuredClone(content);
+  // The request body is JSON, so a JSON clone keeps this compatible with all
+  // Pages Functions runtimes and avoids relying on structuredClone support.
+  const translated = JSON.parse(JSON.stringify(content));
   nodes.forEach((node, index) => setAtPath(translated, node.path, result.translations[index].text));
   return json({ content: translated });
 }
