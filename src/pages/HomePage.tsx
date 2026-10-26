@@ -13,10 +13,27 @@ export default function HomePage() {
   const [portfolios, setPortfolios] = useState<Portfolio[]>(initial?.portfolios ?? []);
 
   useEffect(() => {
-    void import('@/lib/adminApi').then(({ getPublicHomepageContent, listPublicPortfolios }) => Promise.all([getPublicHomepageContent(), listPublicPortfolios()])).then(([content, items]) => {
-      if (content) setHomepage(content);
-      setPortfolios(items);
-    }).catch(() => undefined);
+    let active = true;
+    let requestId = 0;
+    const load = async () => {
+      const currentRequest = ++requestId;
+      try {
+        const { getPublicHomepageContent, listPublicPortfolios } = await import('@/lib/adminApi');
+        const [content, items] = await Promise.all([getPublicHomepageContent(), listPublicPortfolios()]);
+        if (!active || currentRequest !== requestId) return;
+        if (content) setHomepage(content);
+        setPortfolios(items);
+      } catch { /* Keep the current content if a refresh is temporarily unavailable. */ }
+    };
+    const refreshWhenVisible = () => { if (document.visibilityState === 'visible') void load(); };
+    void load();
+    window.addEventListener('focus', refreshWhenVisible);
+    document.addEventListener('visibilitychange', refreshWhenVisible);
+    return () => {
+      active = false;
+      window.removeEventListener('focus', refreshWhenVisible);
+      document.removeEventListener('visibilitychange', refreshWhenVisible);
+    };
   }, []);
 
   const content = homepage ?? { id: 1, ...defaultHomepageContent, updated_at: '' };

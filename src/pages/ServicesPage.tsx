@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ServicesSection from '@/components/ServicesSection';
 import WebServiceSection from '@/components/WebServiceSection';
 import { getServiceContent } from '@/lib/adminApi';
@@ -11,15 +11,17 @@ export default function ServicesPage() {
   const { lang } = useTranslation();
   const [content, setContent] = useState<ServiceContent | null>(() => getPrerenderData()?.serviceContent ?? null);
   const [error, setError] = useState('');
+  const requestId = useRef(0);
 
   useEffect(() => {
     let active = true;
     const load = async () => {
+      const currentRequest = ++requestId.current;
       try {
         const value = await getServiceContent();
-        if (active) { setContent(value); setError(''); }
+        if (active && currentRequest === requestId.current) { setContent(value); setError(''); }
       } catch {
-        if (active) setError('Konten terbaru belum dapat dimuat. Silakan muat ulang halaman.');
+        if (active && currentRequest === requestId.current) setError('Konten terbaru belum dapat dimuat. Silakan muat ulang halaman.');
       }
     };
     const refreshWhenVisible = () => { if (document.visibilityState === 'visible') void load(); };

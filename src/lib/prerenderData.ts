@@ -24,6 +24,9 @@ declare global {
 
 export function getPrerenderData(): PrerenderData | undefined {
   if (typeof window === 'undefined') return undefined;
+  // Bootstrap data is only valid during the initial prerendered render. Once
+  // the client app is ready, never reuse that snapshot on a later navigation.
+  if (!isPrerenderedDocument()) return undefined;
   if (!window.__VISITIGA_PRERENDER_DATA__) {
     const element = document.getElementById('visitiga-prerender-data');
     if (element?.textContent) {

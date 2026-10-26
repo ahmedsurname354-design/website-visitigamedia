@@ -11,6 +11,7 @@ afterEach(() => {
 describe('prerender bootstrap', () => {
   it('parses safe JSON data for the current route', () => {
     window.history.replaceState({}, '', '/news');
+    document.documentElement.dataset.prerendered = 'true';
     const script = document.createElement('script');
     script.id = 'visitiga-prerender-data';
     script.type = 'application/json';
@@ -21,6 +22,7 @@ describe('prerender bootstrap', () => {
 
   it('uses prerendered data after the host adds a trailing slash', () => {
     window.history.replaceState({}, '', '/portfolio/');
+    document.documentElement.dataset.prerendered = 'true';
     window.__VISITIGA_PRERENDER_DATA__ = { route: '/portfolio', portfolios: [] };
     expect(getPrerenderData()).toEqual({ route: '/portfolio', portfolios: [] });
   });
