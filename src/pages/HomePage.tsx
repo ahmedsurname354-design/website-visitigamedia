@@ -9,14 +9,17 @@ import type { HomepageContent, Portfolio } from '@/types/admin';
 
 export default function HomePage() {
   const initial = getPrerenderData();
+  const hasInitialHomepage = Boolean(initial?.homepage);
   const [homepage, setHomepage] = useState<HomepageContent | null>(initial?.homepage ?? null);
   const [portfolios, setPortfolios] = useState<Portfolio[]>(initial?.portfolios ?? []);
+  const [loading, setLoading] = useState(!hasInitialHomepage);
 
   useEffect(() => {
     let active = true;
     let requestId = 0;
-    const load = async () => {
+    const load = async (replaceCurrent = false) => {
       const currentRequest = ++requestId;
+      if (replaceCurrent) setLoading(true);
       try {
         const { getPublicHomepageContent, listPublicPortfolios } = await import('@/lib/adminApi');
         const [content, items] = await Promise.all([getPublicHomepageContent(), listPublicPortfolios()]);
@@ -24,9 +27,12 @@ export default function HomePage() {
         if (content) setHomepage(content);
         setPortfolios(items);
       } catch { /* Keep the current content if a refresh is temporarily unavailable. */ }
+      finally {
+        if (active && currentRequest === requestId) setLoading(false);
+      }
     };
-    const refreshWhenVisible = () => { if (document.visibilityState === 'visible') void load(); };
-    void load();
+    const refreshWhenVisible = () => { if (document.visibilityState === 'visible') void load(true); };
+    void load(!hasInitialHomepage);
     window.addEventListener('focus', refreshWhenVisible);
     document.addEventListener('visibilitychange', refreshWhenVisible);
     return () => {
@@ -34,7 +40,11 @@ export default function HomePage() {
       window.removeEventListener('focus', refreshWhenVisible);
       document.removeEventListener('visibilitychange', refreshWhenVisible);
     };
-  }, []);
+  }, [hasInitialHomepage]);
+
+  if (loading) {
+    return <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center px-6" role="status" aria-live="polite"><div className="rounded-full border border-current/10 px-5 py-3 text-sm opacity-70 shadow-sm">Memuat konten terbaru…</div></div>;
+  }
 
   const content = homepage ?? { id: 1, ...defaultHomepageContent, updated_at: '' };
   return (
