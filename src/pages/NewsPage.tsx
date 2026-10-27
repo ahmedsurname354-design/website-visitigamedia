@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ArrowRight, LoaderCircle } from 'lucide-react';
 import { LocalizedLink as Link } from '@/components/LocalizedLink';
-import { listPublicNews } from '@/lib/adminApi';
-import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
+import { responsiveImageSources, restoreOriginalImage } from '@/lib/imageUrl';
 import type { NewsRecord } from '@/types/admin';
 import { useTranslation } from '@/i18n';
 import LightReveal from '@/components/LightReveal';
@@ -18,11 +17,13 @@ export default function NewsPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    void listPublicNews()
-      .then(setArticles)
+    let active = true;
+    const timer = window.setTimeout(() => void import('@/lib/publicApi').then(({ listPublicNews }) => listPublicNews())
+      .then((data) => { if (active) setArticles(data); })
       .catch(() => setError(en ? 'News could not be loaded.' : 'Berita belum dapat dimuat.'))
-      .finally(() => setLoading(false));
-  }, [en]);
+      .finally(() => { if (active) setLoading(false); }), initialNews?.length ? 1500 : 0);
+    return () => { active = false; window.clearTimeout(timer); };
+  }, [en, initialNews?.length]);
 
   const localizedArticles = articles.map((article) => localizedNews(article, lang));
   return (
@@ -50,7 +51,9 @@ export default function NewsPage() {
               <LightReveal key={article.id} delay={Math.min(index * 0.045, 0.18)} className="h-full">
               <article className="journal-card public-card h-full overflow-hidden border shadow-sm">
                 <img
-                  src={optimizedImageUrl(article.cover_image, 800)}
+                  {...responsiveImageSources(article.cover_image)}
+                  width="800"
+                  height="450"
                   onError={({ currentTarget }) => restoreOriginalImage(currentTarget, article.cover_image)}
                   alt={article.title}
                   loading={index === 0 ? 'eager' : 'lazy'}

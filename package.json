@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "optimize-images": "node scripts/optimize-images.mjs",
+    "responsive-images": "node scripts/generate-responsive-images.mjs",
     "dev": "vite",
     "build:app": "vite build",
     "build": "npm run build:app && node scripts/prerender.mjs",

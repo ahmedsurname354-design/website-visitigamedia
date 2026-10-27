@@ -1,6 +1,5 @@
 import { useEffect, useState, type CSSProperties } from 'react';
-import { listPublicProducts } from '@/lib/adminApi';
-import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
+import { responsiveImageSources, restoreOriginalImage } from '@/lib/imageUrl';
 import { getPrerenderData } from '@/lib/prerenderData';
 import { useTranslation } from '@/i18n';
 import { localizedProduct } from '@/lib/contentLocale';
@@ -69,6 +68,7 @@ const fallbackItems: AccordionItem[] = [
 export default function HorizontalAccordionCards() {
   const { lang } = useTranslation();
   const initialProducts = getPrerenderData()?.products;
+  const initialProductCount = initialProducts?.length ?? 0;
   const [activeIndex, setActiveIndex] = useState(0);
   const [items, setItems] = useState<AccordionItem[]>(() => initialProducts?.length ? initialProducts.map((raw) => { const product = localizedProduct(raw, lang); return { title: product.name, label: product.label, description: product.description, image: product.image_url, color: product.color, accent: product.accent }; }) : fallbackItems);
   const [requestedImages, setRequestedImages] = useState(() => new Set([0]));
@@ -80,15 +80,15 @@ export default function HorizontalAccordionCards() {
 
   useEffect(() => {
     let active = true;
-    void listPublicProducts().then((products) => {
+    const timer = window.setTimeout(() => void import('@/lib/publicApi').then(({ listPublicProducts }) => listPublicProducts()).then((products) => {
       if (!active || products.length === 0) return;
       setItems(products.map((raw) => { const product = localizedProduct(raw, lang); return { title: product.name, label: product.label, description: product.description, image: product.image_url, color: product.color, accent: product.accent }; }));
       setActiveIndex(0);
     }).catch(() => {
       // Static cards keep the public product page functional until Supabase is configured.
-    });
-    return () => { active = false; };
-  }, [lang]);
+    }), initialProductCount ? 1500 : 0);
+    return () => { active = false; window.clearTimeout(timer); };
+  }, [initialProductCount, lang]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -116,7 +116,7 @@ export default function HorizontalAccordionCards() {
             <span className="accordion-card__content">
               <span className="accordion-card__label">{item.label}</span>
               <span className="accordion-card__image-wrap">
-                {requestedImages.has(index) && <img className="accordion-card__image" src={optimizedImageUrl(item.image, 900)} onError={({ currentTarget }) => restoreOriginalImage(currentTarget, item.image)} alt="" loading={index === 0 ? 'eager' : 'lazy'} fetchPriority={index === 0 ? 'high' : 'auto'} decoding="async" />}
+                {requestedImages.has(index) && <img className="accordion-card__image" {...responsiveImageSources(item.image)} sizes="(min-width: 1024px) 40vw, 90vw" width="900" height="675" onError={({ currentTarget }) => restoreOriginalImage(currentTarget, item.image)} alt="" loading={index === 0 ? 'eager' : 'lazy'} fetchPriority={index === 0 ? 'high' : 'auto'} decoding="async" />}
               </span>
               <span className="accordion-card__copy">
                 <span className="accordion-card__title">{item.title}</span>

@@ -21,7 +21,7 @@ export default function HomePage() {
       const currentRequest = ++requestId;
       if (replaceCurrent) setLoading(true);
       try {
-        const { getPublicHomepageContent, listPublicPortfolios } = await import('@/lib/adminApi');
+        const { getPublicHomepageContent, listPublicPortfolios } = await import('@/lib/publicApi');
         const [content, items] = await Promise.all([getPublicHomepageContent(), listPublicPortfolios()]);
         if (!active || currentRequest !== requestId) return;
         if (content) setHomepage(content);
@@ -32,13 +32,14 @@ export default function HomePage() {
       }
     };
     const refreshWhenVisible = () => { if (document.visibilityState === 'visible') void load(true); };
-    void load(!hasInitialHomepage);
+    const timer = window.setTimeout(() => void load(!hasInitialHomepage), hasInitialHomepage ? 1500 : 0);
     window.addEventListener('focus', refreshWhenVisible);
     document.addEventListener('visibilitychange', refreshWhenVisible);
     return () => {
       active = false;
       window.removeEventListener('focus', refreshWhenVisible);
       document.removeEventListener('visibilitychange', refreshWhenVisible);
+      window.clearTimeout(timer);
     };
   }, [hasInitialHomepage]);
 

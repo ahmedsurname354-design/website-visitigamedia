@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Download } from 'lucide-react';
 import { useTranslation } from '@/i18n';
-import { getProductCatalogue } from '@/lib/adminApi';
 import { getPrerenderData } from '@/lib/prerenderData';
 
 const FALLBACK_PDF = '/products/product-catalogue-2026.pdf';
@@ -9,20 +8,21 @@ const FALLBACK_PDF = '/products/product-catalogue-2026.pdf';
 export default function ProductCatalogueDownload() {
   const { lang } = useTranslation();
   const initialCatalogue = getPrerenderData()?.catalogue;
+  const hasInitialCatalogue = Boolean(initialCatalogue);
   const [title, setTitle] = useState((lang === 'id' ? initialCatalogue?.title_id : initialCatalogue?.title_en) || initialCatalogue?.title || (lang === 'id' ? 'Katalog Produk 2026' : 'Product Catalogue 2026'));
   const [fileUrl, setFileUrl] = useState(initialCatalogue?.file_url || FALLBACK_PDF);
 
   useEffect(() => {
     let active = true;
-    void getProductCatalogue()
+    const timer = window.setTimeout(() => void import('@/lib/publicApi').then(({ getProductCatalogue }) => getProductCatalogue())
       .then((catalogue) => {
         if (!active || !catalogue) return;
         setTitle(lang === 'id' ? (catalogue.title_id || catalogue.title) : (catalogue.title_en || catalogue.title));
         setFileUrl(catalogue.file_url);
       })
-      .catch(() => undefined);
-    return () => { active = false; };
-  }, [lang]);
+      .catch(() => undefined), hasInitialCatalogue ? 1500 : 0);
+    return () => { active = false; window.clearTimeout(timer); };
+  }, [hasInitialCatalogue, lang]);
 
   const heading = lang === 'id' ? 'Unduh katalog produk' : 'Download the product catalogue';
   const description = lang === 'id'
