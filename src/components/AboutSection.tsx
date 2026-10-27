@@ -136,7 +136,7 @@ export default function AboutSection() {
             {clientLogos.map((client) => (
               <li key={client.src} className="client-logo-slot">
                 <a href={client.href} target="_blank" rel="noopener noreferrer" aria-label={`Kunjungi website ${client.alt}`}>
-                  <img src={client.src} alt={client.alt} loading="lazy" decoding="async" />
+                  <img src={client.src} alt={client.alt} decoding="async" />
                 </a>
               </li>
             ))}

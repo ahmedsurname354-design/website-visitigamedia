@@ -251,7 +251,6 @@ export default function CTASection({ variant = 'full', content }: { variant?: 'c
                     src="https://www.google.com/maps?q=Jl.+Setra+Dago+Barat+No.9+Antapani+Bandung&output=embed"
                     title={en ? 'Office location map' : 'Peta lokasi kantor'}
                     className="absolute inset-0 h-full w-full border-0"
-                    loading="lazy"
                   />
                 </div>
                 <div className="bg-black/90 p-4">

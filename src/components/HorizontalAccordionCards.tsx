@@ -71,11 +71,9 @@ export default function HorizontalAccordionCards() {
   const initialProductCount = initialProducts?.length ?? 0;
   const [activeIndex, setActiveIndex] = useState(0);
   const [items, setItems] = useState<AccordionItem[]>(() => initialProducts?.length ? initialProducts.map((raw) => { const product = localizedProduct(raw, lang); return { title: product.name, label: product.label, description: product.description, image: product.image_url, color: product.color, accent: product.accent }; }) : fallbackItems);
-  const [requestedImages, setRequestedImages] = useState(() => new Set([0]));
 
   const activate = (index: number) => {
     setActiveIndex(index);
-    setRequestedImages((current) => current.has(index) ? current : new Set(current).add(index));
   };
 
   useEffect(() => {
@@ -89,13 +87,6 @@ export default function HorizontalAccordionCards() {
     }), initialProductCount ? 1500 : 0);
     return () => { active = false; window.clearTimeout(timer); };
   }, [initialProductCount, lang]);
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      setRequestedImages(new Set(items.map((_, index) => index)));
-    }, 2500);
-    return () => window.clearTimeout(timer);
-  }, [items]);
 
   return (
     <div className="accordion-cards" aria-label="Layanan media kami">
@@ -116,7 +107,7 @@ export default function HorizontalAccordionCards() {
             <span className="accordion-card__content">
               <span className="accordion-card__label">{item.label}</span>
               <span className="accordion-card__image-wrap">
-                {requestedImages.has(index) && <img className="accordion-card__image" {...responsiveImageSources(item.image)} sizes="(min-width: 1024px) 40vw, 90vw" width="900" height="675" onError={({ currentTarget }) => restoreOriginalImage(currentTarget, item.image)} alt="" loading={index === 0 ? 'eager' : 'lazy'} fetchPriority={index === 0 ? 'high' : 'auto'} decoding="async" />}
+                <img className="accordion-card__image" {...responsiveImageSources(item.image)} sizes="(min-width: 1024px) 40vw, 90vw" width="900" height="675" onError={({ currentTarget }) => restoreOriginalImage(currentTarget, item.image)} alt="" fetchPriority={index === 0 ? 'high' : 'auto'} decoding="async" />
               </span>
               <span className="accordion-card__copy">
                 <span className="accordion-card__title">{item.title}</span>

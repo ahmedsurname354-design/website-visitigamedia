@@ -35,7 +35,7 @@ export default function VideoSection() {
               {en ? 'Your browser does not support video playback.' : 'Browser Anda tidak mendukung pemutar video.'}
             </video>
           ) : <>
-          <img src={videoImg} alt={en ? 'Visitiga LED project showreel' : 'Cuplikan proyek LED Visitiga'} loading="lazy" decoding="async" className="h-[400px] w-full object-cover transition-transform duration-700 group-hover:scale-105 md:h-[560px]" />
+          <img src={videoImg} alt={en ? 'Visitiga LED project showreel' : 'Cuplikan proyek LED Visitiga'} decoding="async" className="h-[400px] w-full object-cover transition-transform duration-700 group-hover:scale-105 md:h-[560px]" />
           <div className="absolute inset-0 bg-black/50 transition-colors duration-300 group-hover:bg-black/40" />
 
           {/* Play button */}

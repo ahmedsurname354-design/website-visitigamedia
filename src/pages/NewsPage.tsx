@@ -56,7 +56,6 @@ export default function NewsPage() {
                   height="450"
                   onError={({ currentTarget }) => restoreOriginalImage(currentTarget, article.cover_image)}
                   alt={article.title}
-                  loading={index === 0 ? 'eager' : 'lazy'}
                   fetchPriority={index === 0 ? 'high' : 'auto'}
                   decoding="async"
                   className="public-media-placeholder aspect-[16/9] w-full object-cover"

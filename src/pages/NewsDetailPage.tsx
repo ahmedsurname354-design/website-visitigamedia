@@ -219,7 +219,7 @@ export default function NewsDetailPage() {
                 <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
                   {relatedArticles.map((related) => (
                     <Link key={related.id} to={`/news/${related.slug}`} className="related-article-link group grid grid-cols-[6.5rem_minmax(0,1fr)] gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500">
-                      <img src={optimizedImageUrl(related.cover_image, 320)} srcSet={`${optimizedImageUrl(related.cover_image, 240)} 240w, ${optimizedImageUrl(related.cover_image, 320)} 320w, ${optimizedImageUrl(related.cover_image, 600)} 600w`} sizes="(min-width: 1024px) 104px, 30vw" onError={({ currentTarget }) => restoreOriginalImage(currentTarget, related.cover_image)} alt="" loading="lazy" decoding="async" className="aspect-[4/3] w-full rounded-xl bg-[#f3e5d7] object-cover" />
+                      <img src={optimizedImageUrl(related.cover_image, 320)} srcSet={`${optimizedImageUrl(related.cover_image, 240)} 240w, ${optimizedImageUrl(related.cover_image, 320)} 320w, ${optimizedImageUrl(related.cover_image, 600)} 600w`} sizes="(min-width: 1024px) 104px, 30vw" onError={({ currentTarget }) => restoreOriginalImage(currentTarget, related.cover_image)} alt="" decoding="async" className="aspect-[4/3] w-full rounded-xl bg-[#f3e5d7] object-cover" />
                       <div className="min-w-0 py-0.5"><h3 className="line-clamp-3 text-sm font-bold leading-5 transition group-hover:text-orange-600">{related.title}</h3><p className="mt-2 truncate text-xs text-[#735c4d]">{related.category}</p></div>
                     </Link>
                   ))}
