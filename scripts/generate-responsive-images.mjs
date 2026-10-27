@@ -20,9 +20,7 @@ let generated = 0;
 for (const root of roots) {
   for (const source of await imageFiles(root)) {
     const input = sharp(source).rotate();
-    const metadata = await input.metadata();
     for (const width of widths) {
-      if (metadata.width && metadata.width < width) continue;
       const target = source.replace(new RegExp(`${extname(source)}$`, 'i'), `-${width}.webp`);
       try { await stat(target); continue; } catch { /* generate missing variant */ }
       await input.clone().resize({ width, withoutEnlargement: true }).webp({ quality: 72, effort: 5 }).toFile(target);
