@@ -50,5 +50,10 @@ export function responsiveImageSources(source: string, quality = 75) {
 export function restoreOriginalImage(image: HTMLImageElement, source: string): void {
   if (image.src === source) return;
   image.onerror = null;
+  // Clear responsive candidates before switching to the original URL.
+  // Otherwise the browser may immediately select the failing Supabase
+  // transform from srcset again.
+  image.removeAttribute('srcset');
+  image.removeAttribute('sizes');
   image.src = source;
 }
