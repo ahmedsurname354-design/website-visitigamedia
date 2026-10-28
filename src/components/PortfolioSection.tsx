@@ -32,7 +32,7 @@ export default function PortfolioSection() {
   return <div>
     <section id="portfolio" className="theme-section-alt public-surface-alt px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
       <div className="mx-auto max-w-[1536px]">
-      <p className="text-xs font-semibold uppercase text-orange-600">Karya Kami</p>
+      <p className="text-xs font-semibold uppercase text-orange-600">{lang === 'en' ? 'Our Work' : 'Karya Kami'}</p>
       <h1 className="mt-2 text-3xl font-bold text-neutral-900 sm:text-4xl">{lang === 'en' ? 'Projects' : 'Proyek'}</h1>
       <div className="mt-8 flex flex-wrap gap-2" role="group" aria-label="Filter kategori">{categories.map((name) => <button key={name} type="button" onClick={() => setCategory(name === allLabel ? null : name)} aria-pressed={selectedCategory === name} className={`rounded-full border px-4 py-2 text-sm font-medium ${selectedCategory === name ? 'border-orange-600 bg-orange-600 text-white' : 'public-card border-neutral-300 bg-white text-neutral-700 hover:border-orange-500'}`}>{name}</button>)}</div>
       {error && !projects.length && <p role="alert" className="mt-8 text-sm text-red-700">Portofolio belum dapat dimuat. Silakan coba lagi.</p>}
