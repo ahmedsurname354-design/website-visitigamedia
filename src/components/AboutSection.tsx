@@ -51,7 +51,7 @@ export default function AboutSection() {
           <div className="relative rounded-2xl overflow-hidden">
             <img
               src={aboutImg}
-              alt="Tim kami sedang bekerja"
+              alt={t('about.teamImageAlt')}
               decoding="async"
               className="w-full h-[360px] sm:h-[500px] object-cover"
             />
@@ -66,7 +66,7 @@ export default function AboutSection() {
             className="brand-on-orange absolute -bottom-4 right-3 sm:-bottom-6 sm:-right-6 bg-orange-500 rounded-2xl p-4 sm:p-6 max-w-[180px] sm:max-w-[200px] shadow-2xl shadow-orange-500/30"
           >
             <p className="font-bold text-3xl">12+</p>
-            <p className="text-sm mt-1 opacity-80">Tahun menghadirkan solusi LED terbaik</p>
+            <p className="text-sm mt-1 opacity-80">{t('about.yearsLabel')}</p>
           </motion.div>
         </motion.div>
 
@@ -78,7 +78,7 @@ export default function AboutSection() {
             transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.06 }}
             className="text-orange-500 text-sm font-semibold tracking-[0.3em] uppercase mb-4"
           >
-            Tentang Visitiga
+            {t('about.sectionLabel')}
           </motion.p>
           <motion.h1
             initial={reducedMotion ? false : { opacity: 0, y: 12 }}
@@ -86,7 +86,7 @@ export default function AboutSection() {
             transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.06 }}
             className="text-white font-bold text-4xl md:text-5xl leading-tight tracking-tight mb-6"
           >
-            Mitra Tepercaya untuk <span className="inline-block whitespace-nowrap text-orange-500">Inovasi LED</span>
+            {t('about.headingPrefix')}<span className="inline-block whitespace-nowrap text-orange-500">{t('about.headingAccent')}</span>
           </motion.h1>
           <motion.p
             initial={reducedMotion ? false : { opacity: 0, y: 12 }}
@@ -129,13 +129,13 @@ export default function AboutSection() {
 
       <section className="client-wall" aria-labelledby="client-wall-title">
         <div className="client-wall__heading">
-          <h2 id="client-wall-title">Klien Kami</h2>
+          <h2 id="client-wall-title">{t('about.clientsTitle')}</h2>
         </div>
         <div className="client-wall__gallery">
           <ul className="client-wall__logos-grid" aria-label="Daftar klien">
             {clientLogos.map((client) => (
               <li key={client.src} className="client-logo-slot">
-                <a href={client.href} target="_blank" rel="noopener noreferrer" aria-label={`Kunjungi website ${client.alt}`}>
+                <a href={client.href} target="_blank" rel="noopener noreferrer" aria-label={`${t('about.clientLinkAria')} ${client.alt}`}>
                   <img src={client.src} alt={client.alt} decoding="async" />
                 </a>
               </li>

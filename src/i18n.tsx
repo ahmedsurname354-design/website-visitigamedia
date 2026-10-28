@@ -31,7 +31,10 @@ const translations = {
     about: {
       sectionLabel: 'Tentang Visitiga',
       heading: 'Mitra Tepercaya untuk Inovasi LED',
+      headingPrefix: 'Mitra Tepercaya untuk ',
+      headingAccent: 'Inovasi LED',
       subtitle: 'Sejak 2013, Visitiga telah menjadi pelopor dalam penyediaan solusi LED display di Indonesia. Dengan tim ahli yang berpengalaman, kami menghadirkan kualitas premium, desain kreatif, dan pelayanan terbaik untuk setiap klien.',
+      yearsLabel: 'Tahun menghadirkan solusi LED terbaik',
       features: [
         'Panel LED berkualitas premium',
         'Tim instalasi bersertifikat',
@@ -39,6 +42,9 @@ const translations = {
         'Dukungan purnajual',
       ],
       contactButton: 'Hubungi Kami',
+      clientsTitle: 'Klien Kami',
+      teamImageAlt: 'Tim kami sedang bekerja',
+      clientLinkAria: 'Kunjungi website',
     },
     services: {
       sectionLabel: 'Layanan Kami',
@@ -208,7 +214,10 @@ const translations = {
     about: {
       sectionLabel: 'About Visitiga',
       heading: 'Trusted Partner for LED Innovation',
+      headingPrefix: 'Trusted Partner for ',
+      headingAccent: 'LED Innovation',
       subtitle: 'Since 2013, Visitiga has been a pioneer in providing LED display solutions in Indonesia. With an experienced expert team, we deliver premium quality, creative design, and excellent service for every client.',
+      yearsLabel: 'Years delivering leading LED solutions',
       features: [
         'Premium quality LED panels',
         'Certified installation team',
@@ -216,6 +225,9 @@ const translations = {
         'Post-sale support',
       ],
       contactButton: 'Contact Us',
+      clientsTitle: 'Our Clients',
+      teamImageAlt: 'Our team at work',
+      clientLinkAria: 'Visit website',
     },
     services: {
       sectionLabel: 'Our Services',
