@@ -31,7 +31,7 @@ export default function NewsPage() {
       <div className="mx-auto max-w-[1344px]">
         <LightReveal>
           <p className="editorial-eyebrow">Visitiga Journal</p>
-          <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight sm:text-6xl">
+          <h1 className="mt-3 max-w-3xl text-4xl font-bold tracking-tight sm:text-6xl">
             {en ? 'Latest ' : 'Berita '}<span className="text-orange-500">{en ? 'news.' : 'terbaru.'}</span>
           </h1>
           <p className="public-muted mt-4 max-w-2xl">{en ? 'The latest articles and updates from Visitiga Media.' : 'Artikel dan kabar terbaru dari Visitiga Media.'}</p>
