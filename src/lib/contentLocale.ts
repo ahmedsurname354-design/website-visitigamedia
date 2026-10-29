@@ -2,8 +2,9 @@ import type { Lang } from '@/i18n';
 import type { NewsRecord, Portfolio, Product, ServiceContent } from '@/types/admin';
 
 export type PortfolioCategoryKey = 'conventional' | 'indoor' | 'outdoor' | 'rental' | 'audio-visual' | `custom:${string}`;
+type StandardPortfolioCategoryKey = Exclude<PortfolioCategoryKey, `custom:${string}`>;
 
-const portfolioCategoryLabels: Record<Exclude<PortfolioCategoryKey, `custom:${string}`>, Record<Lang, string>> = {
+const portfolioCategoryLabels: Record<StandardPortfolioCategoryKey, Record<Lang, string>> = {
   conventional: { id: 'Media Konvensional', en: 'Conventional Media' },
   indoor: { id: 'Media Dalam Ruangan', en: 'Indoor Media' },
   outdoor: { id: 'Media Luar Ruang', en: 'Outdoor Media' },
@@ -23,7 +24,8 @@ export function portfolioCategoryKey(category: string): PortfolioCategoryKey {
 
 export function portfolioCategoryLabel(category: string, lang: Lang): string {
   const key = portfolioCategoryKey(category);
-  return key.startsWith('custom:') ? category : portfolioCategoryLabels[key][lang];
+  if (key.startsWith('custom:')) return category;
+  return portfolioCategoryLabels[key as StandardPortfolioCategoryKey][lang];
 }
 
 export function localizedPortfolio(item: Portfolio, lang: Lang): Portfolio {
