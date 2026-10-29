@@ -62,7 +62,7 @@ export default function NewsPage() {
                 />
                 <div className="p-6">
                   <p className="text-xs font-bold uppercase tracking-[.16em] text-orange-600">{article.category}</p>
-                  <h2 className="mt-3 text-2xl font-black leading-tight">{article.title}</h2>
+                  <h2 className="mt-3 text-xl font-bold leading-tight">{article.title}</h2>
                   <p className="public-muted mt-3 line-clamp-3 text-sm leading-6">{article.excerpt}</p>
                   <p className="public-muted mt-5 text-xs">
                     {article.author} · {new Date(article.published_at!).toLocaleDateString(en ? 'en-US' : 'id-ID')}
