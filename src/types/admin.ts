@@ -89,6 +89,17 @@ export interface HomepageContent {
   updated_at: string;
 }
 
+export interface AboutValueItem { title: string; description: string; }
+export interface AboutLocaleContent { eyebrow: string; title: string; items: AboutValueItem[]; }
+export interface AboutContent {
+  id: number;
+  content_id: AboutLocaleContent;
+  content_en: AboutLocaleContent;
+  updated_at: string;
+}
+
+export type AboutContentInput = Omit<AboutContent, 'id' | 'updated_at'>;
+
 export type HomepageContentInput = Omit<HomepageContent, 'id' | 'updated_at'>;
 
 export interface ProductCatalogue {

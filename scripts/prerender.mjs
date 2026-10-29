@@ -40,9 +40,9 @@ async function getBuildContent() {
   if (!supabaseUrl || !supabaseKey) {
     if (requireNews) throw new Error('SEO_REQUIRE_NEWS=true, tetapi kredensial Supabase tidak tersedia.');
     console.warn('[seo] Kredensial Supabase tidak tersedia; prerender lokal memakai fallback statis.');
-    return { news: [], portfolios: null, products: null, serviceContent: null, serviceLandings: null, catalogue: null, homepage: null };
+    return { news: [], portfolios: null, products: null, serviceContent: null, serviceLandings: null, catalogue: null, homepage: null, about: null };
   }
-  const [news, portfolios, products, serviceRows, serviceLandings, catalogueRows, homepageRows] = await Promise.all([
+  const [news, portfolios, products, serviceRows, serviceLandings, catalogueRows, homepageRows, aboutRows] = await Promise.all([
     fetchPublicTable('news', '*', { published_at: 'not.is.null', order: 'published_at.desc' }),
     fetchPublicTable('portfolios', '*', { order: 'created_at.desc' }),
     fetchPublicTable('products', '*', { order: 'sort_order.asc,created_at.asc' }),
@@ -50,6 +50,7 @@ async function getBuildContent() {
     fetchPublicTable('service_landings', '*,service_landing_portfolios(portfolio_id,position)', { order: 'slug.asc' }),
     fetchPublicTable('product_catalogue', '*', { id: 'eq.1' }),
     fetchPublicTable('homepage_content', '*', { id: 'eq.1' }),
+    fetchPublicTable('about_content', '*', { id: 'eq.1' }),
   ]);
   return {
     news: news ?? [], portfolios, products,
@@ -60,6 +61,7 @@ async function getBuildContent() {
     })) ?? null,
     catalogue: catalogueRows?.[0] ?? null,
     homepage: homepageRows?.[0] ?? null,
+    about: aboutRows?.[0] ?? null,
   };
 }
 
@@ -73,6 +75,7 @@ function dataForRoute(path, content) {
   if (publicPath === '/portfolio') return { route: path, portfolios: content.portfolios ?? undefined };
   if (publicPath.startsWith('/portfolio/')) return { route: path, portfolios: content.portfolios ?? undefined, portfolio: content.portfolios?.find(({ slug }) => publicPath === `/portfolio/${slug}`) ?? null };
   if (publicPath === '/') return { route: path, portfolios: content.portfolios ?? undefined, homepage: content.homepage };
+  if (publicPath === '/about') return { route: path, about: content.about };
   return { route: path };
 }
 

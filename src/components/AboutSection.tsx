@@ -12,6 +12,8 @@ import emc from '@/assets/clients/emc.webp';
 import mandalika from '@/assets/clients/mandalika.webp';
 import iims from '@/assets/clients/iims.webp';
 import wonderfulIndonesiaRed from '@/assets/clients/wonderful-indonesia-red.webp';
+import ValuePropositionSection from '@/components/ValuePropositionSection';
+import type { AboutLocaleContent } from '@/types/admin';
 
 const aboutImg = teamPhoto;
 
@@ -33,7 +35,7 @@ const clientLogos = [
   { src: wonderfulIndonesiaRed, alt: 'Sarinah', href: 'https://www.sarinah.co.id/' },
 ];
 
-export default function AboutSection() {
+export default function AboutSection({ valueContent }: { valueContent?: AboutLocaleContent } = {}) {
   const { ref, isInView, reducedMotion } = useScrollReveal();
   const { t } = useTranslation();
 
@@ -126,6 +128,13 @@ export default function AboutSection() {
           </motion.a>
         </div>
       </div>
+
+      <ValuePropositionSection content={valueContent ?? { eyebrow: t('about.valuesEyebrow'), title: t('about.valuesTitle'), items: [
+        { title: t('about.values.0.title'), description: t('about.values.0.description') },
+        { title: t('about.values.1.title'), description: t('about.values.1.description') },
+        { title: t('about.values.2.title'), description: t('about.values.2.description') },
+        { title: t('about.values.3.title'), description: t('about.values.3.description') },
+      ] }} />
 
       <section className="client-wall" aria-labelledby="client-wall-title">
         <div className="client-wall__heading">

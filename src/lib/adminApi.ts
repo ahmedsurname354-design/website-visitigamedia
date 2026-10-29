@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { translateContent } from '@/lib/translation';
-import type { ContactLead, HomepageContent, HomepageContentInput, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, PortfolioSlugAlias, Product, ProductCatalogue, ProductInput, ServiceContent, ServiceContentInput, ServiceLandingContent, ServiceLandingInput, ServiceLandingSlug } from '@/types/admin';
+import type { AboutContent, AboutContentInput, ContactLead, HomepageContent, HomepageContentInput, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, PortfolioSlugAlias, Product, ProductCatalogue, ProductInput, ServiceContent, ServiceContentInput, ServiceLandingContent, ServiceLandingInput, ServiceLandingSlug } from '@/types/admin';
 
 function client(): SupabaseClient {
   if (!supabase) throw new Error('Supabase belum dikonfigurasi.');
@@ -176,6 +176,18 @@ export async function saveHomepageContent(input: HomepageContentInput): Promise<
   const { data, error } = await client().from('homepage_content').upsert({ id: 1, ...input }).select('*').single();
   if (error) throw error;
   return data as HomepageContent;
+}
+
+export async function getAboutContent(): Promise<AboutContent | null> {
+  const { data, error } = await client().from('about_content').select('*').eq('id', 1).maybeSingle();
+  if (error) throw error;
+  return data as AboutContent | null;
+}
+
+export async function saveAboutContent(input: AboutContentInput): Promise<AboutContent> {
+  const { data, error } = await client().from('about_content').upsert({ id: 1, ...input }).select('*').single();
+  if (error) throw error;
+  return data as AboutContent;
 }
 
 export async function getProductCatalogue(): Promise<ProductCatalogue | null> {

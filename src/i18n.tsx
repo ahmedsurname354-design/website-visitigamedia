@@ -45,6 +45,14 @@ const translations = {
       clientsTitle: 'Klien Kami',
       teamImageAlt: 'Tim kami sedang bekerja',
       clientLinkAria: 'Kunjungi website',
+      valuesEyebrow: 'Nilai kami',
+      valuesTitle: 'MENGAPA MEMILIH KAMI',
+      values: [
+        { title: 'Ketekunan', description: 'Terus tekun dengan semangat kewirausahaan.' },
+        { title: 'Tanggung Jawab', description: 'Terus mencari cara untuk meningkatkan profitabilitas dan keberlanjutan.' },
+        { title: 'Pelayanan', description: 'Memberikan pelayanan terbaik dan bekerja keras untuk membangun hubungan yang adil.' },
+        { title: 'Integritas', description: 'Selalu berusaha melakukan hal yang benar dan bersikap jujur.' },
+      ],
     },
     services: {
       sectionLabel: 'Layanan Kami',
@@ -228,6 +236,14 @@ const translations = {
       clientsTitle: 'Our Clients',
       teamImageAlt: 'Our team at work',
       clientLinkAria: 'Visit website',
+      valuesEyebrow: 'Our values',
+      valuesTitle: 'WHY CHOOSE US',
+      values: [
+        { title: 'Persistence', description: 'Be persistent in keeping with an entrepreneurial attitude.' },
+        { title: 'Stewardship', description: 'Continually look for ways to improve profitability and sustainability.' },
+        { title: 'Service', description: 'Give our customers the best service and work hard to make a fair relationship.' },
+        { title: 'Integrity', description: 'strive to always do the right thing; be honest.' },
+      ],
     },
     services: {
       sectionLabel: 'Our Services',

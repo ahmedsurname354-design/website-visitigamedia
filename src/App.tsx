@@ -26,6 +26,7 @@ const NewsDetailPage = lazy(publicPageLoaders.newsDetail);
 const LoginPage = lazy(() => import('@/pages/admin/LoginPage'));
 const DashboardPage = lazy(() => import('@/pages/admin/DashboardPage'));
 const HomepageManagerPage = lazy(() => import('@/pages/admin/HomepageManagerPage'));
+const AboutManagerPage = lazy(() => import('@/pages/admin/AboutManagerPage'));
 const PortfoliosPage = lazy(() => import('@/pages/admin/PortfoliosPage'));
 const NewsManagerPage = lazy(() => import('@/pages/admin/NewsManagerPage'));
 const ProductsManagerPage = lazy(() => import('@/pages/admin/ProductsManagerPage'));
@@ -111,6 +112,7 @@ function AnimatedRoutes() {
                 <Route element={<AdminLayout />}>
                   <Route index element={<DashboardPage />} />
                   <Route path="homepage" element={<HomepageManagerPage />} />
+                  <Route path="about" element={<AboutManagerPage />} />
                   <Route path="products" element={<ProductsManagerPage />} />
                   <Route path="services" element={<ServicesManagerPage />} />
                   <Route path="portfolios" element={<PortfoliosPage />} />

@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { HomepageContent, NewsRecord, Portfolio, Product, ProductCatalogue } from '@/types/admin';
+import type { AboutContent, HomepageContent, NewsRecord, Portfolio, Product, ProductCatalogue } from '@/types/admin';
 
 async function client(): Promise<SupabaseClient> {
   const { supabase } = await import('@/lib/supabase');
@@ -29,6 +29,12 @@ export async function getPublicHomepageContent(): Promise<HomepageContent | null
   const { data, error } = await (await client()).from('homepage_content').select('*').eq('id', 1).maybeSingle();
   if (error) throw error;
   return data as HomepageContent | null;
+}
+
+export async function getPublicAboutContent(): Promise<AboutContent | null> {
+  const { data, error } = await (await client()).from('about_content').select('*').eq('id', 1).maybeSingle();
+  if (error) throw error;
+  return data as AboutContent | null;
 }
 
 export async function getProductCatalogue(): Promise<ProductCatalogue | null> {
