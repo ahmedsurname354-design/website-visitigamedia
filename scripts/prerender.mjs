@@ -102,8 +102,9 @@ async function snapshot(page, path, content, outputOverride) {
   const response = await page.goto(`http://127.0.0.1:4173${path}`, { waitUntil: 'domcontentloaded' });
   if (!response?.ok()) throw new Error(`${path} mengembalikan status ${response?.status() ?? 'tanpa respons'}.`);
   const publicPath = (path.replace(/^\/(?:id|en)(?=\/|$)/, '').replace(/\/+$/, '') || '/');
-  if (publicPath.startsWith('/news/') || publicPath.startsWith('/portfolio/')) await page.waitForSelector('article h1', { timeout: 15_000 });
-  else await page.waitForSelector('#main-content h1', { timeout: 15_000 });
+  // Detail pages can render either an article shell or a fallback state while
+  // data is resolving. Both states expose the page's primary heading as h1.
+  await page.waitForSelector('h1', { timeout: 15_000 });
   if (publicPath === '/news') {
     await page.waitForFunction(() => {
       const text = document.querySelector('#main-content')?.textContent || '';
