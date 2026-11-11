@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ArrowRight, LoaderCircle } from 'lucide-react';
 import { LocalizedLink as Link } from '@/components/LocalizedLink';
-import { responsiveImageSources, restoreOriginalImage } from '@/lib/imageUrl';
+import { responsiveImageSources } from '@/lib/imageUrl';
 import type { NewsRecord } from '@/types/admin';
 import { useTranslation } from '@/i18n';
 import LightReveal from '@/components/LightReveal';
@@ -54,7 +54,6 @@ export default function NewsPage() {
                   {...responsiveImageSources(article.cover_image)}
                   width="800"
                   height="450"
-                  onError={({ currentTarget }) => restoreOriginalImage(currentTarget, article.cover_image)}
                   alt={article.title}
                   fetchPriority={index === 0 ? 'high' : 'auto'}
                   decoding="async"

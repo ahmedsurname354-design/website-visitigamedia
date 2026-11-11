@@ -1,18 +1,16 @@
 import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { Monitor, PanelsTopLeft, Layers3, Grid2x2Plus, ArrowRight, MessageCircle } from 'lucide-react';
-import { useTranslation } from '@/i18n';
 import type { ServiceContent } from '@/types/admin';
 import { LocalizedLink as Link } from '@/components/LocalizedLink';
 
 const servicePaths = ['/services/videotron-outdoor/', '/services/led-indoor/', '/services/rental-led/', '/services/media-konvensional/'];
 
-export default function ServicesSection({ content }: { content?: ServiceContent | null }) {
+export default function ServicesSection({ content }: { content: ServiceContent }) {
   const { ref, isInView, reducedMotion } = useScrollReveal();
-  const { dict, lang } = useTranslation();
-  const services = (content?.cards ?? dict.services.cards).map((card, index) => ({
+  const services = content.cards.map((card, index) => ({
     ...card,
-    desc: 'desc' in card ? card.desc : card.description,
+    desc: card.description,
     icon: [Monitor, PanelsTopLeft, Layers3, Grid2x2Plus][index],
   }));
 
@@ -26,10 +24,10 @@ export default function ServicesSection({ content }: { content?: ServiceContent 
           transition={{ duration: reducedMotion ? 0 : 0.32 }}
           className="max-w-2xl mb-10 sm:mb-16"
         >
-          <p className="text-orange-500 text-sm font-semibold tracking-[0.3em] uppercase mb-4">{content?.eyebrow ?? dict.services.sectionLabel}</p>
+          <p className="text-orange-500 text-sm font-semibold tracking-[0.3em] uppercase mb-4">{content.eyebrow}</p>
           <h1 className="text-white font-bold text-4xl md:text-5xl leading-tight tracking-tight">
-            {content?.heading ?? (lang === 'id' ? 'Solusi LED Terbaik' : 'The Best LED Solutions')} <br />
-            <span className="text-orange-500">{content?.heading_accent ?? (lang === 'id' ? 'untuk Setiap Kebutuhan' : 'for Every Need')}</span>
+            {content.heading} <br />
+            <span className="text-orange-500">{content.heading_accent}</span>
           </h1>
         </motion.div>
 
@@ -58,7 +56,7 @@ export default function ServicesSection({ content }: { content?: ServiceContent 
                 </div>
                 <div className="mt-auto flex flex-col gap-3 pt-7 sm:flex-row sm:flex-wrap">
                   <Link to={servicePaths[i]} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-current/20 px-4 py-2.5 text-sm font-semibold text-current transition hover:border-orange-500 hover:text-orange-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2">
-                    {lang === 'id' ? 'Pelajari layanan' : 'Explore service'}
+                    Pelajari layanan
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                   <a

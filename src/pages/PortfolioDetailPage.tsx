@@ -7,7 +7,7 @@ import { getPrerenderData } from '@/lib/prerenderData';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { absoluteUrl, canonicalPublicPath, localizedAbsoluteUrl } from '@/lib/seo';
 import { localizedPublicPath } from '@/lib/localizedRoutes';
-import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
+import { optimizedImageUrl } from '@/lib/imageUrl';
 import { useTranslation } from '@/i18n';
 import type { Portfolio } from '@/types/admin';
 import { localizedPortfolio } from '@/lib/contentLocale';
@@ -72,11 +72,11 @@ export default function PortfolioDetailPage() {
   return <article className="public-surface min-h-screen pb-20 pt-24 text-neutral-900">
     <div className="mx-auto max-w-[1536px] px-5 sm:px-8 lg:px-12">
       <Link to="/portfolio/" className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-neutral-700 hover:text-orange-700"><ArrowLeft className="size-4" /> Kembali ke portofolio</Link>
-      <div className="public-media-placeholder mt-5 aspect-[4/3] overflow-hidden rounded-md bg-neutral-100 sm:aspect-[16/8]"><img src={optimizedImageUrl(project.image_url, 1800)} onError={({ currentTarget }) => restoreOriginalImage(currentTarget, project.image_url)} alt={project.title} className="h-full w-full object-cover" /></div>
+      <div className="public-media-placeholder mt-5 aspect-[4/3] overflow-hidden rounded-md bg-neutral-100 sm:aspect-[16/8]"><img src={optimizedImageUrl(project.image_url, 1800)} alt={project.title} className="h-full w-full object-cover" /></div>
       <header className="max-w-4xl py-10 sm:py-14"><p className="text-xs font-semibold uppercase text-orange-700">{project.category}</p><h1 className="mt-3 text-3xl font-bold leading-tight sm:text-5xl">{project.title}</h1>{clean(project.description) && <p className="mt-5 text-base leading-7 text-neutral-700 sm:text-lg">{clean(project.description)}</p>}</header>
       {(project.client || project.project_date) && <div className="public-divider border-y border-neutral-200 py-5 text-sm"><p>{project.client && <><span className="font-semibold">{lang === 'en' ? 'Client: ' : 'Klien: '}</span>{project.client}</>}</p>{project.project_date && <p className={project.client ? 'mt-2' : ''}><span className="font-semibold">{lang === 'en' ? 'Date: ' : 'Tanggal: '}</span><time dateTime={project.project_date}>{formatProjectDate(project.project_date)}</time></p>}</div>}
       {sections.length > 0 && <div className="max-w-3xl space-y-12 py-14">{sections.map((section) => <section key={section.title}><h2 className="text-xl font-semibold">{section.title}</h2><p className="mt-4 whitespace-pre-line leading-8 text-neutral-700">{section.body}</p></section>)}</div>}
-      {nearby.length > 0 && <section className="public-divider border-t border-neutral-200 pt-12"><h2 className="text-2xl font-semibold">Proyek lainnya</h2><div className="mt-6 grid gap-5 sm:grid-cols-3">{nearby.map((item) => <Link key={item.id} to={`/portfolio/${item.slug}/`} className="group"><img src={optimizedImageUrl(item.image_url, 700)} onError={({ currentTarget }) => restoreOriginalImage(currentTarget, item.image_url)} alt="" className="public-media-placeholder aspect-[4/3] w-full rounded-md object-cover" /><h3 className="mt-3 font-semibold group-hover:text-orange-700">{item.title}</h3></Link>)}</div></section>}
+      {nearby.length > 0 && <section className="public-divider border-t border-neutral-200 pt-12"><h2 className="text-2xl font-semibold">Proyek lainnya</h2><div className="mt-6 grid gap-5 sm:grid-cols-3">{nearby.map((item) => <Link key={item.id} to={`/portfolio/${item.slug}/`} className="group"><img src={optimizedImageUrl(item.image_url, 700)} alt="" className="public-media-placeholder aspect-[4/3] w-full rounded-md object-cover" /><h3 className="mt-3 font-semibold group-hover:text-orange-700">{item.title}</h3></Link>)}</div></section>}
     </div>
   </article>;
 }

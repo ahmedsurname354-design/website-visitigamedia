@@ -47,7 +47,7 @@ describe('portfolio detail date', () => {
     expect(screen.getByText('Date:')).toBeInTheDocument();
   });
 
-  it('falls back to the original related image when the optimized image fails', async () => {
+  it('does not replace a related image when the optimized image fails', async () => {
     vi.mocked((await import('@/lib/adminApi')).listPublicPortfolios).mockResolvedValueOnce([project, relatedProject]);
     renderPage('/en/portfolio/test-project/');
 
@@ -60,6 +60,6 @@ describe('portfolio detail date', () => {
 
     expect(relatedImage.src).toContain('/storage/v1/render/image/public/');
     fireEvent.error(relatedImage);
-    expect(relatedImage.src).toBe(relatedProject.image_url);
+    expect(relatedImage.src).toContain('/storage/v1/render/image/public/');
   });
 });

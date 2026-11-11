@@ -23,7 +23,10 @@ export default function ServicesPage() {
       if (replaceCurrent) setLoading(true);
       try {
         const value = await getServiceContent();
-        if (active && currentRequest === requestId.current) { setContent(value); setError(''); }
+        if (active && currentRequest === requestId.current) {
+          if (value) { setContent(value); setError(''); }
+          else setError('Konten layanan belum tersedia.');
+        }
       } catch {
         if (active && currentRequest === requestId.current) setError('Konten terbaru belum dapat dimuat. Silakan muat ulang halaman.');
       } finally {
@@ -43,10 +46,11 @@ export default function ServicesPage() {
   if (loading) {
     return <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center px-6" role="status" aria-live="polite"><div className="rounded-full border border-current/10 px-5 py-3 text-sm opacity-70 shadow-sm">Memuat layanan terbaru…</div></div>;
   }
+  if (error && !content) return <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center px-6" role="alert"><p className="text-center text-sm text-red-700">{error}</p></div>;
+  if (!content) return null;
   const displayContent = content ? localizedServiceContent(content, lang) : content;
   return (
     <>
-      {error && <div role="alert" className="bg-amber-50 px-4 py-3 text-center text-sm text-amber-900">{error}</div>}
       <ServicesSection content={displayContent} />
       <WebServiceSection content={displayContent} />
     </>

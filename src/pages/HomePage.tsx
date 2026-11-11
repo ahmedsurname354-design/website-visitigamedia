@@ -4,7 +4,6 @@ import StatsSection from '@/components/StatsSection';
 import CTASection from '@/components/CTASection';
 import HomeShowcase from '@/components/HomeShowcase';
 import { getPrerenderData } from '@/lib/prerenderData';
-import { defaultHomepageContent } from '@/lib/homepageContent';
 import type { HomepageContent, Portfolio } from '@/types/admin';
 
 export default function HomePage() {
@@ -13,6 +12,7 @@ export default function HomePage() {
   const [homepage, setHomepage] = useState<HomepageContent | null>(initial?.homepage ?? null);
   const [portfolios, setPortfolios] = useState<Portfolio[]>(initial?.portfolios ?? []);
   const [loading, setLoading] = useState(!hasInitialHomepage);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     let active = true;
@@ -24,9 +24,10 @@ export default function HomePage() {
         const { getPublicHomepageContent, listPublicPortfolios } = await import('@/lib/publicApi');
         const [content, items] = await Promise.all([getPublicHomepageContent(), listPublicPortfolios()]);
         if (!active || currentRequest !== requestId) return;
-        if (content) setHomepage(content);
+        if (content) { setHomepage(content); setError(''); }
+        else setError('Konten beranda belum tersedia. Silakan coba lagi nanti.');
         setPortfolios(items);
-      } catch { /* Keep the current content if a refresh is temporarily unavailable. */ }
+      } catch { if (active && currentRequest === requestId) setError('Konten beranda belum dapat dimuat. Silakan coba lagi.'); }
       finally {
         if (active && currentRequest === requestId) setLoading(false);
       }
@@ -47,7 +48,11 @@ export default function HomePage() {
     return <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center px-6" role="status" aria-live="polite"><div className="rounded-full border border-current/10 px-5 py-3 text-sm opacity-70 shadow-sm">Memuat konten terbaru…</div></div>;
   }
 
-  const content = homepage ?? { id: 1, ...defaultHomepageContent, updated_at: '' };
+  if (error && !homepage) {
+    return <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center px-6" role="alert"><p className="text-center text-sm text-red-700">{error}</p></div>;
+  }
+  if (!homepage) return null;
+  const content = homepage;
   return (
     <>
       <HeroSection content={content} />

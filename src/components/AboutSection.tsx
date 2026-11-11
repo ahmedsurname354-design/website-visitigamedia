@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { Check, ArrowRight } from 'lucide-react';
 import { useTranslation } from '@/i18n';
-import teamPhoto from '@/assets/team-visitiga.webp';
 import wonderfulIndonesia from '@/assets/clients/wonderful-indonesia.webp';
 // These legacy filenames do not match the artwork; map by the actual logo.
 import pertamina from '@/assets/clients/viata-vira-jati.webp';
@@ -14,8 +13,6 @@ import iims from '@/assets/clients/iims.webp';
 import wonderfulIndonesiaRed from '@/assets/clients/wonderful-indonesia-red.webp';
 import ValuePropositionSection from '@/components/ValuePropositionSection';
 import type { AboutLocaleContent } from '@/types/admin';
-
-const aboutImg = teamPhoto;
 
 const features = [
   'Panel LED berkualitas premium',
@@ -35,45 +32,15 @@ const clientLogos = [
   { src: wonderfulIndonesiaRed, alt: 'Sarinah', href: 'https://www.sarinah.co.id/' },
 ];
 
-export default function AboutSection({ valueContent }: { valueContent?: AboutLocaleContent } = {}) {
+export default function AboutSection({ valueContent }: { valueContent: AboutLocaleContent }) {
   const { ref, isInView, reducedMotion } = useScrollReveal();
   const { t } = useTranslation();
 
   return (
     <section id="about" className="relative theme-section overflow-hidden">
       <div className="mx-auto grid max-w-[1536px] items-center gap-10 px-4 py-16 sm:gap-16 sm:px-6 sm:py-24 md:py-32 lg:grid-cols-2 lg:px-8 xl:gap-24">
-        {/* Image */}
-        <motion.div
-          ref={ref}
-          initial={reducedMotion ? false : { opacity: 0, y: 12 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: reducedMotion ? 0 : 0.32 }}
-          className="relative"
-        >
-          <div className="relative rounded-2xl overflow-hidden">
-            <img
-              src={aboutImg}
-              alt={t('about.teamImageAlt')}
-              decoding="async"
-              className="w-full h-[360px] sm:h-[500px] object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-          </div>
-
-          {/* Floating card */}
-          <motion.div
-            initial={reducedMotion ? false : { opacity: 0, y: 12 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.06 }}
-            className="brand-on-orange absolute -bottom-4 right-3 sm:-bottom-6 sm:-right-6 bg-orange-500 rounded-2xl p-4 sm:p-6 max-w-[180px] sm:max-w-[200px] shadow-2xl shadow-orange-500/30"
-          >
-            <p className="font-bold text-3xl">12+</p>
-            <p className="text-sm mt-1 opacity-80">{t('about.yearsLabel')}</p>
-          </motion.div>
-        </motion.div>
-
         {/* Content */}
-        <div>
+        <div ref={ref} className="lg:col-span-2">
           <motion.p
             initial={reducedMotion ? false : { opacity: 0, y: 12 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -129,12 +96,7 @@ export default function AboutSection({ valueContent }: { valueContent?: AboutLoc
         </div>
       </div>
 
-      <ValuePropositionSection content={valueContent ?? { eyebrow: t('about.valuesEyebrow'), title: t('about.valuesTitle'), items: [
-        { title: t('about.values.0.title'), description: t('about.values.0.description') },
-        { title: t('about.values.1.title'), description: t('about.values.1.description') },
-        { title: t('about.values.2.title'), description: t('about.values.2.description') },
-        { title: t('about.values.3.title'), description: t('about.values.3.description') },
-      ] }} />
+      <ValuePropositionSection content={valueContent} />
 
       <section className="client-wall" aria-labelledby="client-wall-title">
         <div className="client-wall__heading">

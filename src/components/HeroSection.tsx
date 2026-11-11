@@ -7,8 +7,6 @@ import { preloadPublicRoute } from '@/lib/publicRoutes';
 
 import { useMotionPolicy } from '@/hooks/useMotionPolicy';
 
-const heroImg = '/hero-1600.webp';
-
 export default function HeroSection({ content }: { content: HomepageContent }) {
   const { lang } = useTranslation();
   const hero = lang === 'id' ? content.content_id.hero : content.content_en.hero;
@@ -19,8 +17,8 @@ export default function HeroSection({ content }: { content: HomepageContent }) {
       <div className="hero-editorial__stage">
         {/* Background image */}
         <div className="absolute inset-0">
-          <img
-            src={content.hero_image_url || heroImg}
+          {content.hero_image_url && <img
+            src={content.hero_image_url}
             srcSet={content.hero_image_url === '/hero-1600.webp' ? '/hero-640.webp 640w, /hero-960.webp 960w, /hero-1600.webp 1600w' : undefined}
             sizes="100vw"
             alt="Tampilan LED di kota pada malam hari"
@@ -29,7 +27,7 @@ export default function HeroSection({ content }: { content: HomepageContent }) {
             fetchPriority="high"
             decoding="async"
             className="w-full h-full object-cover object-[68%_center] sm:object-center"
-          />
+          />}
         </div>
         <div className="hero-editorial__scrim absolute inset-0" />
 

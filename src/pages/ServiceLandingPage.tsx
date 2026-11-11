@@ -3,9 +3,9 @@ import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import { Navigate, useParams } from 'react-router-dom';
 import { LocalizedLink as Link } from '@/components/LocalizedLink';
 import { getServiceLanding, listPublicPortfolios } from '@/lib/adminApi';
-import { optimizedImageUrl, restoreOriginalImage } from '@/lib/imageUrl';
+import { optimizedImageUrl } from '@/lib/imageUrl';
 import { getPrerenderData } from '@/lib/prerenderData';
-import { defaultServiceLandings, isServiceLandingSlug } from '@/lib/serviceLanding';
+import { isServiceLandingSlug } from '@/lib/serviceLanding';
 import { useTranslation } from '@/i18n';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { localizedAbsoluteUrl } from '@/lib/seo';
@@ -17,43 +17,48 @@ export default function ServiceLandingPage() {
   const validSlug = isServiceLandingSlug(serviceSlug) ? serviceSlug : undefined;
   const { lang } = useTranslation();
   const initial = getPrerenderData();
-  const fallback = validSlug ? defaultServiceLandings[validSlug] : defaultServiceLandings['led-indoor'];
   const initialService = initial?.serviceLanding;
-  const [service, setService] = useState<ServiceLandingContent>(initialService?.slug === validSlug ? (initialService ?? fallback) : fallback);
+  const [service, setService] = useState<ServiceLandingContent | null>(initialService?.slug === validSlug ? initialService ?? null : null);
   const [projects, setProjects] = useState<Portfolio[]>(initial?.portfolios ?? []);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (!validSlug) return;
     let active = true;
     if (initial?.serviceLanding?.slug !== validSlug) {
-      void getServiceLanding(validSlug).then((value) => { if (active && value) setService(value); }).catch(() => undefined);
+      void getServiceLanding(validSlug).then((value) => {
+        if (!active) return;
+        if (value) { setService(value); setError(''); }
+        else setError('Layanan tidak ditemukan.');
+      }).catch(() => { if (active) setError('Layanan belum dapat dimuat. Silakan coba lagi.'); });
     }
     if (!initial?.portfolios) void listPublicPortfolios().then((value) => { if (active) setProjects(value); }).catch(() => undefined);
     return () => { active = false; };
   }, [initial?.portfolios, initial?.serviceLanding, validSlug]);
 
-  const copy = lang === 'en' ? service.content_en : service.content_id;
-  const related = service.related_portfolio_ids
+  const copy = service ? (lang === 'en' ? service.content_en : service.content_id) : null;
+  const related = service ? service.related_portfolio_ids
     .map((id) => projects.find((project) => project.id === id))
-    .filter((project): project is Portfolio => Boolean(project));
-  const heroImage = service.hero_image_url || related[0]?.image_url;
-  const pathname = `/services/${validSlug ?? service.slug}/`;
-  const metaTitle = lang === 'en' ? service.seo_title_en : service.seo_title_id;
-  const metaDescription = lang === 'en' ? service.seo_description_en : service.seo_description_id;
+    .filter((project): project is Portfolio => Boolean(project)) : [];
+  const heroImage = service?.hero_image_url;
+  const pathname = `/services/${validSlug ?? service?.slug ?? ''}/`;
+  const metaTitle = service ? (lang === 'en' ? service.seo_title_en : service.seo_title_id) : '';
+  const metaDescription = service ? (lang === 'en' ? service.seo_description_en : service.seo_description_id) : '';
   const structuredData = useMemo(() => ({
     '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: lang === 'en' ? 'Home' : 'Beranda', item: localizedAbsoluteUrl('/', lang) },
       { '@type': 'ListItem', position: 2, name: lang === 'en' ? 'Services' : 'Layanan', item: localizedAbsoluteUrl('/services/', lang) },
-      { '@type': 'ListItem', position: 3, name: copy.title, item: localizedAbsoluteUrl(pathname, lang) },
+      { '@type': 'ListItem', position: 3, name: copy?.title ?? '', item: localizedAbsoluteUrl(pathname, lang) },
     ],
-  }), [copy.title, lang, pathname]);
-  usePageMeta({ title: metaTitle, description: metaDescription, pathname, image: heroImage, imageAlt: copy.title, structuredData, noIndex: !validSlug, lang });
+  }), [copy?.title, lang, pathname]);
+  usePageMeta({ title: metaTitle, description: metaDescription, pathname, image: heroImage, imageAlt: copy?.title, structuredData, noIndex: !validSlug, lang });
 
   if (!validSlug) return <Navigate to={localizedPublicPath('/services/', lang)} replace />;
+  if (!service || !copy) return <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center px-6" role="alert"><p className="text-center text-sm text-red-700">{error || 'Layanan tidak tersedia.'}</p></div>;
 
   return <article className="public-surface text-neutral-900">
     <header className="brand-surface-dark public-dark relative isolate min-h-[32rem] overflow-hidden text-white">
-      {heroImage && <img src={optimizedImageUrl(heroImage, 1800)} onError={({ currentTarget }) => restoreOriginalImage(currentTarget, heroImage)} alt="" className="absolute inset-0 -z-20 h-full w-full object-cover opacity-45" />}
+      {heroImage && <img src={optimizedImageUrl(heroImage, 1800)} alt="" className="absolute inset-0 -z-20 h-full w-full object-cover opacity-45" />}
       <div className="absolute inset-0 -z-10 bg-black/55" />
       <div className="mx-auto flex min-h-[32rem] max-w-7xl flex-col justify-end px-5 pb-16 pt-32 sm:px-8">
         <Link to="/services/" className="mb-9 inline-flex w-fit items-center gap-2 text-sm font-semibold text-white/80 hover:text-white"><ArrowLeft className="size-4" /> {copy.back_text}</Link>
@@ -71,7 +76,7 @@ export default function ServiceLandingPage() {
 
       <section className="public-divider mt-20 border-t border-neutral-200 pt-14"><p className="text-sm font-semibold uppercase text-orange-700">{copy.process_eyebrow}</p><h2 className="mt-3 text-3xl font-semibold">{copy.process_title}</h2><ol className="public-divider mt-10 grid gap-px overflow-hidden rounded-md border border-neutral-200 bg-neutral-200 sm:grid-cols-2 lg:grid-cols-4">{copy.process.map((item, index) => <li key={`${index}-${item}`} className="public-card bg-white p-6"><span className="text-sm font-semibold text-orange-700">{String(index + 1).padStart(2, '0')}</span><p className="mt-4 font-semibold leading-6">{item}</p></li>)}</ol></section>
 
-      {related.length > 0 && <section className="public-divider mt-20 border-t border-neutral-200 pt-14"><div className="flex items-end justify-between gap-6"><div><p className="text-sm font-semibold uppercase text-orange-700">{copy.portfolio_eyebrow}</p><h2 className="mt-3 text-3xl font-semibold">{copy.portfolio_title}</h2></div><Link to="/portfolio/" className="public-link hidden items-center gap-2 text-sm font-semibold text-orange-700 sm:flex">{copy.portfolio_link_text} <ArrowRight className="size-4" /></Link></div><div className="mt-9 grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">{related.map((project) => <Link key={project.id} to={`/portfolio/${project.slug}/`} className="group"><img src={optimizedImageUrl(project.image_url, 800)} onError={({ currentTarget }) => restoreOriginalImage(currentTarget, project.image_url)} alt="" className="public-media-placeholder aspect-[4/3] w-full rounded-md object-cover" /><h3 className="mt-4 text-lg font-semibold group-hover:text-orange-700">{project.title}</h3><p className="mt-1 text-sm text-neutral-500">{project.category}</p></Link>)}</div></section>}
+      {related.length > 0 && <section className="public-divider mt-20 border-t border-neutral-200 pt-14"><div className="flex items-end justify-between gap-6"><div><p className="text-sm font-semibold uppercase text-orange-700">{copy.portfolio_eyebrow}</p><h2 className="mt-3 text-3xl font-semibold">{copy.portfolio_title}</h2></div><Link to="/portfolio/" className="public-link hidden items-center gap-2 text-sm font-semibold text-orange-700 sm:flex">{copy.portfolio_link_text} <ArrowRight className="size-4" /></Link></div><div className="mt-9 grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">{related.map((project) => <Link key={project.id} to={`/portfolio/${project.slug}/`} className="group"><img src={optimizedImageUrl(project.image_url, 800)} alt="" className="public-media-placeholder aspect-[4/3] w-full rounded-md object-cover" /><h3 className="mt-4 text-lg font-semibold group-hover:text-orange-700">{project.title}</h3><p className="mt-1 text-sm text-neutral-500">{project.category}</p></Link>)}</div></section>}
 
       <section className="public-divider mt-20 border-t border-neutral-200 pt-12"><h2 className="text-2xl font-semibold">{copy.cta_title}</h2><p className="mt-3 max-w-2xl leading-7 text-neutral-700">{copy.cta_description}</p><Link to="/contact/" className="brand-button mt-7 inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold">{copy.cta_button_text} <ArrowRight className="size-4" /></Link></section>
     </div>

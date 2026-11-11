@@ -3,6 +3,17 @@ import { describe, expect, it } from 'vitest';
 import AboutSection from '@/components/AboutSection';
 import { LanguageProvider } from '@/i18n';
 
+const valueContent = {
+  eyebrow: 'Nilai kami',
+  title: 'MENGAPA MEMILIH KAMI',
+  items: [
+    { title: 'Ketekunan', description: 'Terus tekun.' },
+    { title: 'Tanggung Jawab', description: 'Bertanggung jawab.' },
+    { title: 'Pelayanan', description: 'Memberikan pelayanan.' },
+    { title: 'Integritas', description: 'Bersikap jujur.' },
+  ],
+};
+
 const clients = [
   ['Wonderful Indonesia', 'https://wonderfulindonesia.co.id/'],
   ['Pertamina', 'https://www.pertamina.com/en/'],
@@ -16,9 +27,9 @@ const clients = [
 
 describe('client logo links', () => {
   it('links every logo to its official website', () => {
-    render(<LanguageProvider><AboutSection /></LanguageProvider>);
+    render(<LanguageProvider><AboutSection valueContent={valueContent} /></LanguageProvider>);
     for (const [brand, href] of clients) {
-      const link = screen.getByRole('link', { name: `Kunjungi website ${brand}` });
+      const link = screen.getByRole('link', { name: `Visit website ${brand}` });
       expect(link).toHaveAttribute('href', href);
       expect(link).toHaveAttribute('target', '_blank');
       expect(link).toHaveAttribute('rel', 'noopener noreferrer');

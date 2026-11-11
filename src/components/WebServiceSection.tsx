@@ -2,14 +2,11 @@ import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { Play, ArrowUpRight } from 'lucide-react';
 import type { ServiceContent } from '@/types/admin';
-import { useTranslation } from '@/i18n';
 
-export default function WebServiceSection({ content }: { content?: ServiceContent | null }) {
+export default function WebServiceSection({ content }: { content: ServiceContent }) {
   const { ref, isInView, reducedMotion } = useScrollReveal();
-  const videoUrl = content?.video_mp4_url ?? '/videos/service-showreel.mp4';
-  const videoVersion = content?.updated_at ?? 'default';
-  const { lang } = useTranslation();
-  const en = lang === 'en';
+  const videoUrl = content.video_mp4_url;
+  const videoVersion = content.updated_at;
 
   return (
     <section className="relative theme-section py-24 md:py-32">
@@ -22,28 +19,28 @@ export default function WebServiceSection({ content }: { content?: ServiceConten
             transition={{ duration: reducedMotion ? 0 : 0.32 }}
             className="max-w-xl"
           >
-            <p className="text-orange-500 text-sm font-semibold tracking-[0.3em] uppercase mb-4">{content?.showreel_eyebrow ?? (en ? 'Our Services' : 'Layanan Kami')}</p>
+            <p className="text-orange-500 text-sm font-semibold tracking-[0.3em] uppercase mb-4">{content.showreel_eyebrow}</p>
             <h2 className="text-white font-bold text-4xl md:text-5xl leading-tight tracking-tight">
-              {content?.showreel_heading ?? (en ? 'Compelling Visuals,' : 'Visual Memukau,')} <span className="text-orange-500">{content?.showreel_accent ?? (en ? 'Remarkable Impact' : 'Kesan Luar Biasa')}</span>
+              {content.showreel_heading} <span className="text-orange-500">{content.showreel_accent}</span>
             </h2>
             <p className="text-white/70 mt-6 text-lg leading-relaxed">
-              {content?.showreel_description ?? (en ? 'Discover our videotron installations and content, combining vivid color, precise lighting, and reliable performance.' : 'Menampilkan hasil pemasangan dan konten videotron kami kombinasi warna tajam, pencahayaan presisi, dan performa optimal untuk hasil visual maksimal.')}
+              {content.showreel_description}
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <a
-                href={content?.primary_button_url ?? 'https://bit.ly/49NclAE'}
+                href={content.primary_button_url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-orange-500 text-black px-7 py-4 rounded-full font-semibold transition-all duration-300 hover:bg-orange-400"
               >
-                {content?.primary_button_text ?? (en ? 'Consult Now' : 'Konsultasi Sekarang')}
+                {content.primary_button_text}
                 <ArrowUpRight className="w-4 h-4" />
               </a>
               <a
-                href={content?.secondary_button_url ?? 'mailto:marcomm@visitiga.com?subject=Konsultasi%20Visitiga%20Media'}
+                href={content.secondary_button_url}
                 className="inline-flex items-center gap-2 border border-white/10 bg-white/5 text-white px-7 py-4 rounded-full font-semibold transition-all duration-300 hover:bg-white/10"
               >
-                {content?.secondary_button_text ?? 'Email Marketing'}
+                {content.secondary_button_text}
                 <Play className="w-4 h-4" />
               </a>
             </div>
@@ -62,11 +59,10 @@ export default function WebServiceSection({ content }: { content?: ServiceConten
               playsInline
               controls
               preload="none"
-              poster={content?.video_poster_url ?? '/videos/service-showreel-poster.webp'}
+              poster={content.video_poster_url}
             >
               <source src={videoUrl} type="video/mp4" />
-              {!content && <source src="/videos/service-showreel.webm" type="video/webm" />}
-              {en ? 'Your browser does not support video playback.' : 'Browser Anda tidak mendukung pemutaran video.'}
+              Your browser does not support video playback.
             </video>
           </motion.div>
         </div>
