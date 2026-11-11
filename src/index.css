@@ -142,9 +142,9 @@ body {
 .featured-work-meta small { display: block; margin-bottom: .45rem; color: var(--brand-orange); font-size: .66rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
 .featured-work-meta strong { font-size: clamp(1.25rem, 2vw, 2rem); font-weight: 600; letter-spacing: -.035em; }
 .editorial-story { padding-bottom: 0; background: #f2ece5; }
-.editorial-story-grid { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: clamp(3rem, 8vw, 8rem); }
+.editorial-story-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); align-items: center; gap: clamp(3rem, 6vw, 6rem); }
 .editorial-story-image { position: relative; }
-.editorial-story-image img { width: 100%; min-height: 34rem; object-fit: cover; border-radius: var(--editorial-radius); box-shadow: var(--editorial-shadow); }
+.editorial-story-image img { width: 100%; min-height: 0; object-fit: cover; border-radius: var(--editorial-radius); box-shadow: var(--editorial-shadow); }
 .editorial-story-image > span { position: absolute; right: -1.25rem; bottom: -1.25rem; width: 9.5rem; padding: 1.4rem; border-radius: 1rem; color: var(--brand-on-orange); background: var(--brand-orange); font-size: 2.5rem; font-weight: 650; letter-spacing: -.06em; }
 .editorial-story-image small { display: block; margin-top: .35rem; font-size: .7rem; font-weight: 650; letter-spacing: .04em; }
 .editorial-story-copy > p:not(.editorial-eyebrow) { max-width: 39rem; margin-top: 1.8rem; color: var(--editorial-muted); font-size: 1rem; line-height: 1.8; }
@@ -825,7 +825,7 @@ img, video { max-width: 100%; }
 @keyframes page-content-enter { from { transform: translateY(4px); } to { transform: translateY(0); } }
 .page-content-enter { animation: page-content-enter 200ms cubic-bezier(.22,1,.36,1); }
 .hero-editorial__glow { background: radial-gradient(ellipse at 75% 30%, rgb(249 115 22 / .08), transparent 35%), radial-gradient(ellipse at 35% 70%, rgb(254 215 170 / .04), transparent 40%); }
-.editorial-story-image img { aspect-ratio: 4 / 5; }
+.editorial-story-image img { aspect-ratio: 6 / 5; }
 .client-proof img { height: 3.2rem; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
