@@ -39,7 +39,7 @@ export default function PageMeta() {
     }
     if (path === '/') {
       return [
-        { '@context': 'https://schema.org', '@type': 'Organization', '@id': `${localizedAbsoluteUrl('/', lang)}#organization`, name: 'Visitiga Media', url: localizedAbsoluteUrl('/', lang), logo: absoluteUrl('/social-preview.png'), email: 'marcomm@visitiga.com', telephone: '+62 822 5878 8780' },
+        { '@context': 'https://schema.org', '@type': 'Organization', '@id': `${localizedAbsoluteUrl('/', lang)}#organization`, name: 'Visitiga Media', url: localizedAbsoluteUrl('/', lang), logo: absoluteUrl('/visitiga-media-logo.png'), email: 'marcomm@visitiga.com', telephone: '+62 822 5878 8780' },
         { '@context': 'https://schema.org', '@type': 'WebSite', '@id': `${localizedAbsoluteUrl('/', lang)}#website`, name: 'Visitiga Media', url: localizedAbsoluteUrl('/', lang), publisher: { '@id': `${localizedAbsoluteUrl('/', lang)}#organization` }, inLanguage: lang === 'en' ? 'en-US' : 'id-ID' },
       ];
     }

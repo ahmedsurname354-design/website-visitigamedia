@@ -39,8 +39,8 @@ export default function Footer() {
       <div className="mx-auto max-w-[1536px] px-4 sm:px-6 lg:px-8">
         <div className="site-footer__top grid gap-12 mb-14 lg:grid-cols-5">
           <div className="lg:col-span-2">
-            <div className="relative mb-6 size-20">
-              <Logo className="absolute inset-0 !size-20 !w-20" />
+            <div className="relative mb-6 h-20 w-56">
+              <Logo className="absolute inset-0 !h-auto !w-56" />
             </div>
             <p className="text-white/50 text-sm leading-relaxed max-w-sm mb-6">{copy.description}</p>
             <div className="flex gap-3">
