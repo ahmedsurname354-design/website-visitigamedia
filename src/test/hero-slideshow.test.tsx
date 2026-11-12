@@ -28,9 +28,9 @@ describe('hero slideshow', () => {
     expect(document.querySelector('.hero-editorial__eyebrow')).toBeNull();
   });
 
-  it('changes the active slide through the next control', () => {
+  it('changes the active slide through the line indicator', () => {
     renderHero();
-    const next = screen.getByRole('button', { name: 'Next slide' });
+    const next = screen.getByRole('tab', { name: 'Slide 2' });
     expect(screen.getAllByRole('tab')[0]).toHaveAttribute('aria-selected', 'true');
     fireEvent.click(next);
     expect(screen.getAllByRole('tab')[1]).toHaveAttribute('aria-selected', 'true');

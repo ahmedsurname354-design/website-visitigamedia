@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import AboutSection from '@/components/AboutSection';
 import { useTranslation } from '@/i18n';
 import { getPrerenderData } from '@/lib/prerenderData';
+import { normalizeAboutContent } from '@/lib/aboutContent';
 import type { AboutContent } from '@/types/admin';
 
 export default function AboutPage() {
@@ -21,6 +22,7 @@ export default function AboutPage() {
 
   if (error && !content) return <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center px-6" role="alert"><p className="text-center text-sm text-red-700">{error}</p></div>;
   if (!content) return <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center px-6" role="status">Memuat konten…</div>;
-  const localized = lang === 'en' ? content.content_en : content.content_id;
+  const normalized = normalizeAboutContent(content);
+  const localized = lang === 'en' ? normalized.content_en : normalized.content_id;
   return <AboutSection valueContent={localized} />;
 }

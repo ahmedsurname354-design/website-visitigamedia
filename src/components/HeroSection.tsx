@@ -1,6 +1,6 @@
 import { AnimatePresence, m as motion } from 'framer-motion';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { LocalizedLink as Link } from '@/components/LocalizedLink';
 import { useTranslation } from '@/i18n';
 import type { HomepageContent, HomepageHeroSlide } from '@/types/admin';
@@ -104,14 +104,9 @@ export default function HeroSection({ content }: { content: HomepageContent }) {
         </AnimatePresence>
 
         <div className="hero-carousel__controls" aria-label={lang === 'id' ? 'Kontrol slideshow' : 'Slideshow controls'}>
-          <div className="flex items-center gap-3">
-            <button type="button" className="hero-carousel__arrow" onClick={goPrevious} aria-label={lang === 'id' ? 'Slide sebelumnya' : 'Previous slide'}><ChevronLeft /></button>
-            <button type="button" className="hero-carousel__arrow" onClick={goNext} aria-label={lang === 'id' ? 'Slide berikutnya' : 'Next slide'}><ChevronRight /></button>
-          </div>
           <div className="hero-carousel__pagination" role="tablist" aria-label={lang === 'id' ? 'Pilih slide' : 'Choose slide'}>
             {slides.map((slide, index) => <button key={`${slide.image_url}-dot`} type="button" role="tab" aria-selected={index === activeIndex} aria-label={`${lang === 'id' ? 'Slide' : 'Slide'} ${index + 1}`} className={index === activeIndex ? 'is-active' : ''} onClick={() => goTo(index)}><span /></button>)}
           </div>
-          <p className="hero-carousel__count"><strong>0{activeIndex + 1}</strong> / 0{slides.length}</p>
         </div>
       </div>
       <div className="sr-only" aria-live="polite">{lang === 'id' ? `Slide ${activeIndex + 1} dari ${slides.length}` : `Slide ${activeIndex + 1} of ${slides.length}`}</div>

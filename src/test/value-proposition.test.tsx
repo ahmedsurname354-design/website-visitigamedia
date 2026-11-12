@@ -13,6 +13,7 @@ describe('value proposition section', () => {
         { title: 'Service', description: 'Service description' },
         { title: 'Integrity', description: 'Integrity description' },
       ],
+      process: [],
     }} />);
     expect(screen.getByRole('heading', { name: 'WHY CHOOSE US' })).toBeInTheDocument();
     expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(4);

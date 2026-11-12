@@ -12,6 +12,7 @@ const valueContent = {
     { title: 'Pelayanan', description: 'Memberikan pelayanan.' },
     { title: 'Integritas', description: 'Bersikap jujur.' },
   ],
+  process: Array.from({ length: 5 }, (_, index) => ({ title: `Proses ${index + 1}`, description: `Deskripsi proses ${index + 1}.` })),
 };
 
 describe('client logo section', () => {

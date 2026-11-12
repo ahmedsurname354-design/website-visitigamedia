@@ -20,6 +20,17 @@ describe('prerender bootstrap', () => {
     expect(getPrerenderData()).toEqual({ route: '/news', news: [] });
   });
 
+  it('reads news bootstrap data for the homepage route', () => {
+    window.history.replaceState({}, '', '/id/');
+    document.documentElement.dataset.prerendered = 'true';
+    const script = document.createElement('script');
+    script.id = 'visitiga-prerender-data';
+    script.type = 'application/json';
+    script.textContent = JSON.stringify({ route: '/id/', news: [{ id: 'latest' }] });
+    document.head.appendChild(script);
+    expect(getPrerenderData()?.news).toEqual([{ id: 'latest' }]);
+  });
+
   it('uses prerendered data after the host adds a trailing slash', () => {
     window.history.replaceState({}, '', '/portfolio/');
     document.documentElement.dataset.prerendered = 'true';

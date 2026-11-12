@@ -77,6 +77,31 @@ export default function AboutSection({ valueContent }: { valueContent: AboutLoca
         </div>
       </div>
 
+      <section className="about-process" aria-labelledby="about-process-title">
+        <div className="about-process__inner">
+          <div className="about-process__heading">
+            <p className="about-process__eyebrow">{t('about.processEyebrow')}</p>
+            <h2 id="about-process-title">{t('about.processTitle')}</h2>
+          </div>
+          <div className="about-process__grid">
+            {valueContent.process.slice(0, 5).map((item, index) => (
+              <motion.article
+                key={`${item.title}-${index}`}
+                initial={reducedMotion ? false : { opacity: 0, y: 14 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: reducedMotion ? 0 : 0.35, delay: reducedMotion ? 0 : index * 0.05 }}
+                className="about-process__card"
+              >
+                <span className="about-process__number">0{index + 1}</span>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </motion.article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <ValuePropositionSection content={valueContent} />
 
     </section>

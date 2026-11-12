@@ -29,6 +29,11 @@ function localVariantUrl(source: string, width: number): string {
 export function responsiveImageSources(source: string, quality = 75) {
   const isLocalImage = /^\/(?:portfolio|news|products)\/.+\.(?:png|jpe?g|webp)$/i.test(source);
   if (isLocalImage) {
+    // News covers currently ship with one optimized WebP file, not generated
+    // width variants. Do not advertise missing srcset candidates to the browser.
+    if (/^\/news\//i.test(source)) {
+      return { src: optimizedImageUrl(source, 960, quality), srcSet: undefined };
+    }
     return {
       src: optimizedImageUrl(source, 960, quality),
       srcSet: responsiveWidths.map((width) => `${localVariantUrl(source, width)} ${width}w`).join(', '),
