@@ -152,8 +152,10 @@ export async function deleteProduct(id: string): Promise<void> {
 function validateHomepageContent(input: HomepageContentInput) {
   if (input.content_id.stats.length > 4 || input.content_en.stats.length > 4) throw new Error('Maksimal empat statistik per bahasa.');
   if (input.content_id.services.cards.length > 4 || input.content_en.services.cards.length > 4) throw new Error('Maksimal empat kartu layanan per bahasa.');
+  if (input.hero_slides.length !== 4) throw new Error('Hero harus memiliki tepat empat slide.');
   if (input.featured_portfolio_ids.length > 3) throw new Error('Maksimal tiga proyek unggulan.');
   assertSafeMediaUrl(input.hero_image_url, 'URL gambar hero');
+  for (const [index, slide] of input.hero_slides.entries()) assertSafeMediaUrl(slide.image_url, `URL gambar slide ${index + 1}`);
   if (input.about_image_url) assertSafeMediaUrl(input.about_image_url, 'URL gambar tentang');
   for (const locale of [input.content_id, input.content_en]) {
     if (!locale.cta.emailInfo.includes('@')) throw new Error('Email CTA tidak valid.');

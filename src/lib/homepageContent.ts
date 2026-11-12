@@ -28,6 +28,12 @@ const en: HomepageLocaleContent = {
 
 export const defaultHomepageContent: HomepageContentInput = {
   hero_image_url: '/hero-1600.webp',
+  hero_slides: [
+    { image_url: '/hero-1600.webp', alt: 'Tampilan LED Visitiga di malam hari' },
+    { image_url: '/portfolio/indoor/indoor-9.webp', alt: 'Proyek LED indoor Visitiga' },
+    { image_url: '/portfolio/rental/rental-8.webp', alt: 'Proyek rental LED Visitiga' },
+    { image_url: '/portfolio/audiovisual/IMG_9584-scaled.webp', alt: 'Proyek audiovisual Visitiga' },
+  ],
   about_image_url: '',
   content_id: id,
   content_en: en,

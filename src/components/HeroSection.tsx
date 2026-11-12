@@ -1,94 +1,104 @@
 import { m as motion } from 'framer-motion';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { LocalizedLink as Link } from '@/components/LocalizedLink';
-import { ArrowRight, Play, ShieldCheck } from 'lucide-react';
 import { useTranslation } from '@/i18n';
-import type { HomepageContent } from '@/types/admin';
-import { preloadPublicRoute } from '@/lib/publicRoutes';
-
+import type { HomepageContent, HomepageHeroSlide } from '@/types/admin';
 import { useMotionPolicy } from '@/hooks/useMotionPolicy';
+
+const AUTOPLAY_MS = 6000;
+const fallbackSlides: HomepageHeroSlide[] = [
+  { image_url: '/hero-1600.webp', alt: 'Tampilan LED Visitiga di malam hari' },
+  { image_url: '/portfolio/indoor/indoor-9.webp', alt: 'Proyek LED indoor Visitiga' },
+  { image_url: '/portfolio/rental/rental-8.webp', alt: 'Proyek rental LED Visitiga' },
+  { image_url: '/portfolio/audiovisual/IMG_9584-scaled.webp', alt: 'Proyek audiovisual Visitiga' },
+];
+
+function normalizeSlides(content: HomepageContent): HomepageHeroSlide[] {
+  const configured = content.hero_slides?.filter((slide) => slide?.image_url);
+  if (configured?.length === 4) return configured;
+  return fallbackSlides.map((slide, index) => index === 0 && content.hero_image_url ? { ...slide, image_url: content.hero_image_url } : slide);
+}
 
 export default function HeroSection({ content }: { content: HomepageContent }) {
   const { lang } = useTranslation();
-  const hero = lang === 'id' ? content.content_id.hero : content.content_en.hero;
+  const hero = lang === 'id'
+    ? { eyebrow: 'ADVERTISING', title: 'PERIKLANAN', subtitle: 'Dengan berpartner bersama klien untuk menciptakan hal yang berarti, kami meningkatkan pengalaman manusia.', cta: 'HUBUNGI KAMI' }
+    : { eyebrow: 'ADVERTISING', title: 'ADVERTISING', subtitle: 'By partnering with our clients to create what matters, we improve the human experience.', cta: 'CONTACT US' };
   const { reducedMotion } = useMotionPolicy();
+  const slides = useMemo(() => normalizeSlides(content), [content]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const touchStartX = useRef<number | null>(null);
+
+  const goTo = useCallback((index: number) => setActiveIndex((index + slides.length) % slides.length), [slides.length]);
+  const goNext = useCallback(() => goTo(activeIndex + 1), [activeIndex, goTo]);
+  const goPrevious = useCallback(() => goTo(activeIndex - 1), [activeIndex, goTo]);
+
+  useEffect(() => {
+    if (paused || reducedMotion || slides.length < 2) return undefined;
+    const timer = window.setInterval(goNext, AUTOPLAY_MS);
+    return () => window.clearInterval(timer);
+  }, [goNext, paused, reducedMotion, slides.length]);
+
+  useEffect(() => setActiveIndex(0), [content]);
 
   return (
-    <section id="home" className="hero-editorial theme-keep-light brand-surface-dark relative bg-black">
-      <div className="hero-editorial__stage">
-        {/* Background image */}
-        <div className="absolute inset-0">
-          {content.hero_image_url && <img
-            src={content.hero_image_url}
-            srcSet={content.hero_image_url === '/hero-1600.webp' ? '/hero-640.webp 640w, /hero-960.webp 960w, /hero-1600.webp 1600w' : undefined}
-            sizes="100vw"
-            alt="Tampilan LED di kota pada malam hari"
-            width={1600}
-            height={900}
-            fetchPriority="high"
-            decoding="async"
-            className="w-full h-full object-cover object-[68%_center] sm:object-center"
-          />}
+    <section
+      id="home"
+      className="hero-editorial hero-carousel theme-keep-light brand-surface-dark relative"
+      aria-roledescription="carousel"
+      aria-label={lang === 'id' ? 'Presentasi utama Visitiga' : 'Visitiga featured presentation'}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false); }}
+      onTouchStart={(event) => { touchStartX.current = event.changedTouches[0]?.clientX ?? null; }}
+      onTouchEnd={(event) => {
+        const start = touchStartX.current;
+        const end = event.changedTouches[0]?.clientX;
+        touchStartX.current = null;
+        if (start === null || end === undefined || Math.abs(end - start) < 45) return;
+        if (end < start) goNext(); else goPrevious();
+      }}
+      onKeyDown={(event) => {
+        if (event.key === 'ArrowRight') { event.preventDefault(); goNext(); }
+        if (event.key === 'ArrowLeft') { event.preventDefault(); goPrevious(); }
+      }}
+    >
+      <div className="hero-carousel__slides">
+        {slides.map((slide, index) => {
+          const isActive = index === activeIndex;
+          return <motion.div key={`${slide.image_url}-${index}`} className="hero-carousel__slide absolute inset-0" initial={false} animate={{ opacity: isActive ? 1 : 0, scale: isActive ? 1 : 1.025 }} transition={{ duration: reducedMotion ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }} aria-hidden={!isActive}>
+            <img src={slide.image_url} alt={slide.alt ?? ''} width="1600" height="900" fetchPriority={index === 0 ? 'high' : 'auto'} decoding="async" />
+          </motion.div>;
+        })}
+      </div>
+      <div className="hero-editorial__scrim absolute inset-0" />
+      <div aria-hidden="true" className="hero-editorial__glow absolute inset-0 pointer-events-none" />
+
+      <div className="relative z-10 mx-auto flex min-h-[min(760px,calc(100vh-5rem))] w-full max-w-[1440px] flex-col justify-between px-5 pb-8 pt-32 sm:px-8 sm:pb-12 lg:px-12 lg:pb-16">
+        <div className="max-w-3xl">
+          <motion.p initial={reducedMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="hero-editorial__eyebrow"><span />{hero.eyebrow}</motion.p>
+          <h1 className="hero-carousel__title">{hero.title}</h1>
+          <motion.p initial={reducedMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reducedMotion ? 0 : 0.08 }} className="mt-7 max-w-xl text-base leading-relaxed text-white/75 sm:mt-9 sm:text-lg">{hero.subtitle}</motion.p>
+          <motion.div initial={reducedMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reducedMotion ? 0 : 0.14 }} className="mt-8">
+            <Link to="/contact" className="editorial-button editorial-button--primary">{hero.cta}<ArrowRight className="h-4 w-4" /></Link>
+          </motion.div>
         </div>
-        <div className="hero-editorial__scrim absolute inset-0" />
 
-        <div aria-hidden="true" className="hero-editorial__glow absolute inset-0 pointer-events-none" />
-
-        <div className="relative z-10 mx-auto w-full max-w-[1440px] px-5 pb-12 pt-32 sm:px-8 sm:pb-16 lg:px-12 lg:pb-20">
-          <div className="max-w-4xl">
-            <div>
-              <motion.p initial={reducedMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="hero-editorial__eyebrow"><span /> VISUAL TECHNOLOGY · INDONESIA</motion.p>
-              <h1
-                className="hero-editorial__title text-white font-semibold text-[clamp(2.75rem,7vw,5.5rem)] leading-[.94] tracking-[-0.06em]"
-              >
-                {hero.titleLine1} <span className="hero-editorial__accent text-orange-500">{hero.titleLine2}</span> <br />
-                {hero.titleLine3}
-              </h1>
-            </div>
-
-            <div>
-              <motion.p
-                initial={reducedMotion ? false : { opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.06 }}
-                className="text-white/70 text-base sm:text-lg mt-6 sm:mt-8 max-w-2xl leading-relaxed"
-              >
-                {hero.subtitle}
-              </motion.p>
-
-              <motion.div
-                initial={reducedMotion ? false : { opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.12 }}
-                className="flex flex-col items-stretch gap-3 mt-8 min-[420px]:flex-row min-[420px]:items-center sm:mt-10"
-              >
-                <Link
-                  to="/services"
-                  onPointerEnter={() => void preloadPublicRoute('/services')}
-                  onFocus={() => void preloadPublicRoute('/services')}
-                  onTouchStart={() => void preloadPublicRoute('/services')}
-                  className="editorial-button editorial-button--primary"
-                >
-                  {hero.viewServices}
-                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
-                <Link
-                  to="/portfolio"
-                  onPointerEnter={() => void preloadPublicRoute('/portfolio')}
-                  onFocus={() => void preloadPublicRoute('/portfolio')}
-                  onTouchStart={() => void preloadPublicRoute('/portfolio')}
-                  className="editorial-button editorial-button--ghost"
-                >
-                  <span className="w-12 h-12 rounded-full border border-white/30 group-hover:border-orange-500 flex items-center justify-center transition-colors duration-300">
-                    <Play className="w-4 h-4 fill-current" />
-                  </span>
-                  {hero.viewPortfolio}
-                </Link>
-              </motion.div>
-              <motion.div initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.18 }} className="hero-editorial__trust"><ShieldCheck /><span>{hero.trustNotice}</span></motion.div>
-            </div>
+        <div className="hero-carousel__controls" aria-label={lang === 'id' ? 'Kontrol slideshow' : 'Slideshow controls'}>
+          <div className="flex items-center gap-3">
+            <button type="button" className="hero-carousel__arrow" onClick={goPrevious} aria-label={lang === 'id' ? 'Slide sebelumnya' : 'Previous slide'}><ChevronLeft /></button>
+            <button type="button" className="hero-carousel__arrow" onClick={goNext} aria-label={lang === 'id' ? 'Slide berikutnya' : 'Next slide'}><ChevronRight /></button>
           </div>
+          <div className="hero-carousel__pagination" role="tablist" aria-label={lang === 'id' ? 'Pilih slide' : 'Choose slide'}>
+            {slides.map((slide, index) => <button key={`${slide.image_url}-dot`} type="button" role="tab" aria-selected={index === activeIndex} aria-label={`${lang === 'id' ? 'Slide' : 'Slide'} ${index + 1}`} className={index === activeIndex ? 'is-active' : ''} onClick={() => goTo(index)}><span /></button>)}
+          </div>
+          <p className="hero-carousel__count"><strong>0{activeIndex + 1}</strong> / 0{slides.length}</p>
         </div>
       </div>
+      <div className="sr-only" aria-live="polite">{lang === 'id' ? `Slide ${activeIndex + 1} dari ${slides.length}` : `Slide ${activeIndex + 1} of ${slides.length}`}</div>
     </section>
   );
 }

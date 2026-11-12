@@ -32,8 +32,13 @@ export default function HomepageManagerPage() {
     try {
       setMessage('Menerjemahkan ke Bahasa Indonesia…');
       const englishContent = readLocale(form, 'en');
+      const heroSlides = Array.from({ length: 4 }, (_, index) => ({
+        image_url: String(form.get(`hero_slide_${index}`) ?? '').trim(),
+        alt: index === 0 ? 'Tampilan LED Visitiga di malam hari' : `Proyek visual Visitiga ${index + 1}`,
+      }));
       const next: HomepageContentInput = {
-        hero_image_url: String(form.get('hero_image_url') ?? '').trim(),
+        hero_image_url: heroSlides[0].image_url,
+        hero_slides: heroSlides,
         about_image_url: String(form.get('about_image_url') ?? '').trim(),
         content_id: await translateContent(englishContent), content_en: englishContent, featured_portfolio_ids: selectedProjects,
       };
@@ -46,7 +51,10 @@ export default function HomepageManagerPage() {
   if (loading) return <div className="py-20 text-center text-sm text-slate-500"><LoaderCircle className="mr-2 inline h-5 w-5 animate-spin" />Memuat konten beranda...</div>;
   return <div className="mx-auto max-w-7xl"><AdminPageHeader title="Beranda" description="Kelola seluruh teks, media, statistik, layanan unggulan, proyek, dan CTA homepage." />{error && <AdminAlert>{error}</AdminAlert>}{message && <p role="status" className="mb-5 rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{message}</p>}
     <form onSubmit={(event) => { event.preventDefault(); void submit(new FormData(event.currentTarget)); }} className="space-y-7">
-      <Section title="Media beranda"><div className="grid gap-5 lg:grid-cols-2"><ImageUploadField name="hero_image_url" label="Gambar Hero" initial={content.hero_image_url} folder="homepage" /><ImageUploadField name="about_image_url" label="Gambar bagian Tentang" initial={content.about_image_url} folder="homepage" allowClear /></div></Section>
+      <Section title="Media beranda"><div className="grid gap-5 lg:grid-cols-2">
+        {Array.from({ length: 4 }, (_, index) => <ImageUploadField key={index} name={`hero_slide_${index}`} label={`Gambar Hero ${index + 1}`} initial={content.hero_slides?.[index]?.image_url ?? content.hero_image_url} folder="homepage" />)}
+        <ImageUploadField name="about_image_url" label="Gambar bagian Tentang" initial={content.about_image_url} folder="homepage" allowClear />
+      </div><p className="mt-3 text-xs text-slate-500">Empat gambar hero tampil berurutan dalam slideshow. Gambar Hero 1 juga menjadi fallback untuk data lama.</p></Section>
       <LocalePanel locale="en" content={content.content_en} />
       <TranslationPreview content={content.content_id} />
       <Section title="Proyek unggulan beranda"><p className="mb-4 text-sm text-slate-500">Pilih maksimal tiga proyek dari Portofolio. Urutan pilihan menjadi urutan tampil.</p><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{portfolios.map((item) => <label key={item.id} className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 ${selectedProjects.includes(item.id) ? 'border-orange-500 bg-orange-50' : 'border-slate-200'}`}><input type="checkbox" checked={selectedProjects.includes(item.id)} onChange={() => toggleProject(item.id)} /><img src={item.image_url} alt="" className="size-12 rounded object-cover" /><span className="min-w-0"><strong className="block truncate text-sm">{item.title}</strong><small className="block truncate text-xs text-slate-500">{item.category}</small></span></label>)}</div></Section>
