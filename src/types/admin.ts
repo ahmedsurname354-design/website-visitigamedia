@@ -71,7 +71,8 @@ export type ProductInput = Pick<Product, 'name' | 'image_url' | 'category' | 'de
 
 export interface HomepageStat { value: string; label: string; }
 export interface HomepageServiceCard { title: string; description: string; tags: string[]; action: string; }
-export interface HomepageHeroSlide { image_url: string; alt?: string; }
+export interface HomepageHeroCopy { title: string; subtitle: string; ctaLabel: string; }
+export interface HomepageHeroSlide { image_url: string; alt?: string; content_en?: HomepageHeroCopy; content_id?: HomepageHeroCopy; }
 export interface HomepageLocaleContent {
   hero: { title: string; subtitle: string; ctaLabel: string };
   stats: HomepageStat[];

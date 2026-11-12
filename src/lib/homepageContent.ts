@@ -28,10 +28,10 @@ const en: HomepageLocaleContent = {
 
 export const defaultHomepageContent: HomepageContentInput = {
   hero_slides: [
-    { image_url: '/hero-1600.webp', alt: 'Tampilan LED Visitiga di malam hari' },
-    { image_url: '/portfolio/indoor/indoor-9.webp', alt: 'Proyek LED indoor Visitiga' },
-    { image_url: '/portfolio/rental/rental-8.webp', alt: 'Proyek rental LED Visitiga' },
-    { image_url: '/portfolio/audiovisual/IMG_9584-scaled.webp', alt: 'Proyek audiovisual Visitiga' },
+    { image_url: '/hero-1600.webp', alt: 'Tampilan LED Visitiga di malam hari', content_en: { title: 'ADVERTISING', subtitle: 'By partnering with our clients to create what matters, we improve the human experience.', ctaLabel: 'CONTACT US' }, content_id: { title: 'PERIKLANAN', subtitle: 'Dengan berpartner bersama klien untuk menciptakan hal yang berarti, kami meningkatkan pengalaman manusia.', ctaLabel: 'HUBUNGI KAMI' } },
+    { image_url: '/portfolio/indoor/indoor-9.webp', alt: 'Proyek LED indoor Visitiga', content_en: { title: 'OUTDOOR LED', subtitle: 'Make your brand visible day and night with powerful visual communication.', ctaLabel: 'EXPLORE OUTDOOR' }, content_id: { title: 'LED OUTDOOR', subtitle: 'Buat brand Anda terlihat siang dan malam melalui komunikasi visual yang kuat.', ctaLabel: 'LIHAT OUTDOOR' } },
+    { image_url: '/portfolio/rental/rental-8.webp', alt: 'Proyek rental LED Visitiga', content_en: { title: 'INDOOR EXPERIENCE', subtitle: 'Create sharper, more memorable spaces with premium indoor display solutions.', ctaLabel: 'SEE INDOOR SOLUTIONS' }, content_id: { title: 'PENGALAMAN INDOOR', subtitle: 'Ciptakan ruang yang lebih tajam dan berkesan dengan solusi display indoor premium.', ctaLabel: 'LIHAT SOLUSI INDOOR' } },
+    { image_url: '/portfolio/audiovisual/IMG_9584-scaled.webp', alt: 'Proyek audiovisual Visitiga', content_en: { title: 'EVENT IMPACT', subtitle: 'Bring every event to life with reliable rental LED and audiovisual production.', ctaLabel: 'PLAN YOUR EVENT' }, content_id: { title: 'DAMPAK EVENT', subtitle: 'Hidupkan setiap acara dengan rental LED dan produksi audiovisual yang andal.', ctaLabel: 'RENCANAKAN EVENT' } },
   ],
   about_image_url: '',
   content_id: id,

@@ -9,11 +9,11 @@ function renderHero() {
   const content = {
     id: 1,
     ...defaultHomepageContent,
+    hero_slides: defaultHomepageContent.hero_slides.map((slide, index) => index === 0 ? {
+      ...slide,
+      content_en: { title: 'Custom campaign', subtitle: 'Editable hero description', ctaLabel: 'Start a project' },
+    } : slide),
     updated_at: '',
-    content_en: {
-      ...defaultHomepageContent.content_en,
-      hero: { title: 'Custom campaign', subtitle: 'Editable hero description', ctaLabel: 'Start a project' },
-    },
   };
   return render(<LanguageProvider><MemoryRouter><HeroSection content={content} /></MemoryRouter></LanguageProvider>);
 }
@@ -34,5 +34,6 @@ describe('hero slideshow', () => {
     expect(screen.getAllByRole('tab')[0]).toHaveAttribute('aria-selected', 'true');
     fireEvent.click(next);
     expect(screen.getAllByRole('tab')[1]).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('heading', { name: 'OUTDOOR LED' })).toBeInTheDocument();
   });
 });

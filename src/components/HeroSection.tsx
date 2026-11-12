@@ -1,4 +1,4 @@
-import { m as motion } from 'framer-motion';
+import { AnimatePresence, m as motion } from 'framer-motion';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { LocalizedLink as Link } from '@/components/LocalizedLink';
@@ -20,12 +20,27 @@ function normalizeSlides(content: HomepageContent): HomepageHeroSlide[] {
   return fallbackSlides;
 }
 
+function AnimatedLetters({ text, reducedMotion, delay = 0 }: { text: string; reducedMotion: boolean; delay?: number }) {
+  return <><span className="sr-only">{text}</span><span aria-hidden="true">{Array.from(text).map((character, index) => <motion.span key={`${character}-${index}`} className="hero-carousel__letter" initial={reducedMotion ? false : { opacity: 0, y: 18, rotateX: -70 }} animate={{ opacity: 1, y: 0, rotateX: 0 }} transition={{ duration: reducedMotion ? 0 : .42, delay: reducedMotion ? 0 : delay + index * .018, ease: [0.22, 1, 0.36, 1] }}>{character === ' ' ? '\u00a0' : character}</motion.span>)}</span></>;
+}
+
+const fallbackCopies = {
+  en: [
+    { title: 'ADVERTISING', subtitle: 'By partnering with our clients to create what matters, we improve the human experience.', ctaLabel: 'CONTACT US' },
+    { title: 'OUTDOOR LED', subtitle: 'Make your brand visible day and night with powerful visual communication.', ctaLabel: 'EXPLORE OUTDOOR' },
+    { title: 'INDOOR EXPERIENCE', subtitle: 'Create sharper, more memorable spaces with premium indoor display solutions.', ctaLabel: 'SEE INDOOR SOLUTIONS' },
+    { title: 'EVENT IMPACT', subtitle: 'Bring every event to life with reliable rental LED and audiovisual production.', ctaLabel: 'PLAN YOUR EVENT' },
+  ],
+  id: [
+    { title: 'PERIKLANAN', subtitle: 'Dengan berpartner bersama klien untuk menciptakan hal yang berarti, kami meningkatkan pengalaman manusia.', ctaLabel: 'HUBUNGI KAMI' },
+    { title: 'LED OUTDOOR', subtitle: 'Buat brand Anda terlihat siang dan malam melalui komunikasi visual yang kuat.', ctaLabel: 'LIHAT OUTDOOR' },
+    { title: 'PENGALAMAN INDOOR', subtitle: 'Ciptakan ruang yang lebih tajam dan berkesan dengan solusi display indoor premium.', ctaLabel: 'LIHAT SOLUSI INDOOR' },
+    { title: 'DAMPAK EVENT', subtitle: 'Hidupkan setiap acara dengan rental LED dan produksi audiovisual yang andal.', ctaLabel: 'RENCANAKAN EVENT' },
+  ],
+};
+
 export default function HeroSection({ content }: { content: HomepageContent }) {
   const { lang } = useTranslation();
-  const sourceHero = lang === 'id' ? content.content_id.hero : content.content_en.hero;
-  const hero = lang === 'id'
-    ? { title: sourceHero.title || 'PERIKLANAN', subtitle: sourceHero.subtitle || 'Dengan berpartner bersama klien untuk menciptakan hal yang berarti, kami meningkatkan pengalaman manusia.', ctaLabel: sourceHero.ctaLabel || 'HUBUNGI KAMI' }
-    : { title: sourceHero.title || 'ADVERTISING', subtitle: sourceHero.subtitle || 'By partnering with our clients to create what matters, we improve the human experience.', ctaLabel: sourceHero.ctaLabel || 'CONTACT US' };
   const { reducedMotion } = useMotionPolicy();
   const slides = useMemo(() => normalizeSlides(content), [content]);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -35,6 +50,9 @@ export default function HeroSection({ content }: { content: HomepageContent }) {
   const goTo = useCallback((index: number) => setActiveIndex((index + slides.length) % slides.length), [slides.length]);
   const goNext = useCallback(() => goTo(activeIndex + 1), [activeIndex, goTo]);
   const goPrevious = useCallback(() => goTo(activeIndex - 1), [activeIndex, goTo]);
+  const activeSlide = slides[activeIndex] ?? slides[0];
+  const activeCopy = lang === 'id' ? activeSlide?.content_id : activeSlide?.content_en;
+  const slideCopy = activeCopy ?? fallbackCopies[lang][activeIndex] ?? fallbackCopies[lang][0];
 
   useEffect(() => {
     if (paused || reducedMotion || slides.length < 2) return undefined;
@@ -79,13 +97,15 @@ export default function HeroSection({ content }: { content: HomepageContent }) {
       <div aria-hidden="true" className="hero-editorial__glow absolute inset-0 pointer-events-none" />
 
       <div className="relative z-10 mx-auto flex min-h-[min(760px,calc(100vh-5rem))] w-full max-w-[1440px] flex-col justify-between px-5 pb-8 pt-32 sm:px-8 sm:pb-12 lg:px-12 lg:pb-16">
-        <div className="max-w-3xl">
-          <h1 className="hero-carousel__title">{hero.title}</h1>
-          <motion.p initial={reducedMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reducedMotion ? 0 : 0.08 }} className="mt-7 max-w-xl text-base leading-relaxed text-white/75 sm:mt-9 sm:text-lg">{hero.subtitle}</motion.p>
-          <motion.div initial={reducedMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reducedMotion ? 0 : 0.14 }} className="mt-8">
-            <Link to="/contact" className="editorial-button editorial-button--primary">{hero.ctaLabel}<ArrowRight className="h-4 w-4" /></Link>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div key={`${activeIndex}-${slideCopy.title}`} className="max-w-3xl" initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={reducedMotion ? undefined : { opacity: 0 }} transition={{ duration: reducedMotion ? 0 : .24 }}>
+            <h1 className="hero-carousel__title"><AnimatedLetters text={slideCopy.title} reducedMotion={reducedMotion} /></h1>
+            <motion.p initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: reducedMotion ? 0 : .12 }} className="mt-7 max-w-xl text-base leading-relaxed text-white/75 sm:mt-9 sm:text-lg"><AnimatedLetters text={slideCopy.subtitle} reducedMotion={reducedMotion} delay={.14} /></motion.p>
+            <motion.div initial={reducedMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reducedMotion ? 0 : .32 }} className="mt-8">
+              <Link to="/contact" className="editorial-button editorial-button--primary">{slideCopy.ctaLabel}<ArrowRight className="h-4 w-4" /></Link>
+            </motion.div>
           </motion.div>
-        </div>
+        </AnimatePresence>
 
         <div className="hero-carousel__controls" aria-label={lang === 'id' ? 'Kontrol slideshow' : 'Slideshow controls'}>
           <div className="flex items-center gap-3">
