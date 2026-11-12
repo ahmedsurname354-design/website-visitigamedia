@@ -1,7 +1,7 @@
 import type { HomepageContentInput, HomepageLocaleContent } from '@/types/admin';
 
 const id: HomepageLocaleContent = {
-  hero: { eyebrow: 'VISUAL TECHNOLOGY · INDONESIA', trustNotice: 'Dipercaya lebih dari 500 bisnis di Indonesia', titleLine1: 'Wujudkan', titleLine2: 'Merek Anda', titleLine3: 'Lebih Bersinar dengan LED Premium', subtitle: 'Solusi layar LED profesional untuk bisnis Anda. Kami menyediakan, memasang, dan merawat layar LED berkualitas tinggi yang membuat merek Anda tampil menonjol, siang dan malam.', viewServices: 'Lihat Layanan', viewPortfolio: 'Lihat Portofolio' },
+  hero: { title: 'PERIKLANAN', subtitle: 'Dengan berpartner bersama klien untuk menciptakan hal yang berarti, kami meningkatkan pengalaman manusia.', ctaLabel: 'HUBUNGI KAMI' },
   stats: [{ value: '500+', label: 'Proyek Diselesaikan' }, { value: '12', label: 'Tahun Pengalaman' }, { value: '98%', label: 'Kepuasan Klien' }, { value: '24/7', label: 'Layanan Dukungan' }],
   services: { sectionLabel: 'Layanan Kami', heading: 'Solusi visual untuk setiap ruang.', linkLabel: 'Lihat semua layanan', cards: [
     { title: 'LED Videotron Outdoor', description: 'Display LED berkualitas tinggi untuk jalan raya, gedung, dan area publik. Visibilitas maksimal siang dan malam dengan kecerahan tinggi serta tahan cuaca ekstrem.', tags: ['P6 / P8 / P10', 'Tahan Air', 'Kecerahan Tinggi', 'Kendali Jarak Jauh'], action: 'Konsultasi Outdoor' },
@@ -14,7 +14,7 @@ const id: HomepageLocaleContent = {
 };
 
 const en: HomepageLocaleContent = {
-  hero: { eyebrow: 'VISUAL TECHNOLOGY · INDONESIA', trustNotice: 'Trusted by over 500 businesses in Indonesia', titleLine1: 'Bring Your', titleLine2: 'Brand', titleLine3: 'to Shine with Premium LED', subtitle: 'Professional LED display solutions for your business. We provide, install, and maintain high-quality LED screens that make your brand stand out, day and night.', viewServices: 'View Services', viewPortfolio: 'View Portfolio' },
+  hero: { title: 'ADVERTISING', subtitle: 'By partnering with our clients to create what matters, we improve the human experience.', ctaLabel: 'CONTACT US' },
   stats: [{ value: '500+', label: 'Projects Completed' }, { value: '12', label: 'Years Experience' }, { value: '98%', label: 'Client Satisfaction' }, { value: '24/7', label: 'Support Service' }],
   services: { sectionLabel: 'Our Services', heading: 'Visual solutions for every space.', linkLabel: 'Explore all services', cards: [
     { title: 'Outdoor LED Videotron', description: 'High-quality LED displays for roads, buildings, and public areas. Maximum visibility day and night with high brightness and extreme weather resistance.', tags: ['P6 / P8 / P10', 'Water Resistant', 'High Brightness', 'Remote Control'], action: 'Outdoor Consultation' },
@@ -27,7 +27,6 @@ const en: HomepageLocaleContent = {
 };
 
 export const defaultHomepageContent: HomepageContentInput = {
-  hero_image_url: '/hero-1600.webp',
   hero_slides: [
     { image_url: '/hero-1600.webp', alt: 'Tampilan LED Visitiga di malam hari' },
     { image_url: '/portfolio/indoor/indoor-9.webp', alt: 'Proyek LED indoor Visitiga' },

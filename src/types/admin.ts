@@ -73,7 +73,7 @@ export interface HomepageStat { value: string; label: string; }
 export interface HomepageServiceCard { title: string; description: string; tags: string[]; action: string; }
 export interface HomepageHeroSlide { image_url: string; alt?: string; }
 export interface HomepageLocaleContent {
-  hero: { eyebrow: string; trustNotice: string; titleLine1: string; titleLine2: string; titleLine3: string; subtitle: string; viewServices: string; viewPortfolio: string };
+  hero: { title: string; subtitle: string; ctaLabel: string };
   stats: HomepageStat[];
   services: { sectionLabel: string; heading: string; linkLabel: string; cards: HomepageServiceCard[] };
   about: { sectionLabel: string; heading: string; subtitle: string; features: string[]; buttonLabel: string; clientProofLabel: string };
@@ -82,7 +82,6 @@ export interface HomepageLocaleContent {
 
 export interface HomepageContent {
   id: number;
-  hero_image_url: string;
   hero_slides: HomepageHeroSlide[];
   about_image_url: string;
   content_id: HomepageLocaleContent;

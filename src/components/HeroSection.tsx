@@ -17,14 +17,15 @@ const fallbackSlides: HomepageHeroSlide[] = [
 function normalizeSlides(content: HomepageContent): HomepageHeroSlide[] {
   const configured = content.hero_slides?.filter((slide) => slide?.image_url);
   if (configured?.length === 4) return configured;
-  return fallbackSlides.map((slide, index) => index === 0 && content.hero_image_url ? { ...slide, image_url: content.hero_image_url } : slide);
+  return fallbackSlides;
 }
 
 export default function HeroSection({ content }: { content: HomepageContent }) {
   const { lang } = useTranslation();
+  const sourceHero = lang === 'id' ? content.content_id.hero : content.content_en.hero;
   const hero = lang === 'id'
-    ? { eyebrow: 'ADVERTISING', title: 'PERIKLANAN', subtitle: 'Dengan berpartner bersama klien untuk menciptakan hal yang berarti, kami meningkatkan pengalaman manusia.', cta: 'HUBUNGI KAMI' }
-    : { eyebrow: 'ADVERTISING', title: 'ADVERTISING', subtitle: 'By partnering with our clients to create what matters, we improve the human experience.', cta: 'CONTACT US' };
+    ? { title: sourceHero.title || 'PERIKLANAN', subtitle: sourceHero.subtitle || 'Dengan berpartner bersama klien untuk menciptakan hal yang berarti, kami meningkatkan pengalaman manusia.', ctaLabel: sourceHero.ctaLabel || 'HUBUNGI KAMI' }
+    : { title: sourceHero.title || 'ADVERTISING', subtitle: sourceHero.subtitle || 'By partnering with our clients to create what matters, we improve the human experience.', ctaLabel: sourceHero.ctaLabel || 'CONTACT US' };
   const { reducedMotion } = useMotionPolicy();
   const slides = useMemo(() => normalizeSlides(content), [content]);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -79,11 +80,10 @@ export default function HeroSection({ content }: { content: HomepageContent }) {
 
       <div className="relative z-10 mx-auto flex min-h-[min(760px,calc(100vh-5rem))] w-full max-w-[1440px] flex-col justify-between px-5 pb-8 pt-32 sm:px-8 sm:pb-12 lg:px-12 lg:pb-16">
         <div className="max-w-3xl">
-          <motion.p initial={reducedMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="hero-editorial__eyebrow"><span />{hero.eyebrow}</motion.p>
           <h1 className="hero-carousel__title">{hero.title}</h1>
           <motion.p initial={reducedMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reducedMotion ? 0 : 0.08 }} className="mt-7 max-w-xl text-base leading-relaxed text-white/75 sm:mt-9 sm:text-lg">{hero.subtitle}</motion.p>
           <motion.div initial={reducedMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reducedMotion ? 0 : 0.14 }} className="mt-8">
-            <Link to="/contact" className="editorial-button editorial-button--primary">{hero.cta}<ArrowRight className="h-4 w-4" /></Link>
+            <Link to="/contact" className="editorial-button editorial-button--primary">{hero.ctaLabel}<ArrowRight className="h-4 w-4" /></Link>
           </motion.div>
         </div>
 
