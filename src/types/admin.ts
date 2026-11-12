@@ -77,7 +77,7 @@ export interface HomepageLocaleContent {
   hero: { title: string; subtitle: string; ctaLabel: string };
   stats: HomepageStat[];
   services: { sectionLabel: string; heading: string; linkLabel: string; cards: HomepageServiceCard[] };
-  about: { sectionLabel: string; heading: string; subtitle: string; features: string[]; buttonLabel: string; clientProofLabel: string };
+  about: { sectionLabel: string; heading: string; subtitle: string; features: string[]; buttonLabel: string };
   cta: { title: string; subtitle: string; callNow: string; emailUs: string; phoneInfo: string; emailInfo: string; locationInfo: string };
 }
 

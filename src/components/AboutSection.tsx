@@ -2,15 +2,6 @@ import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { Check, ArrowRight } from 'lucide-react';
 import { useTranslation } from '@/i18n';
-import wonderfulIndonesia from '@/assets/clients/wonderful-indonesia.webp';
-// These legacy filenames do not match the artwork; map by the actual logo.
-import pertamina from '@/assets/clients/viata-vira-jati.webp';
-import dynamix from '@/assets/clients/motogp.webp';
-import motogp from '@/assets/clients/dynamix.webp';
-import emc from '@/assets/clients/emc.webp';
-import mandalika from '@/assets/clients/mandalika.webp';
-import iims from '@/assets/clients/iims.webp';
-import wonderfulIndonesiaRed from '@/assets/clients/wonderful-indonesia-red.webp';
 import ValuePropositionSection from '@/components/ValuePropositionSection';
 import type { AboutLocaleContent } from '@/types/admin';
 
@@ -21,16 +12,6 @@ const features = [
   'Dukungan purnajual',
 ];
 
-const clientLogos = [
-  { src: wonderfulIndonesia, alt: 'Wonderful Indonesia', href: 'https://wonderfulindonesia.co.id/' },
-  { src: pertamina, alt: 'Pertamina', href: 'https://www.pertamina.com/en/' },
-  { src: dynamix, alt: 'Dynamix', href: 'https://dynamixgroup.com/' },
-  { src: motogp, alt: 'MotoGP', href: 'https://www.motogp.com/en' },
-  { src: emc, alt: 'EMC Healthcare', href: 'https://www.emc.id/id' },
-  { src: mandalika, alt: 'Mandalika International Street Circuit', href: 'https://www.themandalikagp.com/' },
-  { src: iims, alt: 'Indonesia International Motor Show', href: 'https://indonesianmotorshow.com/' },
-  { src: wonderfulIndonesiaRed, alt: 'Sarinah', href: 'https://www.sarinah.co.id/' },
-];
 
 export default function AboutSection({ valueContent }: { valueContent: AboutLocaleContent }) {
   const { ref, isInView, reducedMotion } = useScrollReveal();
@@ -98,22 +79,6 @@ export default function AboutSection({ valueContent }: { valueContent: AboutLoca
 
       <ValuePropositionSection content={valueContent} />
 
-      <section className="client-wall" aria-labelledby="client-wall-title">
-        <div className="client-wall__heading">
-          <h2 id="client-wall-title">{t('about.clientsTitle')}</h2>
-        </div>
-        <div className="client-wall__gallery">
-          <ul className="client-wall__logos-grid" aria-label="Daftar klien">
-            {clientLogos.map((client) => (
-              <li key={client.src} className="client-logo-slot">
-                <a href={client.href} target="_blank" rel="noopener noreferrer" aria-label={`${t('about.clientLinkAria')} ${client.alt}`}>
-                  <img src={client.src} alt={client.alt} decoding="async" />
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
     </section>
   );
 }

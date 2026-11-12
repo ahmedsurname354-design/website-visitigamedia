@@ -14,25 +14,11 @@ const valueContent = {
   ],
 };
 
-const clients = [
-  ['Wonderful Indonesia', 'https://wonderfulindonesia.co.id/'],
-  ['Pertamina', 'https://www.pertamina.com/en/'],
-  ['Dynamix', 'https://dynamixgroup.com/'],
-  ['MotoGP', 'https://www.motogp.com/en'],
-  ['EMC Healthcare', 'https://www.emc.id/id'],
-  ['Mandalika International Street Circuit', 'https://www.themandalikagp.com/'],
-  ['Indonesia International Motor Show', 'https://indonesianmotorshow.com/'],
-  ['Sarinah', 'https://www.sarinah.co.id/'],
-] as const;
-
-describe('client logo links', () => {
-  it('links every logo to its official website', () => {
+describe('client logo section', () => {
+  it('does not render the removed client logo wall', () => {
     render(<LanguageProvider><AboutSection valueContent={valueContent} /></LanguageProvider>);
-    for (const [brand, href] of clients) {
-      const link = screen.getByRole('link', { name: `Visit website ${brand}` });
-      expect(link).toHaveAttribute('href', href);
-      expect(link).toHaveAttribute('target', '_blank');
-      expect(link).toHaveAttribute('rel', 'noopener noreferrer');
-    }
+    expect(screen.queryByText('Our Clients')).not.toBeInTheDocument();
+    expect(screen.queryByText('Klien Kami')).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /Visit website|Kunjungi website/i })).not.toBeInTheDocument();
   });
 });

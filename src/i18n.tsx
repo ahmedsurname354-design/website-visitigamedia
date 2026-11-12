@@ -42,9 +42,7 @@ const translations = {
         'Dukungan purnajual',
       ],
       contactButton: 'Hubungi Kami',
-      clientsTitle: 'Klien Kami',
       teamImageAlt: 'Tim kami sedang bekerja',
-      clientLinkAria: 'Kunjungi website',
       valuesEyebrow: 'Nilai kami',
       valuesTitle: 'MENGAPA MEMILIH KAMI',
       values: [
@@ -233,9 +231,7 @@ const translations = {
         'Post-sale support',
       ],
       contactButton: 'Contact Us',
-      clientsTitle: 'Our Clients',
       teamImageAlt: 'Our team at work',
-      clientLinkAria: 'Visit website',
       valuesEyebrow: 'Our values',
       valuesTitle: 'WHY CHOOSE US',
       values: [
