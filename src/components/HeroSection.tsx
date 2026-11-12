@@ -20,10 +20,6 @@ function normalizeSlides(content: HomepageContent): HomepageHeroSlide[] {
   return fallbackSlides;
 }
 
-function AnimatedLetters({ text, reducedMotion, delay = 0 }: { text: string; reducedMotion: boolean; delay?: number }) {
-  return <><span className="sr-only">{text}</span><span aria-hidden="true">{Array.from(text).map((character, index) => <motion.span key={`${character}-${index}`} className="hero-carousel__letter" initial={reducedMotion ? false : { opacity: 0, y: 18, rotateX: -70 }} animate={{ opacity: 1, y: 0, rotateX: 0 }} transition={{ duration: reducedMotion ? 0 : .42, delay: reducedMotion ? 0 : delay + index * .018, ease: [0.22, 1, 0.36, 1] }}>{character === ' ' ? '\u00a0' : character}</motion.span>)}</span></>;
-}
-
 const fallbackCopies = {
   en: [
     { title: 'ADVERTISING', subtitle: 'By partnering with our clients to create what matters, we improve the human experience.', ctaLabel: 'CONTACT US' },
@@ -88,7 +84,7 @@ export default function HeroSection({ content }: { content: HomepageContent }) {
       <div className="hero-carousel__slides">
         {slides.map((slide, index) => {
           const isActive = index === activeIndex;
-          return <motion.div key={`${slide.image_url}-${index}`} className="hero-carousel__slide absolute inset-0" initial={false} animate={{ opacity: isActive ? 1 : 0, scale: isActive ? 1 : 1.025 }} transition={{ duration: reducedMotion ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }} aria-hidden={!isActive}>
+          return <motion.div key={`${slide.image_url}-${index}`} className="hero-carousel__slide absolute inset-0" initial={false} animate={{ opacity: isActive ? 1 : 0, scale: isActive ? 1 : 1.02, x: isActive ? 0 : 8 }} transition={{ duration: reducedMotion ? 0 : .85, ease: [0.22, 1, 0.36, 1] }} aria-hidden={!isActive}>
             <img src={slide.image_url} alt={slide.alt ?? ''} width="1600" height="900" fetchPriority={index === 0 ? 'high' : 'auto'} decoding="async" />
           </motion.div>;
         })}
@@ -98,10 +94,10 @@ export default function HeroSection({ content }: { content: HomepageContent }) {
 
       <div className="relative z-10 mx-auto flex min-h-[min(760px,calc(100vh-5rem))] w-full max-w-[1440px] flex-col justify-between px-5 pb-8 pt-32 sm:px-8 sm:pb-12 lg:px-12 lg:pb-16">
         <AnimatePresence mode="wait" initial={false}>
-          <motion.div key={`${activeIndex}-${slideCopy.title}`} className="max-w-3xl" initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={reducedMotion ? undefined : { opacity: 0 }} transition={{ duration: reducedMotion ? 0 : .24 }}>
-            <h1 className="hero-carousel__title"><AnimatedLetters text={slideCopy.title} reducedMotion={reducedMotion} /></h1>
-            <motion.p initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: reducedMotion ? 0 : .12 }} className="mt-7 max-w-xl text-base leading-relaxed text-white/75 sm:mt-9 sm:text-lg"><AnimatedLetters text={slideCopy.subtitle} reducedMotion={reducedMotion} delay={.14} /></motion.p>
-            <motion.div initial={reducedMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reducedMotion ? 0 : .32 }} className="mt-8">
+          <motion.div key={`${activeIndex}-${slideCopy.title}`} className="max-w-3xl" initial={reducedMotion ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={reducedMotion ? undefined : { opacity: 0, x: -18 }} transition={{ duration: reducedMotion ? 0 : .58, ease: [0.22, 1, 0.36, 1] }}>
+            <motion.h1 initial={reducedMotion ? false : { opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reducedMotion ? 0 : .58, ease: [0.22, 1, 0.36, 1] }} className="hero-carousel__title">{slideCopy.title}</motion.h1>
+            <motion.p initial={reducedMotion ? false : { opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reducedMotion ? 0 : .48, delay: reducedMotion ? 0 : .12, ease: [0.22, 1, 0.36, 1] }} className="mt-7 max-w-xl text-base leading-relaxed text-white/75 sm:mt-9 sm:text-lg">{slideCopy.subtitle}</motion.p>
+            <motion.div initial={reducedMotion ? false : { opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reducedMotion ? 0 : .48, delay: reducedMotion ? 0 : .26, ease: [0.22, 1, 0.36, 1] }} className="mt-8">
               <Link to="/contact" className="editorial-button editorial-button--primary">{slideCopy.ctaLabel}<ArrowRight className="h-4 w-4" /></Link>
             </motion.div>
           </motion.div>

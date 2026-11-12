@@ -86,7 +86,6 @@ body {
 .hero-editorial__eyebrow span { width: 2.5rem; height: 1px; background: var(--editorial-accent); }
 .hero-editorial__title { text-wrap: balance; }
 .hero-carousel__title { max-width: 100%; margin: 0; color: #fff; font-size: clamp(2.65rem, 7vw, 6rem); font-weight: 650; letter-spacing: .015em; line-height: .98; text-wrap: balance; overflow-wrap: normal; }
-.hero-carousel__letter { display: inline-block; transform-origin: 50% 100%; will-change: transform, opacity; }
 .hero-editorial__trust { display: flex; align-items: center; gap: .7rem; margin-top: 2rem; color: rgb(255 255 255 / .7); font-size: .78rem; }
 .hero-editorial__trust svg { width: 1.05rem; color: var(--brand-orange); }
 .hero-carousel { min-height: min(760px, calc(100svh - 5rem)); overflow: hidden; isolation: isolate; }
