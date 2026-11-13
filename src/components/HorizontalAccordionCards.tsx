@@ -59,7 +59,7 @@ export default function HorizontalAccordionCards() {
             <span className="accordion-card__content">
               <span className="accordion-card__label">{item.label}</span>
               <span className="accordion-card__image-wrap">
-                <img className="accordion-card__image" {...responsiveImageSources(item.image)} sizes="(min-width: 1024px) 40vw, 90vw" width="900" height="675" alt="" fetchPriority={index === 0 ? 'high' : 'auto'} decoding="async" />
+                <img className="accordion-card__image" {...responsiveImageSources(item.image)} sizes="(min-width: 1024px) 40vw, 90vw" width="900" height="675" alt="" fetchPriority={index === 0 ? 'high' : 'auto'} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
               </span>
               <span className="accordion-card__copy">
                 <span className="accordion-card__title">{item.title}</span>
