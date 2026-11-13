@@ -4,6 +4,7 @@ import { Check, ArrowRight } from 'lucide-react';
 import { useTranslation } from '@/i18n';
 import ValuePropositionSection from '@/components/ValuePropositionSection';
 import InstallationAreaSection from '@/components/InstallationAreaSection';
+import VisionMissionSection from '@/components/VisionMissionSection';
 import type { AboutLocaleContent } from '@/types/admin';
 
 const features = [
@@ -77,6 +78,8 @@ export default function AboutSection({ valueContent }: { valueContent: AboutLoca
           </motion.a>
         </div>
       </div>
+
+      <VisionMissionSection vision={valueContent.vision} mission={valueContent.mission} />
 
       <InstallationAreaSection />
 

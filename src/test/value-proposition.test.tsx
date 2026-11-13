@@ -7,6 +7,8 @@ describe('value proposition section', () => {
     render(<ValuePropositionSection content={{
       eyebrow: 'Our values',
       title: 'WHY CHOOSE US',
+      vision: 'Vision',
+      mission: 'Mission',
       items: [
         { title: 'Persistence', description: 'Persistence description' },
         { title: 'Stewardship', description: 'Stewardship description' },

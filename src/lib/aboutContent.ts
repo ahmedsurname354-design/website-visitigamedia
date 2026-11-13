@@ -21,6 +21,8 @@ export const defaultAboutContent: AboutContentInput = {
   content_en: {
     eyebrow: 'Our values',
     title: 'WHY CHOOSE US',
+    vision: 'To become a trusted partner in creating meaningful visual communication solutions that connect brands with their audiences.',
+    mission: 'We deliver thoughtful media solutions through quality technology, creative collaboration, precise execution, and dependable long-term support.',
     items: [
       { title: 'Persistence', description: 'Be persistent in keeping with an entrepreneurial attitude.' },
       { title: 'Stewardship', description: 'Continually look for ways to improve profitability and sustainability.' },
@@ -32,6 +34,8 @@ export const defaultAboutContent: AboutContentInput = {
   content_id: {
     eyebrow: 'Nilai kami',
     title: 'MENGAPA MEMILIH KAMI',
+    vision: 'Menjadi mitra terpercaya dalam menciptakan solusi komunikasi visual yang bermakna dan menghubungkan brand dengan audiensnya.',
+    mission: 'Memberikan solusi media yang tepat melalui teknologi berkualitas, kolaborasi kreatif, pelaksanaan yang presisi, dan dukungan jangka panjang yang dapat diandalkan.',
     items: [
       { title: 'Ketekunan', description: 'Terus tekun dengan semangat kewirausahaan.' },
       { title: 'Tanggung Jawab', description: 'Terus mencari cara untuk meningkatkan profitabilitas dan keberlanjutan.' },
@@ -45,7 +49,7 @@ export const defaultAboutContent: AboutContentInput = {
 export function normalizeAboutContent(value: Partial<{ content_id: AboutLocaleContent; content_en: AboutLocaleContent }> | null | undefined) {
   const fallback = defaultAboutContent;
   return {
-    content_en: value?.content_en?.items?.length ? { ...fallback.content_en, ...value.content_en, process: value.content_en.process?.length === 5 ? value.content_en.process : fallback.content_en.process } : fallback.content_en,
-    content_id: value?.content_id?.items?.length ? { ...fallback.content_id, ...value.content_id, process: value.content_id.process?.length === 5 ? value.content_id.process : fallback.content_id.process } : fallback.content_id,
+    content_en: value?.content_en?.items?.length ? { ...fallback.content_en, ...value.content_en, vision: value.content_en.vision || fallback.content_en.vision, mission: value.content_en.mission || fallback.content_en.mission, process: value.content_en.process?.length === 5 ? value.content_en.process : fallback.content_en.process } : fallback.content_en,
+    content_id: value?.content_id?.items?.length ? { ...fallback.content_id, ...value.content_id, vision: value.content_id.vision || fallback.content_id.vision, mission: value.content_id.mission || fallback.content_id.mission, process: value.content_id.process?.length === 5 ? value.content_id.process : fallback.content_id.process } : fallback.content_id,
   };
 }

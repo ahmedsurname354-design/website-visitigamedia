@@ -9,6 +9,8 @@ import { defaultAboutContent, normalizeAboutContent } from '@/lib/aboutContent';
 const values = {
   eyebrow: 'Our values',
   title: 'WHY CHOOSE US',
+  vision: defaultAboutContent.content_en.vision,
+  mission: defaultAboutContent.content_en.mission,
   items: [
     { title: 'Persistence', description: 'Persistence description' },
     { title: 'Stewardship', description: 'Stewardship description' },

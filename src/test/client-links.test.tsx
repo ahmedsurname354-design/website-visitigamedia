@@ -6,6 +6,8 @@ import { LanguageProvider } from '@/i18n';
 const valueContent = {
   eyebrow: 'Nilai kami',
   title: 'MENGAPA MEMILIH KAMI',
+  vision: 'Visi',
+  mission: 'Misi',
   items: [
     { title: 'Ketekunan', description: 'Terus tekun.' },
     { title: 'Tanggung Jawab', description: 'Bertanggung jawab.' },

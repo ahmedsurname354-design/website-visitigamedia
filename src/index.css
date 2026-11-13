@@ -216,6 +216,17 @@ body {
 
 /* Installation area */
 .installation-area { color: var(--editorial-ink); background: #fbf8f3; }
+.vision-mission { color: var(--editorial-ink); border-block: 1px solid var(--editorial-line); background: #fbf8f3; }
+.vision-mission__inner { max-width: 1280px; margin: 0 auto; padding: clamp(4rem, 8vw, 7rem) clamp(1rem, 4vw, 4rem); }
+.vision-mission__heading { max-width: 42rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+.vision-mission__eyebrow, .vision-mission__label { margin: 0 0 .7rem; color: var(--brand-orange-ink); font-size: .68rem; font-weight: 750; letter-spacing: .2em; text-transform: uppercase; }
+.vision-mission__heading h2 { max-width: 36rem; margin: 0; color: var(--editorial-ink); font-size: clamp(2rem, 4.5vw, 3.6rem); font-weight: 650; letter-spacing: -.05em; line-height: 1.02; }
+.vision-mission__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.vision-mission__card { min-height: 17rem; padding: clamp(1.5rem, 3vw, 2.25rem); border: 1px solid var(--editorial-line); border-radius: 1.25rem; background: var(--editorial-card); box-shadow: 0 16px 40px rgb(48 34 24 / .045); }
+.vision-mission__card h3 { max-width: 22rem; margin: 0; color: var(--editorial-ink); font-size: clamp(1.25rem, 2.2vw, 1.75rem); font-weight: 650; letter-spacing: -.03em; line-height: 1.15; }
+.vision-mission__description { max-width: 30rem; margin: 1rem 0 0; color: var(--editorial-muted); font-size: .92rem; line-height: 1.75; }
+.vision-mission__rule { display: block; width: 3.5rem; height: 2px; margin-top: 1.75rem; background: var(--brand-orange); }
+@media (max-width: 640px) { .vision-mission__grid { grid-template-columns: 1fr; } .vision-mission__card { min-height: 0; } }
 .installation-area__inner { max-width: 1280px; margin: 0 auto; padding: clamp(4rem, 8vw, 7rem) clamp(1rem, 4vw, 4rem); }
 .installation-area__highlights { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; max-width: 52rem; margin: 0 auto; }
 .installation-highlight { display: flex; align-items: center; gap: 1rem; min-height: 8rem; padding: 1.25rem 1.5rem; border: 1px solid var(--editorial-line); border-radius: 1.1rem; background: var(--editorial-card); box-shadow: 0 14px 35px rgb(48 34 24 / .055); }
