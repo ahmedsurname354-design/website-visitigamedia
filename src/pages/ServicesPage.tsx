@@ -6,6 +6,7 @@ import type { ServiceContent } from '@/types/admin';
 import { getPrerenderData } from '@/lib/prerenderData';
 import { useTranslation } from '@/i18n';
 import { localizedServiceContent } from '@/lib/contentLocale';
+import ProcessSection from '@/components/ProcessSection';
 
 export default function ServicesPage() {
   const { lang } = useTranslation();
@@ -52,6 +53,7 @@ export default function ServicesPage() {
   return (
     <>
       <ServicesSection content={displayContent} />
+      <ProcessSection eyebrow={displayContent.process_eyebrow ?? 'Our process'} title={displayContent.process_title ?? 'From needs to real solutions'} process={displayContent.process ?? []} />
       <WebServiceSection content={displayContent} />
     </>
   );

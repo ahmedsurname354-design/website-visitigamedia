@@ -217,9 +217,10 @@ export async function saveServiceContent(input: ServiceContentInput): Promise<Se
   assertSafeMediaUrl(input.video_webm_url, 'URL video WebM');
   assertSafeMediaUrl(input.video_mp4_url, 'URL video MP4');
   assertSafeMediaUrl(input.video_poster_url, 'URL poster video');
-  const contentEn = { eyebrow: input.eyebrow, heading: input.heading, heading_accent: input.heading_accent, cards: input.cards, showreel_eyebrow: input.showreel_eyebrow, showreel_heading: input.showreel_heading, showreel_accent: input.showreel_accent, showreel_description: input.showreel_description, primary_button_text: input.primary_button_text, secondary_button_text: input.secondary_button_text };
+  const { process_eyebrow, process_title, process, content_id, content_en, ...databaseInput } = input;
+  const contentEn = { eyebrow: input.eyebrow, heading: input.heading, heading_accent: input.heading_accent, cards: input.cards, showreel_eyebrow: input.showreel_eyebrow, showreel_heading: input.showreel_heading, showreel_accent: input.showreel_accent, showreel_description: input.showreel_description, primary_button_text: input.primary_button_text, secondary_button_text: input.secondary_button_text, process_eyebrow: process_eyebrow ?? 'Our process', process_title: process_title ?? 'From needs to real solutions', process: process?.length === 5 ? process : [] };
   const contentId = await translateContent(contentEn);
-  const { data, error } = await client().from('service_content').upsert({ id: 1, ...input, content_en: contentEn, content_id: contentId }).select('*').single();
+  const { data, error } = await client().from('service_content').upsert({ id: 1, ...databaseInput, content_en: contentEn, content_id: contentId }).select('*').single();
   if (error) throw error;
   return data as ServiceContent;
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { LoaderCircle, Save, Upload } from 'lucide-react';
 import { getServiceContent, saveServiceContent } from '@/lib/adminApi';
-import { defaultServiceContent } from '@/lib/serviceContent';
+import { defaultServiceContent, normalizeServiceContent } from '@/lib/serviceContent';
 import { supabase } from '@/lib/supabase';
 import type { ServiceContentInput } from '@/types/admin';
 import { ServiceLandingManager } from '@/components/admin/ServiceLandingManager';
@@ -21,7 +21,7 @@ export default function ServicesManagerPage() {
   };
 
   useEffect(() => {
-    void getServiceContent().then((value) => { if (value) setContent(value); }).catch((reason) => setError(reason instanceof Error ? reason.message : 'Konten layanan tidak dapat dimuat.')).finally(() => setLoading(false));
+    void getServiceContent().then((value) => { if (value) setContent(normalizeServiceContent(value)); }).catch((reason) => setError(reason instanceof Error ? reason.message : 'Konten layanan tidak dapat dimuat.')).finally(() => setLoading(false));
   }, []);
 
   const submit = async (form: FormData) => {
@@ -38,8 +38,10 @@ export default function ServicesManagerPage() {
         showreel_eyebrow: String(form.get('showreel_eyebrow')).trim(), showreel_heading: String(form.get('showreel_heading')).trim(), showreel_accent: String(form.get('showreel_accent')).trim(), showreel_description: String(form.get('showreel_description')).trim(),
         primary_button_text: String(form.get('primary_button_text')).trim(), primary_button_url: String(form.get('primary_button_url')).trim(), secondary_button_text: String(form.get('secondary_button_text')).trim(), secondary_button_url: String(form.get('secondary_button_url')).trim(),
         video_webm_url: content.video_webm_url, video_mp4_url: content.video_mp4_url, video_poster_url: String(form.get('video_poster_url')).trim(),
+        process_eyebrow: String(form.get('process_eyebrow')).trim(), process_title: String(form.get('process_title')).trim(),
+        process: Array.from({ length: 5 }, (_, index) => ({ title: String(form.get(`process_${index}_title`)).trim(), description: String(form.get(`process_${index}_description`)).trim() })),
       };
-      const saved = await saveServiceContent(next); setContent(saved); setMessage('Konten layanan berhasil disimpan.');
+      const saved = await saveServiceContent(next); setContent(normalizeServiceContent(saved)); setMessage('Konten layanan berhasil disimpan.');
     } catch (reason) { setError(reason instanceof Error ? reason.message : 'Konten layanan tidak dapat disimpan.'); }
     finally { setSaving(false); }
   };
@@ -51,6 +53,7 @@ export default function ServicesManagerPage() {
     <form onSubmit={(event) => { event.preventDefault(); void submit(new FormData(event.currentTarget)); }} className="space-y-7">
       <Section title="Judul layanan"><div className="grid gap-5 sm:grid-cols-3"><Field name="eyebrow" label="Label kecil" initial={content.eyebrow} /><Field name="heading" label="Judul" initial={content.heading} /><Field name="heading_accent" label="Teks aksen" initial={content.heading_accent} /></div></Section>
       <Section title="Kartu layanan"><div className="grid gap-5 lg:grid-cols-2">{content.cards.map((card, index) => <div key={index} className="rounded-xl border border-slate-200 bg-slate-50 p-4"><p className="mb-4 text-sm font-bold text-orange-600">Kartu {index + 1}</p><div className="grid gap-4"><Field name={`card_title_${index}`} label="Judul" initial={card.title} /><Area name={`card_description_${index}`} label="Deskripsi" initial={card.description} /><Field name={`card_tags_${index}`} label="Tag (pisahkan dengan koma)" initial={card.tags.join(', ')} /><Field name={`card_action_${index}`} label="Teks tautan" initial={card.action} /></div></div>)}</div></Section>
+      <Section title="Our process"><div className="grid gap-5"><div className="grid gap-5 sm:grid-cols-2"><Field name="process_eyebrow" label="Label kecil" initial={content.process_eyebrow ?? ''} /><Field name="process_title" label="Judul" initial={content.process_title ?? ''} /></div>{(content.process ?? []).map((item, index) => <div key={index} className="rounded-xl border border-slate-200 bg-slate-50 p-4"><p className="mb-4 text-sm font-bold text-orange-600">Process {index + 1}</p><div className="grid gap-4"><Field name={`process_${index}_title`} label="Judul proses" initial={item.title} /><Area name={`process_${index}_description`} label="Deskripsi" initial={item.description} /></div></div>)}</div></Section>
       <Section title="Teks showreel"><div className="grid gap-5 sm:grid-cols-2"><Field name="showreel_eyebrow" label="Label kecil" initial={content.showreel_eyebrow} /><Field name="showreel_heading" label="Judul" initial={content.showreel_heading} /><Field name="showreel_accent" label="Teks aksen" initial={content.showreel_accent} /><Area name="showreel_description" label="Deskripsi" initial={content.showreel_description} /><Field name="primary_button_text" label="Teks tombol utama" initial={content.primary_button_text} /><Field name="primary_button_url" label="URL tombol utama" initial={content.primary_button_url} /><Field name="secondary_button_text" label="Teks tombol kedua" initial={content.secondary_button_text} /><Field name="secondary_button_url" label="URL tombol kedua" initial={content.secondary_button_url} /></div></Section>
       <Section title="Media showreel"><div className="grid gap-5 lg:grid-cols-2"><VideoUpload value={content.video_mp4_url} onChange={persistUploadedVideo} /><Field name="video_poster_url" label="URL poster video" initial={content.video_poster_url} /></div>{content.video_mp4_url && <video key={content.video_mp4_url} controls preload="metadata" poster={content.video_poster_url} className="mt-5 aspect-video w-full max-w-2xl rounded-xl bg-black"><source src={content.video_mp4_url} type="video/mp4" /></video>}</Section>
       <div className="sticky bottom-4 flex justify-end"><button disabled={saving} className="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-5 py-3 text-sm font-bold text-white shadow-lg hover:bg-orange-600 disabled:opacity-50">{saving ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}{saving ? 'Menyimpan…' : 'Simpan perubahan'}</button></div>

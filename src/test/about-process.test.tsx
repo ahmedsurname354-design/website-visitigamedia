@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import AboutSection from '@/components/AboutSection';
+import ProcessSection from '@/components/ProcessSection';
 import { LanguageProvider } from '@/i18n';
 import { defaultAboutContent, normalizeAboutContent } from '@/lib/aboutContent';
 
@@ -17,16 +18,20 @@ const values = {
   process: defaultAboutContent.content_en.process,
 };
 
-describe('about process section', () => {
-  it('renders five numbered process cards before Why Choose Us', () => {
-    render(<LanguageProvider><MemoryRouter><AboutSection valueContent={values} /></MemoryRouter></LanguageProvider>);
+describe('process section placement', () => {
+  it('renders five numbered process cards in the reusable process section', () => {
+    render(<LanguageProvider><MemoryRouter><ProcessSection eyebrow="Our process" title="From needs to real solutions" process={values.process} /></MemoryRouter></LanguageProvider>);
     expect(screen.getByRole('heading', { name: 'From needs to real solutions' })).toBeInTheDocument();
     expect(screen.getByText('01')).toBeInTheDocument();
     expect(screen.getByText('05')).toBeInTheDocument();
     const process = screen.getByRole('heading', { name: 'From needs to real solutions' }).closest('section');
     expect(process?.querySelectorAll('article')).toHaveLength(5);
-    const valuesSection = screen.getByRole('heading', { name: 'WHY CHOOSE US' }).closest('section');
-    expect(process?.compareDocumentPosition(valuesSection as Node) ?? 0).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+  });
+
+  it('does not render process cards on About anymore', () => {
+    render(<LanguageProvider><MemoryRouter><AboutSection valueContent={values} /></MemoryRouter></LanguageProvider>);
+    expect(screen.queryByRole('heading', { name: 'From needs to real solutions' })).not.toBeInTheDocument();
+    expect(screen.queryByText('01')).not.toBeInTheDocument();
   });
 
   it('fills process content from the fallback when legacy data has no process', () => {

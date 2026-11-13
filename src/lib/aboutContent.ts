@@ -2,7 +2,7 @@ import type { AboutContentInput, AboutLocaleContent, AboutProcessItem } from '@/
 
 export const defaultAboutProcess: { content_en: AboutProcessItem[]; content_id: AboutProcessItem[] } = {
   content_en: [
-    { title: 'FREE CONSULTANT', description: 'Our discussion focuses on understanding and fulfilling each client’s needs through tailored custom solutions.' },
+    { title: 'FREE CONSULTANT', description: "Our discussion focuses on understanding and fulfilling each client's needs through tailored custom solutions." },
     { title: 'SOLUTION', description: 'We establish clear and certain solutions that answer the client’s needs with accurate and effective recommendations.' },
     { title: 'PACKAGE', description: 'Our solution plan includes creative design illustrations, hardware, software, construction, mechanical and electrical systems, and cost estimates.' },
     { title: 'IMPLEMENTATION', description: 'Based on the approved media plan, we turn ideas into real and effective media solutions.' },

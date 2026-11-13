@@ -1,4 +1,5 @@
 import type { ServiceContentInput } from '@/types/admin';
+import { defaultAboutProcess } from '@/lib/aboutContent';
 
 export const defaultServiceContent: ServiceContentInput = {
   eyebrow: 'Layanan Kami',
@@ -21,4 +22,18 @@ export const defaultServiceContent: ServiceContentInput = {
   video_webm_url: '/videos/service-showreel.webm',
   video_mp4_url: '/videos/service-showreel.mp4',
   video_poster_url: '/videos/service-showreel-poster.webp',
+  process_eyebrow: 'Our process',
+  process_title: 'From needs to real solutions',
+  process: defaultAboutProcess.content_en,
 };
+
+export function normalizeServiceContent(value: ServiceContentInput): ServiceContentInput {
+  const locale = value.content_en;
+  return {
+    ...defaultServiceContent,
+    ...value,
+    process_eyebrow: locale?.process_eyebrow ?? value.process_eyebrow ?? defaultServiceContent.process_eyebrow,
+    process_title: locale?.process_title ?? value.process_title ?? defaultServiceContent.process_title,
+    process: locale?.process?.length === 5 ? locale.process : value.process?.length === 5 ? value.process : defaultServiceContent.process,
+  };
+}

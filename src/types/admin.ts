@@ -139,11 +139,14 @@ export interface ServiceContent {
   video_mp4_url: string;
   video_poster_url: string;
   updated_at: string;
+  process_eyebrow?: string;
+  process_title?: string;
+  process?: AboutProcessItem[];
   content_id?: ServiceContentLocale;
   content_en?: ServiceContentLocale;
 }
 
-export interface ServiceContentLocale { eyebrow: string; heading: string; heading_accent: string; cards: ServiceCard[]; showreel_eyebrow: string; showreel_heading: string; showreel_accent: string; showreel_description: string; primary_button_text: string; secondary_button_text: string; }
+export interface ServiceContentLocale { eyebrow: string; heading: string; heading_accent: string; cards: ServiceCard[]; showreel_eyebrow: string; showreel_heading: string; showreel_accent: string; showreel_description: string; primary_button_text: string; secondary_button_text: string; process_eyebrow: string; process_title: string; process: AboutProcessItem[]; }
 
 export type ServiceContentInput = Omit<ServiceContent, 'id' | 'updated_at'>;
 

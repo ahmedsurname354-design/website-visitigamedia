@@ -1,5 +1,6 @@
 import type { Lang } from '@/i18n';
 import type { NewsRecord, Portfolio, Product, ServiceContent } from '@/types/admin';
+import { defaultServiceContent } from '@/lib/serviceContent';
 
 export type PortfolioCategoryKey = 'conventional' | 'indoor' | 'outdoor' | 'rental' | 'audio-visual' | `custom:${string}`;
 type StandardPortfolioCategoryKey = Exclude<PortfolioCategoryKey, `custom:${string}`>;
@@ -45,5 +46,11 @@ export function localizedProduct(item: Product, lang: Lang): Product {
 
 export function localizedServiceContent(item: ServiceContent, lang: Lang): ServiceContent {
   const locale = lang === 'id' ? item.content_id : item.content_en;
-  return locale && Object.keys(locale).length > 0 ? { ...item, ...locale } : item;
+  return {
+    ...item,
+    ...(locale && Object.keys(locale).length > 0 ? locale : {}),
+    process_eyebrow: locale?.process_eyebrow ?? item.process_eyebrow ?? defaultServiceContent.process_eyebrow,
+    process_title: locale?.process_title ?? item.process_title ?? defaultServiceContent.process_title,
+    process: locale?.process?.length === 5 ? locale.process : item.process?.length === 5 ? item.process : defaultServiceContent.process,
+  };
 }
