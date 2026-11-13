@@ -4,15 +4,13 @@ import { useScrollReveal } from '@/hooks/useScrollReveal';
 interface VisionMissionSectionProps {
   visionTitle: string;
   missionTitle: string;
-  vision: string;
-  mission: string;
 }
 
-export default function VisionMissionSection({ visionTitle, missionTitle, vision, mission }: VisionMissionSectionProps) {
+export default function VisionMissionSection({ visionTitle, missionTitle }: VisionMissionSectionProps) {
   const { ref, isInView, reducedMotion } = useScrollReveal();
   const cards = [
-    { label: 'Our vision', title: visionTitle, description: vision },
-    { label: 'Our mission', title: missionTitle, description: mission },
+    { label: 'Our vision', title: visionTitle },
+    { label: 'Our mission', title: missionTitle },
   ];
 
   return (
@@ -38,7 +36,6 @@ export default function VisionMissionSection({ visionTitle, missionTitle, vision
             >
               <p className="vision-mission__label">{card.label}</p>
               <h3>{card.title}</h3>
-              <p className="vision-mission__description">{card.description}</p>
               <span className="vision-mission__rule" aria-hidden="true" />
             </motion.article>
           ))}

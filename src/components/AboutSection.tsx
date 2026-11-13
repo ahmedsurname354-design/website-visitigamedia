@@ -79,7 +79,7 @@ export default function AboutSection({ valueContent }: { valueContent: AboutLoca
         </div>
       </div>
 
-      <VisionMissionSection visionTitle={valueContent.vision_title} missionTitle={valueContent.mission_title} vision={valueContent.vision} mission={valueContent.mission} />
+      <VisionMissionSection visionTitle={valueContent.vision_title} missionTitle={valueContent.mission_title} />
 
       <InstallationAreaSection />
 
