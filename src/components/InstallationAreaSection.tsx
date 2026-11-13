@@ -1,9 +1,13 @@
-import { BadgeCheck, HardHat, MapPin } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useTranslation } from '@/i18n';
 
-const certifications = ['ISO 37001', 'ISO 9001', 'ISO 45001'];
+const certifications = [
+  { label: 'ISO 37001', image: '/installation-icons/iso37001.webp' },
+  { label: 'ISO 9001', image: '/installation-icons/iso9001.webp' },
+  { label: 'ISO 45001', image: '/installation-icons/iso45001.webp' },
+];
 
 export default function InstallationAreaSection() {
   const { ref, isInView, reducedMotion } = useScrollReveal();
@@ -19,14 +23,14 @@ export default function InstallationAreaSection() {
       <div className="installation-area__inner">
         <div className="installation-area__highlights">
           <motion.article {...reveal(0)} className="installation-highlight">
-            <span className="installation-highlight__icon"><HardHat aria-hidden="true" /></span>
+            <span className="installation-highlight__icon"><img src="/installation-icons/experience.webp" alt="Worker with safety helmet and tools" loading="lazy" decoding="async" /></span>
             <div>
               <p className="installation-highlight__eyebrow">{t('about.installation.experienceEyebrow')}</p>
               <h3>{t('about.installation.experience')}</h3>
             </div>
           </motion.article>
           <motion.article {...reveal(0.08)} className="installation-highlight">
-            <span className="installation-highlight__icon"><BadgeCheck aria-hidden="true" /></span>
+            <span className="installation-highlight__icon"><img src="/installation-icons/certification.webp" alt="Certification document with quality seal" loading="lazy" decoding="async" /></span>
             <div>
               <p className="installation-highlight__eyebrow">{t('about.installation.certificationEyebrow')}</p>
               <h3>{t('about.installation.certification')}</h3>
@@ -36,9 +40,8 @@ export default function InstallationAreaSection() {
 
         <motion.div {...reveal(0.14)} className="installation-area__certifications" aria-label={t('about.installation.certificationEyebrow')}>
           {certifications.map((certification) => (
-            <div className="iso-badge" key={certification}>
-              <span className="iso-badge__ring"><BadgeCheck aria-hidden="true" /></span>
-              <strong>{certification}</strong>
+            <div className="iso-badge" key={certification.label}>
+              <span className="iso-badge__ring"><img src={certification.image} alt={`${certification.label} certification emblem`} loading="lazy" decoding="async" /></span>
             </div>
           ))}
         </motion.div>
