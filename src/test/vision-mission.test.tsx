@@ -4,11 +4,13 @@ import VisionMissionSection from '@/components/VisionMissionSection';
 
 describe('vision and mission section', () => {
   it('renders both purpose cards with accessible section structure', () => {
-    render(<VisionMissionSection vision="Vision body" mission="Mission body" />);
+    render(<VisionMissionSection visionTitle="Vision title" missionTitle="Mission title" vision="Vision body" mission="Mission body" />);
 
     expect(screen.getByRole('region', { name: 'Purpose behind every solution.' })).toBeInTheDocument();
     expect(screen.getByText('Our vision')).toBeInTheDocument();
     expect(screen.getByText('Our mission')).toBeInTheDocument();
+    expect(screen.getByText('Vision title')).toBeInTheDocument();
+    expect(screen.getByText('Mission title')).toBeInTheDocument();
     expect(screen.getByText('Vision body')).toBeInTheDocument();
     expect(screen.getByText('Mission body')).toBeInTheDocument();
     expect(screen.getAllByRole('article')).toHaveLength(2);

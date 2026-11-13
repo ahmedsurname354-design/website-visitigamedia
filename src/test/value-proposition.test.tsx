@@ -9,6 +9,8 @@ describe('value proposition section', () => {
       title: 'WHY CHOOSE US',
       vision: 'Vision',
       mission: 'Mission',
+      vision_title: 'Vision title',
+      mission_title: 'Mission title',
       items: [
         { title: 'Persistence', description: 'Persistence description' },
         { title: 'Stewardship', description: 'Stewardship description' },

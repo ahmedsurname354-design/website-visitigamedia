@@ -2,15 +2,17 @@ import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 interface VisionMissionSectionProps {
+  visionTitle: string;
+  missionTitle: string;
   vision: string;
   mission: string;
 }
 
-export default function VisionMissionSection({ vision, mission }: VisionMissionSectionProps) {
+export default function VisionMissionSection({ visionTitle, missionTitle, vision, mission }: VisionMissionSectionProps) {
   const { ref, isInView, reducedMotion } = useScrollReveal();
   const cards = [
-    { label: 'Our vision', title: 'A clearer future for visual communication.', description: vision },
-    { label: 'Our mission', title: 'Ideas made tangible, with care.', description: mission },
+    { label: 'Our vision', title: visionTitle, description: vision },
+    { label: 'Our mission', title: missionTitle, description: mission },
   ];
 
   return (

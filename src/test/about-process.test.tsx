@@ -11,6 +11,8 @@ const values = {
   title: 'WHY CHOOSE US',
   vision: defaultAboutContent.content_en.vision,
   mission: defaultAboutContent.content_en.mission,
+  vision_title: defaultAboutContent.content_en.vision_title,
+  mission_title: defaultAboutContent.content_en.mission_title,
   items: [
     { title: 'Persistence', description: 'Persistence description' },
     { title: 'Stewardship', description: 'Stewardship description' },

@@ -8,6 +8,8 @@ const valueContent = {
   title: 'MENGAPA MEMILIH KAMI',
   vision: 'Visi',
   mission: 'Misi',
+  vision_title: 'Judul visi',
+  mission_title: 'Judul misi',
   items: [
     { title: 'Ketekunan', description: 'Terus tekun.' },
     { title: 'Tanggung Jawab', description: 'Bertanggung jawab.' },
