@@ -3,6 +3,7 @@ import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { Check, ArrowRight } from 'lucide-react';
 import { useTranslation } from '@/i18n';
 import ValuePropositionSection from '@/components/ValuePropositionSection';
+import InstallationAreaSection from '@/components/InstallationAreaSection';
 import type { AboutLocaleContent } from '@/types/admin';
 
 const features = [
@@ -101,6 +102,8 @@ export default function AboutSection({ valueContent }: { valueContent: AboutLoca
           </div>
         </div>
       </section>
+
+      <InstallationAreaSection />
 
       <ValuePropositionSection content={valueContent} />
 
