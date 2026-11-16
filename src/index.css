@@ -214,8 +214,6 @@ body {
 @media (max-width: 480px) { .process-section__heading h2 { font-size: clamp(2.25rem, 12vw, 3.5rem); } .process-section__card { grid-template-columns: 2.75rem minmax(0, 1fr); } .process-section__card p { grid-column: 1 / -1; margin-top: 0; padding-left: 3.75rem; } }
 .stats-editorial__item > p.text-orange-500 { color: var(--brand-orange-ink) !important; }
 
-/* Installation area */
-.installation-area { color: var(--editorial-ink); background: #fbf8f3; }
 .vision-mission { color: var(--editorial-ink); border-block: 1px solid var(--editorial-line); background: #fbf8f3; }
 .vision-mission__inner { max-width: 1280px; margin: 0 auto; padding: clamp(4rem, 8vw, 7rem) clamp(1rem, 4vw, 4rem); }
 .vision-mission__heading { max-width: 42rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
@@ -227,28 +225,23 @@ body {
 .vision-mission__description { max-width: 30rem; margin: 1rem 0 0; color: var(--editorial-muted); font-size: .92rem; line-height: 1.75; }
 .vision-mission__rule { display: block; width: 3.5rem; height: 2px; margin-top: 1.75rem; background: var(--brand-orange); }
 @media (max-width: 640px) { .vision-mission__grid { grid-template-columns: 1fr; } .vision-mission__card { min-height: 0; } }
+/* Installation area */
+.installation-area { color: var(--editorial-ink); background: #fbf8f3; }
 .installation-area__inner { max-width: 1280px; margin: 0 auto; padding: clamp(4rem, 8vw, 7rem) clamp(1rem, 4vw, 4rem); }
 .installation-area__highlights { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; max-width: 52rem; margin: 0 auto; }
 .installation-highlight { display: flex; align-items: center; gap: 1rem; min-height: 8rem; padding: 1.25rem 1.5rem; border: 1px solid var(--editorial-line); border-radius: 1.1rem; background: var(--editorial-card); box-shadow: 0 14px 35px rgb(48 34 24 / .055); }
 .installation-highlight__icon { display: grid; flex: 0 0 3.5rem; width: 3.5rem; height: 3.5rem; place-items: center; border-radius: 1rem; color: #fff; background: var(--brand-orange); }
 .installation-highlight__icon img { display: block; width: 2.8rem; height: 2.8rem; object-fit: contain; }
-.installation-highlight__eyebrow, .installation-area__eyebrow, .installation-office__label { margin: 0 0 .45rem; color: var(--brand-orange-ink); font-size: .68rem; font-weight: 750; letter-spacing: .16em; text-transform: uppercase; }
+.installation-highlight__eyebrow, .installation-office__label { margin: 0 0 .45rem; color: var(--brand-orange-ink); font-size: .68rem; font-weight: 750; letter-spacing: .16em; text-transform: uppercase; }
 .installation-highlight h3 { margin: 0; color: var(--editorial-ink); font-size: clamp(1rem, 1.7vw, 1.35rem); font-weight: 700; line-height: 1.2; }
 .installation-area__certifications { display: flex; justify-content: center; gap: clamp(1.25rem, 5vw, 4.5rem); margin: 3rem auto 0; }
 .iso-badge { display: grid; justify-items: center; gap: .65rem; color: var(--editorial-ink); }
 .iso-badge__ring { display: grid; width: 6.5rem; height: 6.5rem; place-items: center; color: var(--brand-orange); }
 .iso-badge__ring img { display: block; width: 100%; height: 100%; object-fit: contain; }
-.installation-area__heading { max-width: 48rem; margin: clamp(4rem, 8vw, 7rem) auto 2rem; text-align: center; }
-.installation-area__heading h2 { margin: 0; color: var(--editorial-ink); font-size: clamp(2rem, 5vw, 4rem); font-weight: 650; letter-spacing: -.055em; line-height: 1; }
-.installation-map-wrap { position: relative; max-width: 68rem; margin: 0 auto; padding: clamp(.55rem, 1.2vw, 1rem); border: 1px solid var(--editorial-line); border-radius: 1.5rem; background: var(--editorial-card); box-shadow: 0 20px 55px rgb(48 34 24 / .07); }
-.installation-map-figure { margin: 0; overflow: hidden; border-radius: 1rem; background: #fff; }
-.installation-map { display: block; width: 100%; height: auto; aspect-ratio: 1934 / 809; object-fit: contain; }
-.installation-map__legend { display: flex; align-items: center; justify-content: center; gap: .45rem; margin: 0; padding: .8rem .75rem .65rem; color: var(--editorial-muted); font-size: .75rem; }
-.installation-map__legend svg { width: 1rem; height: 1rem; color: #ff3b30; }
 .installation-area__offices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 2rem; }
 .installation-office { min-height: 7.5rem; padding: 1.5rem; border-top: 2px solid var(--brand-orange); background: var(--editorial-card); }
 .installation-office h3 { max-width: 34rem; margin: 0; color: var(--editorial-ink); font-size: clamp(.95rem, 1.5vw, 1.1rem); font-weight: 600; line-height: 1.65; }
-@media (max-width: 640px) { .installation-area__highlights, .installation-area__offices { grid-template-columns: 1fr; } .installation-area__certifications { gap: .6rem; } .iso-badge__ring { width: 5.2rem; height: 5.2rem; } .iso-badge strong { font-size: .66rem; } .installation-map { min-height: 11rem; } }
+@media (max-width: 640px) { .installation-area__highlights, .installation-area__offices { grid-template-columns: 1fr; } .installation-area__certifications { gap: .6rem; } .iso-badge__ring { width: 5.2rem; height: 5.2rem; } }
 .site-footer .text-white\/40 { color: rgb(255 255 255 / .68); }
 .editorial-cta-section { padding-block: clamp(4rem, 8vw, 7rem); background: #f2ece5 !important; }
 .editorial-cta-section > div:last-child > div { border-radius: var(--editorial-radius); box-shadow: 0 30px 80px rgb(151 65 25 / .16); }
