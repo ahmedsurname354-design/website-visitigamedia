@@ -3,6 +3,7 @@ import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { Check, ArrowRight } from 'lucide-react';
 import { useTranslation } from '@/i18n';
 import ValuePropositionSection from '@/components/ValuePropositionSection';
+import CoreValuesSection from '@/components/CoreValuesSection';
 import InstallationAreaSection from '@/components/InstallationAreaSection';
 import VisionMissionSection from '@/components/VisionMissionSection';
 import type { AboutLocaleContent } from '@/types/admin';
@@ -84,6 +85,8 @@ export default function AboutSection({ valueContent }: { valueContent: AboutLoca
       <InstallationAreaSection />
 
       <ValuePropositionSection content={valueContent} />
+
+      <CoreValuesSection />
 
     </section>
   );
