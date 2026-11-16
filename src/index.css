@@ -229,6 +229,8 @@ body {
 @media (max-width: 900px) { .core-values-section__row { grid-template-columns: 3.5rem minmax(0, 1fr) minmax(0, 1.2fr); gap: 1rem 1.5rem; padding-block: 1.75rem; } .core-values-section__row h4 { grid-column: 2; } .core-values-section__row p { grid-column: 3; } }
 @media (max-width: 600px) { .core-values-section__heading h2 { font-size: clamp(2.25rem, 12vw, 3.5rem); } .core-values-section__row { grid-template-columns: 2.75rem minmax(0, 1fr); } .core-values-section__row h4, .core-values-section__row p { grid-column: 2; } .core-values-section__row p { margin-top: -.5rem; } }
 .stats-editorial__item > p.text-orange-500 { color: var(--brand-orange-ink) !important; }
+.public-site .stats-editorial__item > p.text-3xl { color: var(--brand-orange-ink) !important; }
+.public-site .stats-editorial__item > p.text-white\/50 { color: var(--editorial-muted) !important; }
 
 .vision-mission { color: var(--editorial-ink); border-block: 1px solid var(--editorial-line); background: #fbf8f3; }
 .vision-mission__inner { max-width: 1280px; margin: 0 auto; padding: clamp(4rem, 8vw, 7rem) clamp(1rem, 4vw, 4rem); }
