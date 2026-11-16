@@ -47,7 +47,7 @@ describe('portfolio detail date', () => {
     expect(screen.getByText('Date:')).toBeInTheDocument();
   });
 
-  it('does not replace a related image when the optimized image fails', async () => {
+  it('keeps related Supabase images on their public object URL', async () => {
     vi.mocked((await import('@/lib/adminApi')).listPublicPortfolios).mockResolvedValueOnce([project, relatedProject]);
     renderPage('/en/portfolio/test-project/');
 
@@ -58,8 +58,8 @@ describe('portfolio detail date', () => {
       return image as HTMLImageElement;
     });
 
-    expect(relatedImage.src).toContain('/storage/v1/render/image/public/');
+    expect(relatedImage.src).toContain('/storage/v1/object/public/');
     fireEvent.error(relatedImage);
-    expect(relatedImage.src).toContain('/storage/v1/render/image/public/');
+    expect(relatedImage.src).toContain('/storage/v1/object/public/');
   });
 });
