@@ -28,24 +28,24 @@ const seoByPath: Record<string, Record<Lang, SeoCopy>> = {
     en: { title: 'Indoor, Outdoor & Rental LED Services — Visitiga', description: 'Explore outdoor videotron, indoor LED display, LED rental, and conventional media services from Visitiga.' },
   },
   '/services/led-indoor': {
-    id: { title: 'LED Indoor untuk Ruang Komersial | Visitiga', description: 'Perencanaan LED indoor untuk ruang rapat, kampus, retail, dan area presentasi berdasarkan jarak pandang serta kebutuhan ruang.' },
-    en: { title: 'Indoor LED for Commercial Spaces | Visitiga', description: 'Indoor LED planning for meeting rooms, campuses, retail, and presentation areas based on viewing distance and room requirements.' },
+    id: { title: 'Conventional Media | Visitiga', description: 'Billboard, lightbox, dan signage yang dirancang berdasarkan lokasi, ukuran bidang, material, struktur, dan pencahayaan.' },
+    en: { title: 'Conventional Media | Visitiga', description: 'Billboards, lightboxes, and signage planned around location, display size, materials, structure, and lighting.' },
   },
   '/services/videotron-outdoor': {
-    id: { title: 'Videotron Outdoor untuk Berbagai Lokasi | Visitiga', description: 'Perencanaan videotron outdoor dengan mempertimbangkan struktur, cuaca, kecerahan, jarak pandang, daya, dan akses perawatan.' },
-    en: { title: 'Outdoor Videotron for Different Sites | Visitiga', description: 'Outdoor videotron planning based on structure, weather exposure, brightness, viewing distance, power, and maintenance access.' },
+    id: { title: 'Digital Media Solution | Visitiga', description: 'Solusi layar LED indoor dan outdoor dengan perencanaan pixel pitch, brightness, jarak pandang, struktur, dan sistem kontrol.' },
+    en: { title: 'Digital Media Solution | Visitiga', description: 'Indoor and outdoor LED display solutions planned around pixel pitch, brightness, viewing distance, structure, and control systems.' },
   },
   '/services/rental-led': {
-    id: { title: 'Rental LED untuk Acara dan Panggung | Visitiga', description: 'Rental LED untuk acara, konferensi, pertunjukan, dan nonton bersama dengan konfigurasi sesuai venue serta jarak penonton.' },
-    en: { title: 'LED Rental for Events and Stages | Visitiga', description: 'LED rental for events, conferences, performances, and public screenings, configured for the venue and viewing distance.' },
+    id: { title: 'Architectural & Media Construction | Visitiga', description: 'Solusi konstruksi sipil, interior, baja, facade, ballroom, dan media structure yang aman serta terintegrasi.' },
+    en: { title: 'Architectural & Media Construction | Visitiga', description: 'Civil, interior, steel, facade, ballroom, and media structure solutions integrated safely with commercial spaces.' },
   },
   '/services/media-konvensional': {
-    id: { title: 'Billboard dan Media Konvensional | Visitiga', description: 'Perencanaan billboard, lightbox, dan media konvensional berdasarkan lokasi, bidang visual, struktur, serta pencahayaan.' },
-    en: { title: 'Billboards and Conventional Media | Visitiga', description: 'Billboard, lightbox, and conventional media planning based on location, display area, structure, and lighting.' },
+    id: { title: 'Media Placement & Creative Content | Visitiga', description: 'Strategi OOH dan DOOH yang dipadukan dengan creative concept, produksi konten, dan campaign rollout.' },
+    en: { title: 'Media Placement & Creative Content | Visitiga', description: 'OOH and DOOH placement strategy combined with creative concepts, content production, and campaign rollout.' },
   },
   '/services/digital-signage': {
-    id: { title: 'Digital Signage untuk Pengalaman Brand | Visitiga', description: 'Solusi display terhubung untuk retail, hospitality, wayfinding, dan ruang bermerek.' },
-    en: { title: 'Digital Signage for Connected Brand Experiences | Visitiga', description: 'Connected display solutions for retail, hospitality, wayfinding, and branded spaces.' },
+    id: { title: 'Audio Visual | Visitiga', description: 'Sistem audio visual terintegrasi untuk meeting room, ruang presentasi, venue, dan event.' },
+    en: { title: 'Audio Visual | Visitiga', description: 'Integrated audio visual systems for meeting rooms, presentation spaces, venues, and events.' },
   },
   '/services/event-production': {
     id: { title: 'Event Production untuk Pengalaman Live | Visitiga', description: 'Dukungan produksi visual dan teknis untuk acara, panggung, konferensi, dan pengalaman live.' },
