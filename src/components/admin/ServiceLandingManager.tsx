@@ -7,7 +7,7 @@ import type { Portfolio, ServiceLandingContent, ServiceLandingLocaleContent, Ser
 import { translateContent } from '@/lib/translation';
 
 const labels: Record<ServiceLandingSlug, string> = {
-  'led-indoor': 'LED Indoor', 'videotron-outdoor': 'Videotron Outdoor', 'rental-led': 'Rental LED', 'media-konvensional': 'Media Konvensional', 'digital-signage': 'Digital Signage', 'event-production': 'Event Production',
+  'led-indoor': 'Conventional Media', 'videotron-outdoor': 'Digital Media Solution', 'rental-led': 'Architectural & Media Construction', 'media-konvensional': 'Media Placement & Creative Content', 'digital-signage': 'Audio Visual', 'event-production': 'Event Production',
 };
 
 function value(form: FormData, name: string) { return String(form.get(name) ?? '').trim(); }
@@ -26,8 +26,8 @@ function localeFromForm(form: FormData, locale: 'id' | 'en'): ServiceLandingLoca
 }
 
 export function ServiceLandingManager() {
-  const [slug, setSlug] = useState<ServiceLandingSlug>('led-indoor');
-  const [landing, setLanding] = useState<ServiceLandingContent>(defaultServiceLandings['led-indoor']);
+  const [slug, setSlug] = useState<ServiceLandingSlug>('videotron-outdoor');
+  const [landing, setLanding] = useState<ServiceLandingContent>(defaultServiceLandings['videotron-outdoor']);
   const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

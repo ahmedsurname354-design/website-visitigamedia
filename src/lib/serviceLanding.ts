@@ -1,6 +1,6 @@
 import type { ServiceLandingContent, ServiceLandingLocaleContent, ServiceLandingSlug } from '@/types/admin';
 
-export const serviceLandingSlugs: ServiceLandingSlug[] = ['led-indoor', 'videotron-outdoor', 'rental-led', 'media-konvensional', 'digital-signage', 'event-production'];
+export const serviceLandingSlugs: ServiceLandingSlug[] = ['videotron-outdoor', 'led-indoor', 'rental-led', 'media-konvensional', 'digital-signage', 'event-production'];
 
 const commonId = {
   intro_eyebrow: 'Dasar perencanaan', intro_title: 'Solusi mengikuti kebutuhan lokasi.', considerations_title: 'Yang perlu dipastikan',
