@@ -35,7 +35,7 @@ describe('process section placement', () => {
   it('does not render process cards on About anymore', () => {
     render(<LanguageProvider><MemoryRouter><AboutSection valueContent={values} /></MemoryRouter></LanguageProvider>);
     expect(screen.queryByRole('heading', { name: 'From needs to real solutions' })).not.toBeInTheDocument();
-    expect(screen.queryByText('01')).not.toBeInTheDocument();
+    expect(document.querySelector('.process-section__number')).not.toBeInTheDocument();
   });
 
   it('fills process content from the fallback when legacy data has no process', () => {

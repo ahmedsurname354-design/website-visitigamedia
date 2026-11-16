@@ -150,7 +150,7 @@ export interface ServiceContentLocale { eyebrow: string; heading: string; headin
 
 export type ServiceContentInput = Omit<ServiceContent, 'id' | 'updated_at'>;
 
-export type ServiceLandingSlug = 'led-indoor' | 'videotron-outdoor' | 'rental-led' | 'media-konvensional';
+export type ServiceLandingSlug = 'led-indoor' | 'videotron-outdoor' | 'rental-led' | 'media-konvensional' | 'digital-signage' | 'event-production';
 
 export interface ServiceLandingLocaleContent {
   eyebrow: string;

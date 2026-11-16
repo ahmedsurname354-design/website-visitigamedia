@@ -43,6 +43,14 @@ const seoByPath: Record<string, Record<Lang, SeoCopy>> = {
     id: { title: 'Billboard dan Media Konvensional | Visitiga', description: 'Perencanaan billboard, lightbox, dan media konvensional berdasarkan lokasi, bidang visual, struktur, serta pencahayaan.' },
     en: { title: 'Billboards and Conventional Media | Visitiga', description: 'Billboard, lightbox, and conventional media planning based on location, display area, structure, and lighting.' },
   },
+  '/services/digital-signage': {
+    id: { title: 'Digital Signage untuk Pengalaman Brand | Visitiga', description: 'Solusi display terhubung untuk retail, hospitality, wayfinding, dan ruang bermerek.' },
+    en: { title: 'Digital Signage for Connected Brand Experiences | Visitiga', description: 'Connected display solutions for retail, hospitality, wayfinding, and branded spaces.' },
+  },
+  '/services/event-production': {
+    id: { title: 'Event Production untuk Pengalaman Live | Visitiga', description: 'Dukungan produksi visual dan teknis untuk acara, panggung, konferensi, dan pengalaman live.' },
+    en: { title: 'Event Production for Live Visual Experiences | Visitiga', description: 'Visual and technical production support for events, stages, conferences, and live experiences.' },
+  },
   '/product': {
     id: { title: 'Produk LED Display & Videotron — Visitiga', description: 'Jelajahi pilihan produk dan solusi media LED Visitiga yang dapat disesuaikan dengan kebutuhan merek Anda.' },
     en: { title: 'LED Display & Videotron Products — Visitiga', description: 'Explore Visitiga LED products and media solutions tailored to your brand requirements.' },

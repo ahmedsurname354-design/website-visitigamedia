@@ -1,4 +1,4 @@
-export const STATIC_ROUTES = ['/', '/about', '/services', '/services/led-indoor', '/services/videotron-outdoor', '/services/rental-led', '/services/media-konvensional', '/product', '/portfolio', '/video', '/contact', '/news', '/faq', '/privacy'];
+export const STATIC_ROUTES = ['/', '/about', '/services', '/services/led-indoor', '/services/videotron-outdoor', '/services/rental-led', '/services/media-konvensional', '/services/digital-signage', '/services/event-production', '/product', '/portfolio', '/video', '/contact', '/news', '/faq', '/privacy'];
 export const SEO_LANGUAGES = ['id', 'en'];
 
 export function canonicalRoute(path) {

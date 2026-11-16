@@ -49,6 +49,7 @@ export function localizedServiceContent(item: ServiceContent, lang: Lang): Servi
   return {
     ...item,
     ...(locale && Object.keys(locale).length > 0 ? locale : {}),
+    cards: [...(locale?.cards ?? item.cards ?? []), ...defaultServiceContent.cards.slice(locale?.cards?.length ?? item.cards?.length ?? 0)].slice(0, 6),
     process_eyebrow: locale?.process_eyebrow ?? item.process_eyebrow ?? defaultServiceContent.process_eyebrow,
     process_title: locale?.process_title ?? item.process_title ?? defaultServiceContent.process_title,
     process: locale?.process?.length === 5 ? locale.process : item.process?.length === 5 ? item.process : defaultServiceContent.process,

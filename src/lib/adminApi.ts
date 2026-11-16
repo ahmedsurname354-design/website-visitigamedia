@@ -151,7 +151,7 @@ export async function deleteProduct(id: string): Promise<void> {
 
 function validateHomepageContent(input: HomepageContentInput) {
   if (input.content_id.stats.length > 4 || input.content_en.stats.length > 4) throw new Error('Maksimal empat statistik per bahasa.');
-  if (input.content_id.services.cards.length > 4 || input.content_en.services.cards.length > 4) throw new Error('Maksimal empat kartu layanan per bahasa.');
+  if (input.content_id.services.cards.length > 4 || input.content_en.services.cards.length > 4) throw new Error('Maksimal enam kartu layanan per bahasa.');
   if (input.hero_slides.length !== 4) throw new Error('Hero harus memiliki tepat empat slide.');
   if (input.featured_portfolio_ids.length > 3) throw new Error('Maksimal tiga proyek unggulan.');
   for (const [index, slide] of input.hero_slides.entries()) assertSafeMediaUrl(slide.image_url, `URL gambar slide ${index + 1}`);
@@ -212,6 +212,7 @@ export async function getServiceContent(): Promise<ServiceContent | null> {
 }
 
 export async function saveServiceContent(input: ServiceContentInput): Promise<ServiceContent> {
+  if (input.cards.length !== 6) throw new Error('Layanan harus memiliki tepat enam kartu.');
   assertSafeLink(input.primary_button_url, 'URL tombol utama');
   assertSafeLink(input.secondary_button_url, 'URL tombol kedua');
   assertSafeMediaUrl(input.video_webm_url, 'URL video WebM');

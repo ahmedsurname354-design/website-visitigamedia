@@ -5,7 +5,7 @@ import { LocalizedLink as Link } from '@/components/LocalizedLink';
 import { getServiceLanding, listPublicPortfolios } from '@/lib/adminApi';
 import { optimizedImageUrl } from '@/lib/imageUrl';
 import { getPrerenderData } from '@/lib/prerenderData';
-import { isServiceLandingSlug } from '@/lib/serviceLanding';
+import { defaultServiceLandings, isServiceLandingSlug } from '@/lib/serviceLanding';
 import { useTranslation } from '@/i18n';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { localizedAbsoluteUrl } from '@/lib/seo';
@@ -18,7 +18,7 @@ export default function ServiceLandingPage() {
   const { lang } = useTranslation();
   const initial = getPrerenderData();
   const initialService = initial?.serviceLanding;
-  const [service, setService] = useState<ServiceLandingContent | null>(initialService?.slug === validSlug ? initialService ?? null : null);
+  const [service, setService] = useState<ServiceLandingContent | null>(initialService?.slug === validSlug ? initialService ?? null : validSlug ? defaultServiceLandings[validSlug] : null);
   const [projects, setProjects] = useState<Portfolio[]>(initial?.portfolios ?? []);
   const [error, setError] = useState('');
 

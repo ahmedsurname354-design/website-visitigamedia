@@ -10,6 +10,8 @@ export const defaultServiceContent: ServiceContentInput = {
     { title: 'Media Placement', description: 'Penempatan media strategis untuk menjangkau audiens yang tepat.', tags: ['OOH', 'DOOH', 'Campaign'], action: 'Konsultasi sekarang' },
     { title: 'Audio Visual', description: 'Sistem audio visual terintegrasi untuk ruang dan acara profesional.', tags: ['Audio', 'Visual', 'Integration'], action: 'Konsultasi sekarang' },
     { title: 'Creative Content', description: 'Konten visual kreatif yang dirancang untuk menarik perhatian audiens.', tags: ['Design', 'Motion', 'Content'], action: 'Konsultasi sekarang' },
+    { title: 'Digital Signage', description: 'Solusi display terhubung untuk retail, hospitality, wayfinding, dan ruang bermerek.', tags: ['Retail', 'Hospitality', 'Wayfinding'], action: 'Konsultasi sekarang' },
+    { title: 'Event Production', description: 'Dukungan produksi visual dan teknis untuk acara, panggung, konferensi, dan pengalaman live.', tags: ['Events', 'Staging', 'Technical Support'], action: 'Konsultasi sekarang' },
   ],
   showreel_eyebrow: 'Layanan Kami',
   showreel_heading: 'Visual Memukau,',
@@ -32,6 +34,7 @@ export function normalizeServiceContent(value: ServiceContentInput): ServiceCont
   return {
     ...defaultServiceContent,
     ...value,
+    cards: [...(value.cards ?? []), ...defaultServiceContent.cards.slice(value.cards?.length ?? 0)].slice(0, 6),
     process_eyebrow: locale?.process_eyebrow ?? value.process_eyebrow ?? defaultServiceContent.process_eyebrow,
     process_title: locale?.process_title ?? value.process_title ?? defaultServiceContent.process_title,
     process: locale?.process?.length === 5 ? locale.process : value.process?.length === 5 ? value.process : defaultServiceContent.process,

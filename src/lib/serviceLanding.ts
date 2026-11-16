@@ -1,6 +1,6 @@
 import type { ServiceLandingContent, ServiceLandingLocaleContent, ServiceLandingSlug } from '@/types/admin';
 
-export const serviceLandingSlugs: ServiceLandingSlug[] = ['led-indoor', 'videotron-outdoor', 'rental-led', 'media-konvensional'];
+export const serviceLandingSlugs: ServiceLandingSlug[] = ['led-indoor', 'videotron-outdoor', 'rental-led', 'media-konvensional', 'digital-signage', 'event-production'];
 
 const commonId = {
   intro_eyebrow: 'Dasar perencanaan', intro_title: 'Solusi mengikuti kebutuhan lokasi.', considerations_title: 'Yang perlu dipastikan',
@@ -58,6 +58,24 @@ export const defaultServiceLandings: Record<ServiceLandingSlug, ServiceLandingCo
     intro: 'Billboards, lightboxes, and other physical media need to suit their location, viewing direction, structure, artwork dimensions, and lighting. Each display is planned around the installed media format.',
     considerations: ['Location and viewing direction', 'Artwork size and ratio', 'Media structure', 'Lighting and surroundings'], process: ['Site inspection', 'Format and size selection', 'Artwork and structure preparation', 'Installation and final inspection'],
   }, ['Billboard dan Media Konvensional | Visitiga', 'Perencanaan billboard, lightbox, dan media konvensional berdasarkan lokasi, bidang visual, struktur, serta pencahayaan.', 'Billboards and Conventional Media | Visitiga', 'Billboard, lightbox, and conventional media planning based on location, display area, structure, and lighting.']),
+  'digital-signage': landing('digital-signage', {
+    ...commonId, intro_title: 'Solusi mengikuti alur audiens dan ruang.', eyebrow: 'Layanan digital signage', title: 'Digital Signage untuk Pengalaman Brand yang Terhubung', description: 'Solusi display terhubung untuk retail, hospitality, wayfinding, dan ruang bermerek dengan perencanaan konten, lokasi, dan operasional yang selaras.',
+    intro: 'Digital signage perlu direncanakan dari alur audiens, jarak pandang, pencahayaan, sumber konten, koneksi jaringan, dan akses pemeliharaan. Sistem disusun agar pesan dapat tampil konsisten dan mudah dikelola.',
+    considerations: ['Alur audiens dan jarak pandang', 'Format konten serta jadwal pembaruan', 'Jalur listrik, jaringan, dan sistem pengelolaan', 'Struktur pemasangan serta akses perawatan'], process: ['Memahami kebutuhan ruang dan audiens', 'Menentukan layar serta format tampilan', 'Merencanakan konten dan sistem pengelolaan', 'Pemasangan, pengujian, dan serah terima'],
+  }, {
+    ...commonEn, intro_title: 'A solution shaped by the audience and space.', eyebrow: 'Digital signage service', title: 'Digital Signage for Connected Brand Experiences', description: 'Connected display solutions for retail, hospitality, wayfinding, and branded spaces, planned around content, placement, and daily operations.',
+    intro: 'Digital signage needs to account for audience flow, viewing distance, ambient light, content sources, network connections, and maintenance access. The system is shaped to keep messages consistent and easy to manage.',
+    considerations: ['Audience flow and viewing distance', 'Content formats and update frequency', 'Power, network, and content management routes', 'Mounting and maintenance access'], process: ['Reviewing the space and audience needs', 'Selecting displays and formats', 'Planning content and management systems', 'Installation, testing, and handover'],
+  }, ['Digital Signage untuk Pengalaman Brand | Visitiga', 'Solusi display terhubung untuk retail, hospitality, wayfinding, dan ruang bermerek.', 'Digital Signage for Connected Brand Experiences | Visitiga', 'Connected display solutions for retail, hospitality, wayfinding, and branded spaces.']),
+  'event-production': landing('event-production', {
+    ...commonId, intro_title: 'Solusi mengikuti karakter acara.', eyebrow: 'Layanan event production', title: 'Event Production untuk Pengalaman Visual Live', description: 'Dukungan produksi visual dan teknis untuk acara, panggung, konferensi, dan pengalaman live dengan persiapan yang terukur dari rundown hingga hari pelaksanaan.',
+    intro: 'Produksi acara perlu menyatukan kebutuhan visual, panggung, sinyal, listrik, jadwal loading, dan dukungan teknis. Perencanaan dibuat berdasarkan venue dan alur acara agar eksekusi berjalan terkoordinasi.',
+    considerations: ['Format acara dan tata letak audiens', 'Kebutuhan panggung, layar, dan visual', 'Jalur sinyal, audio, listrik, dan keselamatan', 'Jadwal setup, rehearsal, dan dukungan teknis'], process: ['Meninjau rundown dan kebutuhan teknis', 'Survei venue serta jalur operasional', 'Menyiapkan perangkat dan sistem sinyal', 'Rehearsal serta operasional saat acara'],
+  }, {
+    ...commonEn, intro_title: 'A solution shaped by the event.', eyebrow: 'Event production service', title: 'Event Production for Live Visual Experiences', description: 'Visual and technical production support for events, stages, conferences, and live experiences, prepared from the rundown through show day.',
+    intro: 'Event production brings together visual requirements, staging, signal, power, loading schedules, and technical support. Planning follows the venue and event flow so execution stays coordinated.',
+    considerations: ['Event format and audience layout', 'Stage, screen, and visual requirements', 'Signal, audio, power, and safety routes', 'Setup, rehearsal, and technical support schedule'], process: ['Reviewing the rundown and technical needs', 'Surveying the venue and operating routes', 'Preparing equipment and signal systems', 'Rehearsal and live event operation'],
+  }, ['Event Production untuk Pengalaman Live | Visitiga', 'Dukungan produksi visual dan teknis untuk acara, panggung, konferensi, dan pengalaman live.', 'Event Production for Live Visual Experiences | Visitiga', 'Visual and technical production support for events, stages, conferences, and live experiences.']),
 };
 
 export const serviceLandings = defaultServiceLandings;

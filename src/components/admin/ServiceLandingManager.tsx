@@ -7,7 +7,7 @@ import type { Portfolio, ServiceLandingContent, ServiceLandingLocaleContent, Ser
 import { translateContent } from '@/lib/translation';
 
 const labels: Record<ServiceLandingSlug, string> = {
-  'led-indoor': 'LED Indoor', 'videotron-outdoor': 'Videotron Outdoor', 'rental-led': 'Rental LED', 'media-konvensional': 'Media Konvensional',
+  'led-indoor': 'LED Indoor', 'videotron-outdoor': 'Videotron Outdoor', 'rental-led': 'Rental LED', 'media-konvensional': 'Media Konvensional', 'digital-signage': 'Digital Signage', 'event-production': 'Event Production',
 };
 
 function value(form: FormData, name: string) { return String(form.get(name) ?? '').trim(); }
