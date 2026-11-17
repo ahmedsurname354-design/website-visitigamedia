@@ -97,6 +97,7 @@ function LocalePanel({ locale, title, content }: { locale: 'id' | 'en'; title: s
 
 function PortfolioSelects({ projects, selected }: { projects: Portfolio[]; selected: string[] }) {
   const [values, setValues] = useState([selected[0] ?? '', selected[1] ?? '', selected[2] ?? '']);
+  useEffect(() => { setValues([selected[0] ?? '', selected[1] ?? '', selected[2] ?? '']); }, [selected]);
   return <div className="grid gap-4 sm:col-span-2 sm:grid-cols-3">{values.map((current, index) => <label key={index} className="text-sm font-medium text-slate-700">Urutan {index + 1}<select name={`portfolio_${index + 1}`} value={current} onChange={(event) => setValues((items) => items.map((item, itemIndex) => itemIndex === index ? event.target.value : item))} className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 outline-none focus:border-orange-500"><option value="">Tidak dipilih</option>{projects.map((project) => <option key={project.id} value={project.id} disabled={values.some((value, valueIndex) => valueIndex !== index && value === project.id)}>{project.title}</option>)}</select></label>)}</div>;
 }
 

@@ -7,17 +7,8 @@ import type { HomepageContent, HomepageHeroSlide } from '@/types/admin';
 import { useMotionPolicy } from '@/hooks/useMotionPolicy';
 
 const AUTOPLAY_MS = 6000;
-const fallbackSlides: HomepageHeroSlide[] = [
-  { image_url: '/hero-1600.webp', alt: 'Tampilan LED Visitiga di malam hari' },
-  { image_url: '/portfolio/indoor/indoor-9.webp', alt: 'Proyek LED indoor Visitiga' },
-  { image_url: '/portfolio/rental/rental-8.webp', alt: 'Proyek rental LED Visitiga' },
-  { image_url: '/portfolio/audiovisual/IMG_9584-scaled.webp', alt: 'Proyek audiovisual Visitiga' },
-];
-
 function normalizeSlides(content: HomepageContent): HomepageHeroSlide[] {
-  const configured = content.hero_slides?.filter((slide) => slide?.image_url);
-  if (configured?.length === 4) return configured;
-  return fallbackSlides;
+  return content.hero_slides?.filter((slide) => Boolean(slide?.image_url?.trim())) ?? [];
 }
 
 const fallbackCopies = {
@@ -43,7 +34,10 @@ export default function HeroSection({ content }: { content: HomepageContent }) {
   const [paused, setPaused] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
-  const goTo = useCallback((index: number) => setActiveIndex((index + slides.length) % slides.length), [slides.length]);
+  const goTo = useCallback((index: number) => {
+    if (!slides.length) return;
+    setActiveIndex((index + slides.length) % slides.length);
+  }, [slides.length]);
   const goNext = useCallback(() => goTo(activeIndex + 1), [activeIndex, goTo]);
   const goPrevious = useCallback(() => goTo(activeIndex - 1), [activeIndex, goTo]);
   const activeSlide = slides[activeIndex] ?? slides[0];
