@@ -14,7 +14,7 @@ const portfolioCategoryLabels: Record<StandardPortfolioCategoryKey, Record<Lang,
 };
 
 export function portfolioCategoryKey(category: string): PortfolioCategoryKey {
-  const value = category.trim().toLocaleLowerCase().replace(/[&/]+/g, ' ').replace(/\s+/g, ' ');
+  const value = category.trim().toLocaleLowerCase().replace(/[-&/]+/g, ' ').replace(/\s+/g, ' ');
   if (value.includes('konvensional') || value.includes('conventional')) return 'conventional';
   if (value.includes('rental') || value.includes('sewa')) return 'rental';
   if (value.includes('audio visual') || value.includes('audiovisual')) return 'audio-visual';

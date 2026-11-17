@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { serviceIcons, servicePaths } from '@/lib/serviceConfig';
 import { defaultServiceContent } from '@/lib/serviceContent';
 import { defaultServiceLandings, isServiceLandingSlug, serviceLandingSlugs } from '@/lib/serviceLanding';
+import { portfolioCategoryLabel } from '@/lib/contentLocale';
 
 describe('services configuration', () => {
   it('keeps exactly six default service cards', () => {
@@ -20,6 +21,11 @@ describe('services configuration', () => {
     expect(serviceLandingSlugs).toContain('event-production');
     expect(isServiceLandingSlug('digital-signage')).toBe(true);
     expect(isServiceLandingSlug('event-production')).toBe(true);
+  });
+
+  it('formats the hyphenated audio-visual portfolio category', () => {
+    expect(portfolioCategoryLabel('audio-visual', 'id')).toBe('Audio Visual');
+    expect(portfolioCategoryLabel('audio-visual', 'en')).toBe('Audio Visual');
   });
 
   it('keeps every card title aligned with a complete bilingual landing', () => {
