@@ -33,7 +33,8 @@ export default function AdminLayout() {
     const refresh = () => void countNewContactLeads().then(setNewLeadCount).catch(() => undefined);
     refresh();
     const channel = client.channel('admin-new-lead-count').on('postgres_changes', { event: '*', schema: 'public', table: 'contact_messages' }, refresh).subscribe();
-    return () => { void client.removeChannel(channel); };
+    const interval = window.setInterval(refresh, 30_000);
+    return () => { window.clearInterval(interval); void client.removeChannel(channel); };
   }, []);
 
   const logout = async () => {
