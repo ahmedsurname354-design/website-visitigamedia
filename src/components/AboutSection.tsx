@@ -9,9 +9,10 @@ import VisionMissionSection from '@/components/VisionMissionSection';
 import type { AboutLocaleContent } from '@/types/admin';
 
 const features = [
-  'Solusi indoor dan outdoor',
-  'Pembelian, sewa, & konstruksi',
-  'Respons cepat via WhatsApp',
+  'Panel LED berkualitas premium',
+  'Tim instalasi bersertifikat',
+  'Desain sesuai kebutuhan',
+  'Dukungan purnajual',
 ];
 
 
