@@ -2,11 +2,13 @@ import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LocalizedNavLink as NavLink } from '@/components/LocalizedLink';
 import { m as motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, Menu, X } from 'lucide-react';
+import { ChevronDown, Handshake, Mail, Megaphone, Menu, Phone, X } from 'lucide-react';
 import { useMotionPolicy } from '@/hooks/useMotionPolicy';
 import Logo from '@/components/Logo';
 import { useTranslation } from '@/i18n';
 import { preloadPublicRoute } from '@/lib/publicRoutes';
+import { useContactSettings } from '@/hooks/useContactSettings';
+import { whatsappHref } from '@/lib/contactSettings';
 
 const navLinks = [
   { labelKey: 'navbar.home', href: '/' },
@@ -18,13 +20,21 @@ const navLinks = [
   { labelKey: 'navbar.contact', href: '/contact' },
 ];
 
+const marketingSubject = 'Konsultasi Visitiga Media';
+const procurementSubject = 'Kerjasama Procurement';
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(() => window.scrollY > 30);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [contactMenuOpen, setContactMenuOpen] = useState(false);
   const { lang, setLang, t } = useTranslation();
+  const contactSettings = useContactSettings();
   const location = useLocation();
   const { reducedMotion } = useMotionPolicy();
   const mobileToggle = useRef<HTMLButtonElement>(null);
+  const contactToggle = useRef<HTMLButtonElement>(null);
+  const contactFirstLink = useRef<HTMLAnchorElement>(null);
+  const navRef = useRef<HTMLElement>(null);
   const solid = !/^\/(?:id|en)\/?$/.test(location.pathname) || scrolled || mobileOpen;
 
   useEffect(() => {
@@ -45,7 +55,30 @@ export default function Navbar() {
     };
   }, []);
 
-  useEffect(() => setMobileOpen(false), [location.pathname]);
+  useEffect(() => {
+    setMobileOpen(false);
+    setContactMenuOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (!contactMenuOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setContactMenuOpen(false);
+        contactToggle.current?.focus();
+      }
+    };
+    const closeOnOutsidePointer = (event: PointerEvent) => {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) setContactMenuOpen(false);
+    };
+    document.addEventListener('keydown', closeOnEscape);
+    document.addEventListener('pointerdown', closeOnOutsidePointer);
+    contactFirstLink.current?.focus();
+    return () => {
+      document.removeEventListener('keydown', closeOnEscape);
+      document.removeEventListener('pointerdown', closeOnOutsidePointer);
+    };
+  }, [contactMenuOpen]);
 
   useEffect(() => {
     const desktop = window.matchMedia('(min-width: 1024px)');
@@ -73,6 +106,7 @@ export default function Navbar() {
 
   return (
     <motion.nav
+      ref={navRef}
       initial={false}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0 }}
@@ -114,7 +148,39 @@ export default function Navbar() {
           >
             {lang.toUpperCase()}
           </button>
-          <NavLink to="/contact" className="site-navbar__cta">{t('navbar.contact')} <ArrowUpRight /></NavLink>
+          <div className="site-navbar__contact">
+            <button
+              ref={contactToggle}
+              type="button"
+              className="site-navbar__cta"
+              aria-haspopup="menu"
+              aria-expanded={contactMenuOpen}
+              aria-controls="desktop-contact-menu"
+              onClick={() => setContactMenuOpen((open) => !open)}
+            >
+              {t('navbar.contact')} <ChevronDown className={contactMenuOpen ? 'rotate-180' : ''} />
+            </button>
+            {contactMenuOpen && (
+              <div id="desktop-contact-menu" role="menu" className="site-navbar__contact-menu">
+                <div className="site-navbar__contact-option">
+                  <div className="site-navbar__contact-option-heading"><Megaphone aria-hidden="true" /><span>{lang === 'id' ? 'Marketing' : 'Marketing'}</span></div>
+                  <p>{lang === 'id' ? 'Konsultasi media dan kebutuhan proyek.' : 'Media consultation and project requirements.'}</p>
+                  <div className="site-navbar__contact-option-links">
+                    <a ref={contactFirstLink} role="menuitem" href={whatsappHref(contactSettings.marketing_phone, marketingSubject)} target="_blank" rel="noopener noreferrer"><Phone aria-hidden="true" />WhatsApp</a>
+                    <a role="menuitem" href={`mailto:${contactSettings.marketing_email}?subject=${encodeURIComponent(marketingSubject)}`}><Mail aria-hidden="true" />Email</a>
+                  </div>
+                </div>
+                <div className="site-navbar__contact-option">
+                  <div className="site-navbar__contact-option-heading"><Handshake aria-hidden="true" /><span>{lang === 'id' ? 'Procurement' : 'Procurement'}</span></div>
+                  <p>{lang === 'id' ? 'Kerjasama, pengadaan, dan kebutuhan vendor.' : 'Partnership, procurement, and vendor requirements.'}</p>
+                  <div className="site-navbar__contact-option-links">
+                    <a role="menuitem" href={whatsappHref(contactSettings.procurement_phone, procurementSubject)} target="_blank" rel="noopener noreferrer"><Phone aria-hidden="true" />WhatsApp</a>
+                    <a role="menuitem" href={`mailto:${contactSettings.procurement_email}?subject=${encodeURIComponent(procurementSubject)}`}><Mail aria-hidden="true" />Email</a>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Mobile toggle */}
@@ -143,7 +209,7 @@ export default function Navbar() {
           >
             <div className="site-mobile-menu__content flex flex-col px-5 pb-6 pt-4 sm:px-8">
             <ul className="flex shrink-0 flex-col gap-1">
-              {navLinks.map((link) => (
+              {navLinks.filter((link) => link.labelKey !== 'navbar.contact').map((link) => (
                 <li key={link.labelKey}>
                   <NavLink
                     to={link.href}
@@ -160,6 +226,38 @@ export default function Navbar() {
                 </li>
               ))}
             </ul>
+            <div className="site-mobile-contact mt-5">
+              <button
+                type="button"
+                className="site-mobile-contact__toggle"
+                aria-haspopup="menu"
+                aria-expanded={contactMenuOpen}
+                aria-controls="mobile-contact-menu"
+                onClick={() => setContactMenuOpen((open) => !open)}
+              >
+                <span>{t('navbar.contact')}</span><ChevronDown className={contactMenuOpen ? 'rotate-180' : ''} />
+              </button>
+              {contactMenuOpen && (
+                <div id="mobile-contact-menu" role="menu" className="site-mobile-contact__menu">
+                  <div className="site-mobile-contact__option">
+                    <p className="site-mobile-contact__label"><Megaphone aria-hidden="true" />Marketing</p>
+                    <p>{lang === 'id' ? 'Konsultasi media dan kebutuhan proyek.' : 'Media consultation and project requirements.'}</p>
+                    <div className="site-mobile-contact__links">
+                      <a ref={contactFirstLink} role="menuitem" href={whatsappHref(contactSettings.marketing_phone, marketingSubject)} target="_blank" rel="noopener noreferrer"><Phone aria-hidden="true" />WhatsApp</a>
+                      <a role="menuitem" href={`mailto:${contactSettings.marketing_email}?subject=${encodeURIComponent(marketingSubject)}`}><Mail aria-hidden="true" />Email</a>
+                    </div>
+                  </div>
+                  <div className="site-mobile-contact__option">
+                    <p className="site-mobile-contact__label"><Handshake aria-hidden="true" />Procurement</p>
+                    <p>{lang === 'id' ? 'Kerjasama, pengadaan, dan kebutuhan vendor.' : 'Partnership, procurement, and vendor requirements.'}</p>
+                    <div className="site-mobile-contact__links">
+                      <a role="menuitem" href={whatsappHref(contactSettings.procurement_phone, procurementSubject)} target="_blank" rel="noopener noreferrer"><Phone aria-hidden="true" />WhatsApp</a>
+                      <a role="menuitem" href={`mailto:${contactSettings.procurement_email}?subject=${encodeURIComponent(procurementSubject)}`}><Mail aria-hidden="true" />Email</a>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
             <div className="mt-auto shrink-0 border-t border-black/10 pt-5">
               <button
                 onClick={() => setLang(lang === 'id' ? 'en' : 'id')}

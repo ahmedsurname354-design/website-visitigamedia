@@ -190,6 +190,17 @@ export type ServiceLandingInput = Omit<ServiceLandingContent, 'updated_at'>;
 
 export type LeadStatus = 'new' | 'contacted' | 'completed' | 'spam';
 
+export interface ContactSettings {
+  id: number;
+  marketing_phone: string;
+  marketing_email: string;
+  procurement_phone: string;
+  procurement_email: string;
+  updated_at: string;
+}
+
+export type ContactSettingsInput = Omit<ContactSettings, 'id' | 'updated_at'>;
+
 export interface ContactLead {
   id: number;
   name: string;

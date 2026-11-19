@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { translateContent } from '@/lib/translation';
-import type { AboutContent, AboutContentInput, ContactLead, HomepageContent, HomepageContentInput, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, PortfolioSlugAlias, Product, ProductCatalogue, ProductInput, ServiceContent, ServiceContentInput, ServiceLandingContent, ServiceLandingInput, ServiceLandingSlug } from '@/types/admin';
+import type { AboutContent, AboutContentInput, ContactLead, ContactSettings, ContactSettingsInput, HomepageContent, HomepageContentInput, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, PortfolioSlugAlias, Product, ProductCatalogue, ProductInput, ServiceContent, ServiceContentInput, ServiceLandingContent, ServiceLandingInput, ServiceLandingSlug } from '@/types/admin';
 
 function client(): SupabaseClient {
   if (!supabase) throw new Error('Supabase belum dikonfigurasi.');
@@ -28,6 +28,15 @@ function assertSafeLink(value: string, label: string) {
     // Fall through to the user-facing validation error.
   }
   throw new Error(`${label} tidak valid.`);
+}
+
+function validateContactSettings(input: ContactSettingsInput) {
+  for (const [label, value] of [['Nomor WhatsApp Marketing', input.marketing_phone], ['Nomor WhatsApp Procurement', input.procurement_phone]] as const) {
+    if (!/^\+?[\d\s().-]{7,30}$/.test(value.trim())) throw new Error(`${label} tidak valid.`);
+  }
+  for (const [label, value] of [['Email Marketing', input.marketing_email], ['Email Procurement', input.procurement_email]] as const) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()) || value.trim().length > 254) throw new Error(`${label} tidak valid.`);
+  }
 }
 
 export async function listPortfolios(): Promise<Portfolio[]> {
@@ -178,6 +187,25 @@ export async function saveHomepageContent(input: HomepageContentInput): Promise<
   const { data, error } = await client().from('homepage_content').upsert({ id: 1, ...input }).select('*').single();
   if (error) throw error;
   return data as HomepageContent;
+}
+
+export async function getContactSettings(): Promise<ContactSettings | null> {
+  const { data, error } = await client().from('contact_settings').select('*').eq('id', 1).maybeSingle();
+  if (error) throw error;
+  return data as ContactSettings | null;
+}
+
+export async function saveContactSettings(input: ContactSettingsInput): Promise<ContactSettings> {
+  const normalized = {
+    marketing_phone: input.marketing_phone.trim(),
+    marketing_email: input.marketing_email.trim(),
+    procurement_phone: input.procurement_phone.trim(),
+    procurement_email: input.procurement_email.trim(),
+  };
+  validateContactSettings(normalized);
+  const { data, error } = await client().from('contact_settings').upsert({ id: 1, ...normalized }).select('*').single();
+  if (error) throw error;
+  return data as ContactSettings;
 }
 
 export async function getAboutContent(): Promise<AboutContent | null> {

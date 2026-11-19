@@ -3,6 +3,8 @@ import Logo from '@/components/Logo';
 import { LocalizedLink as Link } from '@/components/LocalizedLink';
 import type { MouseEvent } from 'react';
 import { useTranslation } from '@/i18n';
+import { useContactSettings } from '@/hooks/useContactSettings';
+import { whatsappHref } from '@/lib/contactSettings';
 
 const socials = [
   { label: 'Instagram', Icon: Instagram, href: 'https://www.instagram.com/visitigamedia?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==' },
@@ -35,6 +37,7 @@ const footerCopy = {
 
 export default function Footer() {
   const { lang } = useTranslation();
+  const contactSettings = useContactSettings();
   const copy = footerCopy[lang];
   return (
     <footer className="site-footer border-t border-slate-800 pt-16 pb-8 sm:pt-20">
@@ -57,15 +60,15 @@ export default function Footer() {
           <div className="site-footer__partnership rounded-2xl border border-white/10 bg-white/5 p-5">
             <p className="site-footer__heading text-white font-semibold text-sm mb-5">{copy.partnership.title}</p>
             <div className="space-y-4">
-              <a href="https://wa.me/628225878780" target="_blank" rel="noopener noreferrer" className="group flex items-start gap-3 text-white/70 hover:text-orange-500 text-sm transition-colors duration-300" aria-label={`${copy.partnership.title}: ${copy.partnership.phone}`}>
+              <a href={whatsappHref(contactSettings.procurement_phone, 'Kerjasama Procurement')} target="_blank" rel="noopener noreferrer" className="group flex items-start gap-3 text-white/70 hover:text-orange-500 text-sm transition-colors duration-300" aria-label={`${copy.partnership.title}: ${contactSettings.procurement_phone}`}>
                 <Phone aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
-                <span className="whitespace-nowrap underline-offset-4 group-hover:underline">{copy.partnership.phone}</span>
+                <span className="whitespace-nowrap underline-offset-4 group-hover:underline">{contactSettings.procurement_phone}</span>
               </a>
-              <a href={`mailto:${copy.partnership.email}`} className="group flex items-start gap-3 text-white/70 hover:text-orange-500 text-xs transition-colors duration-300" aria-label={`${copy.partnership.title}: ${copy.partnership.email}`}>
+              <a href={`mailto:${contactSettings.procurement_email}?subject=${encodeURIComponent('Kerjasama Procurement')}`} className="group flex items-start gap-3 text-white/70 hover:text-orange-500 text-xs transition-colors duration-300" aria-label={`${copy.partnership.title}: ${contactSettings.procurement_email}`}>
                 <Mail aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
-                <span className="whitespace-nowrap underline-offset-4 group-hover:underline">{copy.partnership.email}</span>
+                <span className="whitespace-nowrap underline-offset-4 group-hover:underline">{contactSettings.procurement_email}</span>
               </a>
-              <a href="https://wa.me/628225878780" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center gap-2 rounded-full bg-orange-500 px-3.5 py-2 text-xs font-semibold text-black transition hover:bg-orange-400" aria-label={copy.partnership.cta}>
+              <a href={whatsappHref(contactSettings.procurement_phone, 'Kerjasama Procurement')} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center gap-2 rounded-full bg-orange-500 px-3.5 py-2 text-xs font-semibold text-black transition hover:bg-orange-400" aria-label={copy.partnership.cta}>
                 {copy.partnership.cta}
                 <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5" />
               </a>

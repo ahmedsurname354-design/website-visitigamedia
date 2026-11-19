@@ -6,6 +6,8 @@ import { LocalizedLink as Link } from '@/components/LocalizedLink';
 import { useTranslation, type Lang } from '@/i18n';
 import { readLocalStorage, writeLocalStorage } from '@/lib/safeStorage';
 import type { HomepageContent } from '@/types/admin';
+import { useContactSettings } from '@/hooks/useContactSettings';
+import { whatsappHref as buildWhatsAppHref } from '@/lib/contactSettings';
 
 const submissionKeyName = 'visitiga_contact_submission_key';
 
@@ -49,10 +51,11 @@ export default function CTASection({ variant = 'full', content }: { variant?: 'c
   const [formError, setFormError] = useState('');
   const compact = variant === 'compact';
   const { lang, dict } = useTranslation();
+  const contactSettings = useContactSettings();
   const en = lang === 'en';
   const homepageCta = content ? (en ? content.content_en.cta : content.content_id.cta) : dict.cta;
-  const whatsappHref = `https://wa.me/${homepageCta.phoneInfo.replace(/\D/g, '')}`;
-  const emailHref = `mailto:${homepageCta.emailInfo}?subject=${encodeURIComponent(en ? 'Visitiga Media consultation' : 'Konsultasi Visitiga Media')}`;
+  const whatsappHref = buildWhatsAppHref(contactSettings.marketing_phone, en ? 'Visitiga Media consultation' : 'Konsultasi Visitiga Media');
+  const emailHref = `mailto:${contactSettings.marketing_email}?subject=${encodeURIComponent(en ? 'Visitiga Media consultation' : 'Konsultasi Visitiga Media')}`;
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -223,13 +226,13 @@ export default function CTASection({ variant = 'full', content }: { variant?: 'c
                 <div className="contact-info-card rounded-3xl p-4">
                   <div className="flex items-center gap-3 text-sm">
                     <Phone className="w-4 h-4 text-orange-400" />
-                    <span>{homepageCta.phoneInfo}</span>
+                    <span>{contactSettings.marketing_phone}</span>
                   </div>
                 </div>
                 <div className="contact-info-card rounded-3xl p-4">
                   <a href={emailHref} className="flex items-center gap-3 text-sm transition-colors duration-200">
                     <Mail className="w-4 h-4 text-orange-400" />
-                    <span>{homepageCta.emailInfo}</span>
+                    <span>{contactSettings.marketing_email}</span>
                   </a>
                 </div>
                 <div className="contact-info-card rounded-3xl p-4">
