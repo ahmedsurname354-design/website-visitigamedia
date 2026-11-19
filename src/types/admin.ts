@@ -93,7 +93,8 @@ export interface HomepageContent {
 
 export interface AboutValueItem { title: string; description: string; }
 export interface AboutProcessItem { title: string; description: string; }
-export interface AboutLocaleContent { eyebrow: string; title: string; vision_title: string; mission_title: string; vision: string; mission: string; items: AboutValueItem[]; process: AboutProcessItem[]; }
+export interface AboutIntroContent { sectionLabel?: string; headingPrefix?: string; headingAccent?: string; subtitle?: string; features: string[]; contactButton?: string; }
+export interface AboutLocaleContent { intro?: AboutIntroContent; eyebrow: string; title: string; vision_title: string; mission_title: string; vision: string; mission: string; items: AboutValueItem[]; process: AboutProcessItem[]; }
 export interface AboutContent {
   id: number;
   content_id: AboutLocaleContent;

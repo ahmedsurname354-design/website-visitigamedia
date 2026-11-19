@@ -19,6 +19,7 @@ const features = [
 export default function AboutSection({ valueContent }: { valueContent: AboutLocaleContent }) {
   const { ref, isInView, reducedMotion } = useScrollReveal();
   const { t } = useTranslation();
+  const intro = valueContent.intro;
 
   return (
     <section id="about" className="relative theme-section overflow-hidden">
@@ -31,7 +32,7 @@ export default function AboutSection({ valueContent }: { valueContent: AboutLoca
             transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.06 }}
             className="text-orange-500 text-sm font-semibold tracking-[0.3em] uppercase mb-4"
           >
-            {t('about.sectionLabel')}
+            {intro?.sectionLabel || t('about.sectionLabel')}
           </motion.p>
           <motion.h1
             initial={reducedMotion ? false : { opacity: 0, y: 12 }}
@@ -39,7 +40,7 @@ export default function AboutSection({ valueContent }: { valueContent: AboutLoca
             transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.06 }}
             className="text-white font-bold text-4xl md:text-5xl leading-tight tracking-tight mb-6"
           >
-            {t('about.headingPrefix')}<span className="inline-block whitespace-nowrap text-orange-500">{t('about.headingAccent')}</span>
+            {intro?.headingPrefix || t('about.headingPrefix')}<span className="inline-block whitespace-nowrap text-orange-500">{intro?.headingAccent || t('about.headingAccent')}</span>
           </motion.h1>
           <motion.p
             initial={reducedMotion ? false : { opacity: 0, y: 12 }}
@@ -47,11 +48,11 @@ export default function AboutSection({ valueContent }: { valueContent: AboutLoca
             transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.06 }}
             className="text-white/60 text-lg leading-relaxed mb-8"
           >
-            {t('about.subtitle')}
+            {intro?.subtitle || t('about.subtitle')}
           </motion.p>
 
           <div className="grid sm:grid-cols-2 gap-4 mb-8">
-            {features.map((feat, i) => (
+            {(intro?.features?.length === 4 ? intro.features : features).map((feat, i) => (
               <motion.div
                 key={feat}
                 initial={reducedMotion ? false : { opacity: 0, y: 12 }}
@@ -62,7 +63,7 @@ export default function AboutSection({ valueContent }: { valueContent: AboutLoca
                 <span className="w-6 h-6 rounded-full bg-orange-500/20 flex items-center justify-center flex-shrink-0">
                   <Check className="w-3.5 h-3.5 text-orange-500" />
                 </span>
-                <span className="text-white/80 text-sm">{t(`about.features.${i}`)}</span>
+                <span className="text-white/80 text-sm">{feat}</span>
               </motion.div>
             ))}
           </div>
@@ -74,7 +75,7 @@ export default function AboutSection({ valueContent }: { valueContent: AboutLoca
             transition={{ duration: reducedMotion ? 0 : 0.32, delay: reducedMotion ? 0 : 0.06 }}
             className="group inline-flex items-center gap-2 bg-white/10 hover:bg-orange-500 text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/30"
           >
-            {t('about.contactButton')}
+            {intro?.contactButton || t('about.contactButton')}
             <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
           </motion.a>
         </div>

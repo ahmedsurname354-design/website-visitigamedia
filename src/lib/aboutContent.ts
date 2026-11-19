@@ -19,6 +19,14 @@ export const defaultAboutProcess: { content_en: AboutProcessItem[]; content_id: 
 
 export const defaultAboutContent: AboutContentInput = {
   content_en: {
+    intro: {
+      sectionLabel: 'About Visitiga',
+      headingPrefix: 'Trusted Partner for ',
+      headingAccent: 'LED Innovation',
+      subtitle: 'Since 2013, Visitiga has been a pioneer in providing LED display solutions in Indonesia. With an experienced expert team, we deliver premium quality, creative design, and excellent service for every client.',
+      features: ['Premium quality LED panels', 'Certified installation team', 'Custom design solutions', 'Post-sale support'],
+      contactButton: 'Contact Us',
+    },
     eyebrow: 'Our values',
     title: 'WHY CHOOSE US',
     vision_title: 'A clearer future for visual communication.',
@@ -34,6 +42,14 @@ export const defaultAboutContent: AboutContentInput = {
     process: defaultAboutProcess.content_en,
   },
   content_id: {
+    intro: {
+      sectionLabel: 'Tentang Visitiga',
+      headingPrefix: 'Mitra Tepercaya untuk ',
+      headingAccent: 'Inovasi LED',
+      subtitle: 'Sejak 2013, Visitiga telah menjadi pelopor dalam penyediaan solusi LED display di Indonesia. Dengan tim ahli yang berpengalaman, kami menghadirkan kualitas premium, desain kreatif, dan pelayanan terbaik untuk setiap klien.',
+      features: ['Panel LED berkualitas premium', 'Tim instalasi bersertifikat', 'Desain sesuai kebutuhan', 'Dukungan purnajual'],
+      contactButton: 'Hubungi Kami',
+    },
     eyebrow: 'Nilai kami',
     title: 'MENGAPA MEMILIH KAMI',
     vision_title: 'Masa depan komunikasi visual yang lebih jelas.',
@@ -53,7 +69,7 @@ export const defaultAboutContent: AboutContentInput = {
 export function normalizeAboutContent(value: Partial<{ content_id: AboutLocaleContent; content_en: AboutLocaleContent }> | null | undefined) {
   const fallback = defaultAboutContent;
   return {
-    content_en: value?.content_en?.items?.length ? { ...fallback.content_en, ...value.content_en, vision_title: value.content_en.vision_title || fallback.content_en.vision_title, mission_title: value.content_en.mission_title || fallback.content_en.mission_title, vision: value.content_en.vision || fallback.content_en.vision, mission: value.content_en.mission || fallback.content_en.mission, process: value.content_en.process?.length === 5 ? value.content_en.process : fallback.content_en.process } : fallback.content_en,
-    content_id: value?.content_id?.items?.length ? { ...fallback.content_id, ...value.content_id, vision_title: value.content_id.vision_title || fallback.content_id.vision_title, mission_title: value.content_id.mission_title || fallback.content_id.mission_title, vision: value.content_id.vision || fallback.content_id.vision, mission: value.content_id.mission || fallback.content_id.mission, process: value.content_id.process?.length === 5 ? value.content_id.process : fallback.content_id.process } : fallback.content_id,
+    content_en: value?.content_en?.items?.length ? { ...fallback.content_en, ...value.content_en, intro: { ...fallback.content_en.intro, ...value.content_en.intro, features: value.content_en.intro?.features?.length === 4 ? value.content_en.intro.features : fallback.content_en.intro?.features ?? [] }, vision_title: value.content_en.vision_title || fallback.content_en.vision_title, mission_title: value.content_en.mission_title || fallback.content_en.mission_title, vision: value.content_en.vision || fallback.content_en.vision, mission: value.content_en.mission || fallback.content_en.mission, process: value.content_en.process?.length === 5 ? value.content_en.process : fallback.content_en.process } : fallback.content_en,
+    content_id: value?.content_id?.items?.length ? { ...fallback.content_id, ...value.content_id, intro: { ...fallback.content_id.intro, ...value.content_id.intro, features: value.content_id.intro?.features?.length === 4 ? value.content_id.intro.features : fallback.content_id.intro?.features ?? [] }, vision_title: value.content_id.vision_title || fallback.content_id.vision_title, mission_title: value.content_id.mission_title || fallback.content_id.mission_title, vision: value.content_id.vision || fallback.content_id.vision, mission: value.content_id.mission || fallback.content_id.mission, process: value.content_id.process?.length === 5 ? value.content_id.process : fallback.content_id.process } : fallback.content_id,
   };
 }
