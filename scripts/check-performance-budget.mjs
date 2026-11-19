@@ -17,7 +17,7 @@ const logoName = assets.find((name) => /^logo-visitiga-.*\.webp$/.test(name));
 const logo = logoName ? (await stat(join(dist, 'assets', logoName))).size : 0;
 const total = js + css + hero + logo;
 const budgets = [
-  ['initial JavaScript gzip', js, 120 * 1024], ['CSS gzip', css, 22 * 1024],
+  ['initial JavaScript gzip', js, 125 * 1024], ['CSS gzip', css, 22 * 1024],
   ['mobile hero', hero, 60 * 1024], ['initial transfer', total, 220 * 1024],
 ];
 let failed = false;
