@@ -1,10 +1,8 @@
-import { Instagram, Facebook, Youtube, ArrowUp, ArrowUpRight, Phone, Mail } from 'lucide-react';
+import { Instagram, Facebook, Youtube, ArrowUp } from 'lucide-react';
 import Logo from '@/components/Logo';
 import { LocalizedLink as Link } from '@/components/LocalizedLink';
 import type { MouseEvent } from 'react';
 import { useTranslation } from '@/i18n';
-import { useContactSettings } from '@/hooks/useContactSettings';
-import { whatsappHref } from '@/lib/contactSettings';
 
 const socials = [
   { label: 'Instagram', Icon: Instagram, href: 'https://www.instagram.com/visitigamedia?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==' },
@@ -15,7 +13,6 @@ const socials = [
 const footerCopy = {
   id: {
     description: 'Solusi LED display profesional untuk bisnis Anda di seluruh Indonesia. Kualitas premium, desain kreatif, dan layanan terbaik.',
-    partnership: { title: 'Kerjasama', phone: '+62 822 5878 8780', email: 'marcomm@visitiga.com', cta: 'Hubungi Procurement' },
     groups: [
       { title: 'Perusahaan', links: [['Tentang Kami', '/about'], ['Kontak', '/contact'], ['Kebijakan Privasi', '/privacy']] },
       { title: 'Layanan', links: [['LED Luar Ruang', '/services'], ['Layar Dalam Ruang', '/services'], ['Sewa LED', '/services'], ['Produk', '/product']] },
@@ -25,7 +22,6 @@ const footerCopy = {
   },
   en: {
     description: 'Professional LED display solutions for businesses across Indonesia. Premium quality, creative design, and excellent service.',
-    partnership: { title: 'Partnership', phone: '+62 822 5878 8780', email: 'marcomm@visitiga.com', cta: 'Contact Procurement' },
     groups: [
       { title: 'Company', links: [['About Us', '/about'], ['Contact', '/contact'], ['Privacy Policy', '/privacy']] },
       { title: 'Services', links: [['Outdoor LED', '/services'], ['Indoor Display', '/services'], ['LED Rental', '/services'], ['Products', '/product']] },
@@ -37,12 +33,11 @@ const footerCopy = {
 
 export default function Footer() {
   const { lang } = useTranslation();
-  const contactSettings = useContactSettings();
   const copy = footerCopy[lang];
   return (
     <footer className="site-footer border-t border-slate-800 pt-16 pb-8 sm:pt-20">
       <div className="mx-auto max-w-[1536px] px-4 sm:px-6 lg:px-8">
-        <div className="site-footer__top grid gap-12 mb-14 lg:grid-cols-6">
+        <div className="site-footer__top grid gap-12 mb-14 lg:grid-cols-5">
           <div className="lg:col-span-2">
             <div className="site-footer__logo-mark" aria-label="Visitiga">
               <span className="site-footer__logo-crop"><Logo alt="Visitiga" className="!h-auto !w-[7.4rem]" /></span>
@@ -57,23 +52,6 @@ export default function Footer() {
               ? <a href={path} className="text-white/50 hover:text-orange-500 text-sm transition-colors duration-300">{label}</a>
               : <Link to={path} className="text-white/50 hover:text-orange-500 text-sm transition-colors duration-300">{label}</Link>}</li>)}</ul>
           </div>)}
-          <div className="site-footer__partnership rounded-2xl border border-white/10 bg-white/5 p-5">
-            <p className="site-footer__heading text-white font-semibold text-sm mb-5">{copy.partnership.title}</p>
-            <div className="space-y-4">
-              <a href={whatsappHref(contactSettings.procurement_phone, 'Kerjasama Procurement')} target="_blank" rel="noopener noreferrer" className="group flex items-start gap-3 text-white/70 hover:text-orange-500 text-sm transition-colors duration-300" aria-label={`${copy.partnership.title}: ${contactSettings.procurement_phone}`}>
-                <Phone aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
-                <span className="whitespace-nowrap underline-offset-4 group-hover:underline">{contactSettings.procurement_phone}</span>
-              </a>
-              <a href={`mailto:${contactSettings.procurement_email}?subject=${encodeURIComponent('Kerjasama Procurement')}`} className="group flex items-start gap-3 text-white/70 hover:text-orange-500 text-xs transition-colors duration-300" aria-label={`${copy.partnership.title}: ${contactSettings.procurement_email}`}>
-                <Mail aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
-                <span className="whitespace-nowrap underline-offset-4 group-hover:underline">{contactSettings.procurement_email}</span>
-              </a>
-              <a href={whatsappHref(contactSettings.procurement_phone, 'Kerjasama Procurement')} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center gap-2 rounded-full bg-orange-500 px-3.5 py-2 text-xs font-semibold text-black transition hover:bg-orange-400" aria-label={copy.partnership.cta}>
-                {copy.partnership.cta}
-                <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5" />
-              </a>
-            </div>
-          </div>
         </div>
         <div className="border-t border-white/5 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-white/40 text-xs">{copy.copyright}</p>
