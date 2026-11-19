@@ -23,13 +23,21 @@ function renderHeroWithSlides(hero_slides: typeof defaultHomepageContent.hero_sl
 }
 
 describe('hero slideshow', () => {
-  it('renders dashboard-provided copy and exactly four slides without the legacy eyebrow', () => {
+  it('renders dashboard-provided copy and the default product slides without the legacy eyebrow', () => {
     renderHero();
     expect(screen.getByRole('heading', { name: 'Custom campaign' })).toBeInTheDocument();
     expect(screen.getByText('Editable hero description')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Start a project/i })).toHaveAttribute('href', '/en/contact/');
-    expect(screen.getAllByRole('tab')).toHaveLength(4);
+    expect(screen.getAllByRole('tab')).toHaveLength(6);
     expect(document.querySelector('.hero-editorial__eyebrow')).toBeNull();
+  });
+
+  it('includes purchase and rental videotron messaging in the default slides', () => {
+    renderHero();
+    fireEvent.click(screen.getByRole('tab', { name: 'Slide 5' }));
+    expect(screen.getByRole('heading', { name: 'BUY YOUR VIDEOTRON' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('tab', { name: 'Slide 4' }));
+    expect(screen.getByRole('heading', { name: 'VIDEOTRON RENTAL' })).toBeInTheDocument();
   });
 
   it('changes the active slide through the line indicator', () => {

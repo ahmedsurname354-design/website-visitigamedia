@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { LoaderCircle, Save } from 'lucide-react';
+import { LoaderCircle, Plus, Save, Trash2 } from 'lucide-react';
 import { getHomepageContent, listPortfolios, saveHomepageContent } from '@/lib/adminApi';
 import { translateContent } from '@/lib/translation';
 import { defaultHomepageContent } from '@/lib/homepageContent';
@@ -13,6 +13,7 @@ export default function HomepageManagerPage() {
   const [content, setContent] = useState<HomepageContent>(emptyContent);
   const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
   const [selectedProjects, setSelectedProjects] = useState<string[]>([]);
+  const [slideKeys, setSlideKeys] = useState<number[]>(() => defaultHomepageContent.hero_slides.map((_, index) => index));
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -20,7 +21,7 @@ export default function HomepageManagerPage() {
 
   useEffect(() => {
     void Promise.all([getHomepageContent(), listPortfolios()]).then(([saved, items]) => {
-      if (saved) { setContent(saved); setSelectedProjects(saved.featured_portfolio_ids); }
+      if (saved) { setContent(saved); setSelectedProjects(saved.featured_portfolio_ids); setSlideKeys(saved.hero_slides.map((_, index) => index)); }
       setPortfolios(items);
     }).catch((reason) => setError(reason instanceof Error ? reason.message : 'Konten beranda tidak dapat dimuat.')).finally(() => setLoading(false));
   }, []);
@@ -31,8 +32,8 @@ export default function HomepageManagerPage() {
     setSaving(true); setError(''); setMessage('');
     try {
       setMessage('Menerjemahkan konten…');
-      const englishContent = readLocale(form, 'en');
-      const englishSlides = readHeroSlides(form);
+      const englishContent = readLocale(form, 'en', slideKeys[0]);
+      const englishSlides = readHeroSlides(form, slideKeys);
       const [translatedContent, translatedCopies] = await Promise.all([
         translateContent(englishContent),
         translateContent(englishSlides.map((slide) => slide.content_en)),
@@ -54,8 +55,8 @@ export default function HomepageManagerPage() {
   if (loading) return <div className="py-20 text-center text-sm text-slate-500"><LoaderCircle className="mr-2 inline h-5 w-5 animate-spin" />Memuat konten beranda...</div>;
   return <div className="mx-auto max-w-7xl"><AdminPageHeader title="Beranda" description="Kelola teks tiap slide, media, statistik, layanan unggulan, proyek, dan CTA homepage." />{error && <AdminAlert>{error}</AdminAlert>}{message && <p role="status" className="mb-5 rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{message}</p>}
     <form onSubmit={(event) => { event.preventDefault(); void submit(new FormData(event.currentTarget)); }} className="space-y-7">
-      <Section title="Media slideshow"><div className="grid gap-5 lg:grid-cols-2">{Array.from({ length: 4 }, (_, index) => <ImageUploadField key={index} name={`hero_slide_${index}`} label={`Gambar Hero ${index + 1}`} initial={content.hero_slides?.[index]?.image_url ?? defaultHomepageContent.hero_slides[index].image_url} folder="homepage" />)}<ImageUploadField name="about_image_url" label="Gambar bagian Tentang" initial={content.about_image_url} folder="homepage" allowClear /></div><p className="mt-3 text-xs text-slate-500">Slideshow menggunakan tepat empat gambar sesuai urutan di atas.</p></Section>
-      <HeroCopyPanel content={content} />
+      <HeroCopyPanel content={content} slideKeys={slideKeys} onAdd={() => setSlideKeys((keys) => [...keys, Math.max(-1, ...keys) + 1])} onRemove={(key) => setSlideKeys((keys) => keys.length > 1 ? keys.filter((item) => item !== key) : keys)} />
+      <Section title="Media slideshow"><div className="grid gap-5 lg:grid-cols-2">{slideKeys.map((key, index) => <div key={key} className="relative rounded-xl border border-slate-200 p-4"><ImageUploadField name={`hero_slide_${key}`} label={`Gambar Hero ${index + 1}`} initial={content.hero_slides?.[index]?.image_url ?? ''} folder="homepage" /><button type="button" disabled={slideKeys.length <= 1} onClick={() => setSlideKeys((keys) => keys.length > 1 ? keys.filter((item) => item !== key) : keys)} className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-red-600 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-40"><Trash2 className="h-3.5 w-3.5" />Hapus slide</button></div>)}<ImageUploadField name="about_image_url" label="Gambar bagian Tentang" initial={content.about_image_url} folder="homepage" allowClear /></div><p className="mt-3 text-xs text-slate-500">Slideshow dapat berisi 1–12 slide. Hapus atau tambahkan slide sesuai kebutuhan.</p></Section>
       <LocalePanel locale="en" content={content.content_en} />
       <TranslationPreview content={content.content_id} />
       <Section title="Proyek unggulan beranda"><p className="mb-4 text-sm text-slate-500">Pilih maksimal tiga proyek dari Portofolio. Urutan pilihan menjadi urutan tampil.</p><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{portfolios.map((item) => <label key={item.id} className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 ${selectedProjects.includes(item.id) ? 'border-orange-500 bg-orange-50' : 'border-slate-200'}`}><input type="checkbox" checked={selectedProjects.includes(item.id)} onChange={() => toggleProject(item.id)} /><img src={item.image_url} alt="" className="size-12 rounded object-cover" /><span className="min-w-0"><strong className="block truncate text-sm">{item.title}</strong><small className="block truncate text-xs text-slate-500">{item.category}</small></span></label>)}</div></Section>
@@ -68,19 +69,19 @@ function fallbackCopy(index: number, locale: 'id' | 'en'): HomepageHeroCopy {
   return defaultHomepageContent.hero_slides[index]?.[locale === 'id' ? 'content_id' : 'content_en'] ?? defaultHomepageContent.hero_slides[0].content_en!;
 }
 
-function HeroCopyPanel({ content }: { content: HomepageContent }) {
-  return <Section title="Teks tiap slide"><p className="mb-5 text-sm text-slate-500">Setiap slide memiliki judul, deskripsi, dan tombol sendiri. Versi Bahasa Indonesia dibuat otomatis saat disimpan.</p><div className="grid gap-5 lg:grid-cols-2">{Array.from({ length: 4 }, (_, index) => { const copy = content.hero_slides[index]?.content_en ?? fallbackCopy(index, 'en'); return <div key={index} className="rounded-xl border border-slate-200 p-4"><p className="mb-4 text-xs font-bold uppercase tracking-wider text-orange-600">Slide {index + 1}</p><div className="grid gap-4"><Field name={`hero_slide_${index}_title`} label="Judul" initial={copy.title} /><Area name={`hero_slide_${index}_subtitle`} label="Deskripsi" initial={copy.subtitle} /><Field name={`hero_slide_${index}_cta`} label="Label tombol" initial={copy.ctaLabel} /></div></div>; })}</div></Section>;
+function HeroCopyPanel({ content, slideKeys, onAdd, onRemove }: { content: HomepageContent; slideKeys: number[]; onAdd: () => void; onRemove: (key: number) => void }) {
+  return <Section title="Teks tiap slide"><div className="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-center"><p className="text-sm text-slate-500">Setiap slide memiliki judul, deskripsi, dan tombol sendiri. Versi Bahasa Indonesia dibuat otomatis saat disimpan.</p><button type="button" disabled={slideKeys.length >= 12} onClick={onAdd} className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-orange-200 px-4 py-2.5 text-sm font-bold text-orange-700 hover:bg-orange-50 disabled:cursor-not-allowed disabled:opacity-40"><Plus className="h-4 w-4" />Tambah slide</button></div><div className="grid gap-5 lg:grid-cols-2">{slideKeys.map((key, index) => { const copy = content.hero_slides[index]?.content_en ?? fallbackCopy(index, 'en'); return <div key={key} className="rounded-xl border border-slate-200 p-4"><div className="mb-4 flex items-center justify-between"><p className="text-xs font-bold uppercase tracking-wider text-orange-600">Slide {index + 1}</p><button type="button" disabled={slideKeys.length <= 1} onClick={() => onRemove(key)} className="inline-flex items-center gap-1 text-xs font-semibold text-red-600 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-40"><Trash2 className="h-3.5 w-3.5" />Hapus</button></div><div className="grid gap-4"><Field name={`hero_slide_${key}_title`} label="Judul" initial={copy.title} /><Area name={`hero_slide_${key}_subtitle`} label="Deskripsi" initial={copy.subtitle} /><Field name={`hero_slide_${key}_cta`} label="Label tombol" initial={copy.ctaLabel} /></div></div>; })}</div></Section>;
 }
 
-function readHeroSlides(form: FormData) {
-  return Array.from({ length: 4 }, (_, index) => ({ image_url: String(form.get(`hero_slide_${index}`) ?? '').trim(), alt: `Proyek visual Visitiga ${index + 1}`, content_en: { title: String(form.get(`hero_slide_${index}_title`) ?? '').trim(), subtitle: String(form.get(`hero_slide_${index}_subtitle`) ?? '').trim(), ctaLabel: String(form.get(`hero_slide_${index}_cta`) ?? '').trim() } }));
+function readHeroSlides(form: FormData, slideKeys: number[]) {
+  return slideKeys.map((key, index) => ({ image_url: String(form.get(`hero_slide_${key}`) ?? '').trim(), alt: `Proyek visual Visitiga ${index + 1}`, content_en: { title: String(form.get(`hero_slide_${key}_title`) ?? '').trim(), subtitle: String(form.get(`hero_slide_${key}_subtitle`) ?? '').trim(), ctaLabel: String(form.get(`hero_slide_${key}_cta`) ?? '').trim() } }));
 }
 
-function readLocale(form: FormData, locale: 'id' | 'en'): HomepageLocaleContent {
+function readLocale(form: FormData, locale: 'id' | 'en', firstSlideKey: number): HomepageLocaleContent {
   const field = (name: string) => String(form.get(`${locale}_${name}`) ?? '').trim();
   const list = (name: string, count: number) => Array.from({ length: count }, (_, index) => field(`${name}_${index}`)).filter(Boolean);
   return {
-    hero: { title: field('hero_slide_0_title'), subtitle: field('hero_slide_0_subtitle'), ctaLabel: field('hero_slide_0_cta') },
+    hero: { title: String(form.get(`hero_slide_${firstSlideKey}_title`) ?? '').trim(), subtitle: String(form.get(`hero_slide_${firstSlideKey}_subtitle`) ?? '').trim(), ctaLabel: String(form.get(`hero_slide_${firstSlideKey}_cta`) ?? '').trim() },
     stats: Array.from({ length: 4 }, (_, index) => ({ value: field(`stat_${index}_value`), label: field(`stat_${index}_label`) })).filter((item) => item.value || item.label),
     services: { sectionLabel: field('services_label'), heading: field('services_heading'), linkLabel: field('services_link'), cards: Array.from({ length: 4 }, (_, index) => ({ title: field(`service_${index}_title`), description: field(`service_${index}_description`), tags: list(`service_${index}_tag`, 4), action: field(`service_${index}_action`) })).filter((item) => item.title || item.description) },
     about: { sectionLabel: field('about_label'), heading: field('about_heading'), subtitle: field('about_subtitle'), features: list('about_feature', 4), buttonLabel: field('about_button') },

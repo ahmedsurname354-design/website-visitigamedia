@@ -16,13 +16,17 @@ const fallbackCopies = {
     { title: 'ADVERTISING', subtitle: 'By partnering with our clients to create what matters, we improve the human experience.', ctaLabel: 'CONTACT US' },
     { title: 'OUTDOOR LED', subtitle: 'Make your brand visible day and night with powerful visual communication.', ctaLabel: 'EXPLORE OUTDOOR' },
     { title: 'INDOOR EXPERIENCE', subtitle: 'Create sharper, more memorable spaces with premium indoor display solutions.', ctaLabel: 'SEE INDOOR SOLUTIONS' },
-    { title: 'EVENT IMPACT', subtitle: 'Bring every event to life with reliable rental LED and audiovisual production.', ctaLabel: 'PLAN YOUR EVENT' },
+    { title: 'VIDEOTRON RENTAL', subtitle: 'Flexible LED videotron rental for events, exhibitions, weddings, and corporate productions with professional technical support.', ctaLabel: 'RENT A VIDEOTRON' },
+    { title: 'BUY YOUR VIDEOTRON', subtitle: 'Build a lasting visual presence with a premium videotron display tailored to your space, audience, and business goals.', ctaLabel: 'BUY A VIDEOTRON' },
+    { title: 'EVENT IMPACT', subtitle: 'Bring every event to life with reliable LED and audiovisual production.', ctaLabel: 'PLAN YOUR EVENT' },
   ],
   id: [
     { title: 'PERIKLANAN', subtitle: 'Dengan berpartner bersama klien untuk menciptakan hal yang berarti, kami meningkatkan pengalaman manusia.', ctaLabel: 'HUBUNGI KAMI' },
     { title: 'LED OUTDOOR', subtitle: 'Buat brand Anda terlihat siang dan malam melalui komunikasi visual yang kuat.', ctaLabel: 'LIHAT OUTDOOR' },
     { title: 'PENGALAMAN INDOOR', subtitle: 'Ciptakan ruang yang lebih tajam dan berkesan dengan solusi display indoor premium.', ctaLabel: 'LIHAT SOLUSI INDOOR' },
-    { title: 'DAMPAK EVENT', subtitle: 'Hidupkan setiap acara dengan rental LED dan produksi audiovisual yang andal.', ctaLabel: 'RENCANAKAN EVENT' },
+    { title: 'RENTAL VIDEOTRON', subtitle: 'Sewa videotron LED fleksibel untuk event, pameran, pernikahan, dan acara korporat dengan dukungan teknis profesional.', ctaLabel: 'SEWA VIDEOTRON' },
+    { title: 'PEMBELIAN PRODUK VIDEOTRON', subtitle: 'Bangun tampilan visual jangka panjang dengan produk videotron premium yang disesuaikan dengan ruang, audiens, dan target bisnis Anda.', ctaLabel: 'BELI VIDEOTRON' },
+    { title: 'DAMPAK EVENT', subtitle: 'Hidupkan setiap acara dengan LED dan produksi audiovisual yang andal.', ctaLabel: 'RENCANAKAN EVENT' },
   ],
 };
 
