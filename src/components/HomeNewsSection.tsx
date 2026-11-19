@@ -51,8 +51,8 @@ export default function HomeNewsSection({ articles }: { articles: NewsRecord[] }
                     <span>{article.category}</span>
                     <time dateTime={article.published_at ?? undefined}>{formatPublishedDate(article.published_at, lang)}</time>
                   </div>
-                  <h3><Link to={`/news/${article.slug}`}>{article.title}</Link></h3>
-                  <p>{article.excerpt}</p>
+                  <h3><Link to={`/news/${article.slug}`} className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500">{article.title}</Link></h3>
+                  <Link to={`/news/${article.slug}`} className="home-news-card__summary rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500">{article.excerpt}</Link>
                   <Link to={`/news/${article.slug}`} className="home-news-card__link">
                     {en ? 'Read more' : 'Baca selengkapnya'} <ArrowRight />
                   </Link>

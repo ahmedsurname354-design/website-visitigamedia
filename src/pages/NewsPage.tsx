@@ -50,19 +50,29 @@ export default function NewsPage() {
             {localizedArticles.map((article, index) => (
               <LightReveal key={article.id} delay={Math.min(index * 0.045, 0.18)} className="h-full">
               <article className="journal-card public-card h-full overflow-hidden border shadow-sm">
-                <img
-                  {...responsiveImageSources(article.cover_image)}
-                  width="800"
-                  height="450"
-                  alt={article.title}
-                  fetchPriority={index === 0 ? 'high' : 'auto'}
-                  decoding="async"
-                  className="public-media-placeholder aspect-[16/9] w-full object-cover"
-                />
+                <Link
+                  to={`/news/${article.slug}`}
+                  aria-label={`${en ? 'Read' : 'Baca'} ${article.title}`}
+                  className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-orange-500"
+                >
+                  <img
+                    {...responsiveImageSources(article.cover_image)}
+                    width="800"
+                    height="450"
+                    alt={article.title}
+                    fetchPriority={index === 0 ? 'high' : 'auto'}
+                    decoding="async"
+                    className="public-media-placeholder aspect-[16/9] w-full object-cover transition duration-500 group-hover:scale-[1.025]"
+                  />
+                </Link>
                 <div className="p-6">
                   <p className="text-xs font-bold uppercase tracking-[.16em] text-orange-600">{article.category}</p>
-                  <h2 className="mt-3 text-xl font-bold leading-tight">{article.title}</h2>
-                  <p className="public-muted mt-3 line-clamp-3 text-sm leading-6">{article.excerpt}</p>
+                  <h2 className="mt-3 text-xl font-bold leading-tight">
+                    <Link to={`/news/${article.slug}`} className="rounded-sm transition-colors hover:text-orange-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500">{article.title}</Link>
+                  </h2>
+                  <Link to={`/news/${article.slug}`} className="public-muted mt-3 block rounded-sm text-sm leading-6 transition-colors hover:text-orange-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500">
+                    <span className="line-clamp-3">{article.excerpt}</span>
+                  </Link>
                   <p className="public-muted mt-5 text-xs">
                     {article.author} · {new Date(article.published_at!).toLocaleDateString(en ? 'en-US' : 'id-ID')}
                   </p>

@@ -31,7 +31,9 @@ describe('homepage news section', () => {
     expect(screen.getAllByRole('article')).toHaveLength(3);
     expect(screen.getByText('Artikel dua')).toBeInTheDocument();
     expect(screen.queryByText('Artikel empat')).not.toBeInTheDocument();
-    expect(screen.getAllByRole('link', { name: /Artikel/ })[0]).toHaveAttribute('href', '/id/news/article-two/');
+    expect(screen.getByRole('link', { name: 'Artikel dua' })).toHaveAttribute('href', '/id/news/article-two/');
+    expect(screen.getAllByRole('link', { name: 'Ringkasan artikel satu.' }).find((link) => link.getAttribute('href') === '/id/news/article-one/')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Baca Artikel dua' })).toHaveAttribute('href', '/id/news/article-two/');
   });
 
   it('renders English article copy and the all-news link', () => {
