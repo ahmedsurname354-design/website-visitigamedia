@@ -27,7 +27,13 @@ export function RichTextEditor({ name, initial = '' }: { name: string; initial?:
       } catch (reason) { if (!disposed) setEditorError(reason instanceof Error ? reason.message : 'Editor tidak dapat dimuat.'); }
     };
     void initialise();
-    return () => { disposed = true; if ($editor) $editor.summernote('destroy'); };
+    return () => {
+      disposed = true;
+      if ($editor) $editor.summernote('destroy');
+      // Summernote mounts image/link dialogs outside the editor in some builds.
+      // Remove any orphaned layer when the parent admin modal closes.
+      document.querySelectorAll('.note-modal, .note-modal-backdrop').forEach((node) => node.remove());
+    };
   }, [initial]);
   return <div className="sm:col-span-2"><label htmlFor={id} className="text-sm font-medium">Isi artikel</label><input type="hidden" name={name} value={content} /><textarea id={id} ref={editorRef} defaultValue={initial} onChange={(event) => setContent(event.target.value)} className={ready ? '' : 'mt-2 min-h-64 w-full rounded-xl border border-slate-300 px-3 py-2 outline-none focus:border-orange-500'} />{!ready && !editorError && <p className="mt-2 text-xs text-slate-500">Memuat editor…</p>}{editorError && <p role="alert" className="mt-2 text-xs text-amber-700">Editor visual tidak dapat dimuat. Anda tetap dapat menulis isi artikel di kolom ini.</p>}</div>;
 }

@@ -874,6 +874,12 @@ img, video { max-width: 100%; }
 .note-editor .note-statusbar { border-top-color: #e2e8f0; background: #f8fafc; }
 .note-editor .dropdown-menu { border-color: #e2e8f0; border-radius: .65rem; box-shadow: 0 10px 25px rgb(15 23 42 / .12); }
 .note-editor .note-modal-content { border-radius: 1rem; box-shadow: 0 20px 50px rgb(15 23 42 / .28); }
+/* Summernote's Bootstrap-era layers can otherwise sit behind their own backdrop
+   when the editor is rendered inside the admin ContentModal. */
+.note-modal-backdrop { z-index: 10000 !important; }
+.note-modal { z-index: 10001 !important; pointer-events: none; }
+.note-modal.open { pointer-events: auto; }
+.note-modal-content { pointer-events: auto; }
 
 @media (max-width: 640px) {
   .note-editor .note-toolbar { gap: .25rem; padding: .5rem; }
