@@ -228,3 +228,12 @@ export interface CareerJob {
 export type CareerJobInput = Omit<CareerJob, 'id' | 'created_at' | 'updated_at' | 'content_id' | 'content_en' | 'title' | 'department' | 'location' | 'employment_type' | 'description' | 'qualifications' | 'responsibilities'> & { title: string; department: string; location: string; employment_type: string; description: string; qualifications: string[]; responsibilities: string[]; content_id: CareerJobLocale; content_en: CareerJobLocale; };
 export interface CareerSubmission { id: number; name: string; email: string; phone: string | null; submission_type: CareerSubmissionType; job_id: string | null; message: string; status: CareerSubmissionStatus; notes: string; created_at: string; updated_at: string; read_at: string | null; job?: Pick<CareerJob, 'title'> | null; }
 export interface AdminNotificationCounts { contacts: number; partnerships: number; applications: number; }
+export interface CareersPageLocaleContent {
+  eyebrow: string; title: string; intro: string; partner_title: string; partner_text: string; partner_button: string;
+  jobs_eyebrow: string; jobs_title: string; jobs_empty: string; open_positions_suffix: string; apply_button: string; apply_by: string;
+  form_eyebrow: string; form_title: string; name_label: string; email_label: string; phone_label: string; type_label: string;
+  partnership_option: string; application_option: string; job_label: string; job_placeholder: string; message_label: string;
+  message_placeholder: string; submit_button: string; success_message: string; error_message: string; privacy_text: string; cv_note: string;
+}
+export interface CareersPageContent { id: number; careers_email: string; content_id: CareersPageLocaleContent; content_en: CareersPageLocaleContent; updated_at: string; }
+export type CareersPageContentInput = Omit<CareersPageContent, 'id' | 'updated_at'>;

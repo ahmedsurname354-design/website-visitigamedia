@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { translateContent } from '@/lib/translation';
-import type { AboutContent, AboutContentInput, AdminNotificationCounts, CareerJob, CareerJobInput, CareerSubmission, CareerSubmissionStatus, ContactLead, ContactSettings, ContactSettingsInput, HomepageContent, HomepageContentInput, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, PortfolioSlugAlias, Product, ProductCatalogue, ProductInput, ServiceContent, ServiceContentInput, ServiceLandingContent, ServiceLandingInput, ServiceLandingSlug } from '@/types/admin';
+import type { AboutContent, AboutContentInput, AdminNotificationCounts, CareerJob, CareerJobInput, CareersPageContent, CareersPageContentInput, CareerSubmission, CareerSubmissionStatus, ContactLead, ContactSettings, ContactSettingsInput, HomepageContent, HomepageContentInput, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, PortfolioSlugAlias, Product, ProductCatalogue, ProductInput, ServiceContent, ServiceContentInput, ServiceLandingContent, ServiceLandingInput, ServiceLandingSlug } from '@/types/admin';
 
 function client(): SupabaseClient {
   if (!supabase) throw new Error('Supabase belum dikonfigurasi.');
@@ -364,3 +364,14 @@ export async function deleteCareerJob(id: string): Promise<void> { const { error
 export async function listCareerSubmissions(): Promise<CareerSubmission[]> { const { data, error } = await client().from('careers_submissions').select('*,job:careers_jobs(title)').order('created_at', { ascending: false }); if (error) throw error; return data as CareerSubmission[]; }
 export async function updateCareerSubmission(id: number, input: { status: CareerSubmissionStatus; notes: string }): Promise<void> { const { error } = await client().from('careers_submissions').update(input).eq('id', id); if (error) throw error; }
 export async function deleteCareerSubmission(id: number): Promise<void> { const { error } = await client().from('careers_submissions').delete().eq('id', id); if (error) throw error; }
+
+export async function getCareersPageContent(): Promise<CareersPageContent | null> { const { data, error } = await client().from('careers_page_content').select('*').eq('id', 1).maybeSingle(); if (error) throw error; return data as CareersPageContent | null; }
+export async function saveCareersPageContent(input: CareersPageContentInput): Promise<CareersPageContent> {
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.careers_email.trim())) throw new Error('Email Careers tidak valid.');
+  for (const locale of [input.content_id, input.content_en]) {
+    if (!locale.title.trim() || !locale.intro.trim() || !locale.form_title.trim() || !locale.submit_button.trim()) throw new Error('Judul, deskripsi pembuka, judul form, dan tombol kirim wajib diisi pada setiap bahasa.');
+  }
+  const { data, error } = await client().from('careers_page_content').upsert({ id: 1, ...input }).select('*').single();
+  if (error) throw error;
+  return data as CareersPageContent;
+}
