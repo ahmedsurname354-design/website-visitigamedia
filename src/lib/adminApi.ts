@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { translateContent } from '@/lib/translation';
-import type { AboutContent, AboutContentInput, CareerJob, CareerJobInput, CareerSubmission, CareerSubmissionStatus, ContactLead, ContactSettings, ContactSettingsInput, HomepageContent, HomepageContentInput, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, PortfolioSlugAlias, Product, ProductCatalogue, ProductInput, ServiceContent, ServiceContentInput, ServiceLandingContent, ServiceLandingInput, ServiceLandingSlug } from '@/types/admin';
+import type { AboutContent, AboutContentInput, AdminNotificationCounts, CareerJob, CareerJobInput, CareerSubmission, CareerSubmissionStatus, ContactLead, ContactSettings, ContactSettingsInput, HomepageContent, HomepageContentInput, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, PortfolioSlugAlias, Product, ProductCatalogue, ProductInput, ServiceContent, ServiceContentInput, ServiceLandingContent, ServiceLandingInput, ServiceLandingSlug } from '@/types/admin';
 
 function client(): SupabaseClient {
   if (!supabase) throw new Error('Supabase belum dikonfigurasi.');
@@ -328,6 +328,21 @@ export async function countNewContactLeads(): Promise<number> {
   if (error) throw error;
   return count ?? 0;
 }
+
+export async function getAdminNotificationCounts(): Promise<AdminNotificationCounts> {
+  const database = client();
+  const [contacts, partnerships, applications] = await Promise.all([
+    database.from('contact_messages').select('id', { count: 'exact', head: true }).is('read_at', null),
+    database.from('careers_submissions').select('id', { count: 'exact', head: true }).is('read_at', null).eq('submission_type', 'partnership'),
+    database.from('careers_submissions').select('id', { count: 'exact', head: true }).is('read_at', null).eq('submission_type', 'job_application'),
+  ]);
+  const error = contacts.error ?? partnerships.error ?? applications.error;
+  if (error) throw error;
+  return { contacts: contacts.count ?? 0, partnerships: partnerships.count ?? 0, applications: applications.count ?? 0 };
+}
+
+export async function markContactMessagesRead(): Promise<void> { const { error } = await client().rpc('mark_contact_messages_read'); if (error) throw error; }
+export async function markCareerSubmissionsRead(): Promise<void> { const { error } = await client().rpc('mark_careers_submissions_read'); if (error) throw error; }
 
 export async function listCareerJobs(): Promise<CareerJob[]> {
   const { data, error } = await client().from('careers_jobs').select('*').order('sort_order').order('created_at', { ascending: false });

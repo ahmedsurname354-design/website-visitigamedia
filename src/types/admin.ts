@@ -212,6 +212,7 @@ export interface ContactLead {
   notes: string;
   created_at: string;
   updated_at: string;
+  read_at: string | null;
 }
 
 export type CareerJobStatus = 'draft' | 'published' | 'closed';
@@ -225,4 +226,5 @@ export interface CareerJob {
   created_at: string; updated_at: string;
 }
 export type CareerJobInput = Omit<CareerJob, 'id' | 'created_at' | 'updated_at' | 'content_id' | 'content_en' | 'title' | 'department' | 'location' | 'employment_type' | 'description' | 'qualifications' | 'responsibilities'> & { title: string; department: string; location: string; employment_type: string; description: string; qualifications: string[]; responsibilities: string[]; content_id: CareerJobLocale; content_en: CareerJobLocale; };
-export interface CareerSubmission { id: number; name: string; email: string; phone: string | null; submission_type: CareerSubmissionType; job_id: string | null; message: string; status: CareerSubmissionStatus; notes: string; created_at: string; updated_at: string; job?: Pick<CareerJob, 'title'> | null; }
+export interface CareerSubmission { id: number; name: string; email: string; phone: string | null; submission_type: CareerSubmissionType; job_id: string | null; message: string; status: CareerSubmissionStatus; notes: string; created_at: string; updated_at: string; read_at: string | null; job?: Pick<CareerJob, 'title'> | null; }
+export interface AdminNotificationCounts { contacts: number; partnerships: number; applications: number; }

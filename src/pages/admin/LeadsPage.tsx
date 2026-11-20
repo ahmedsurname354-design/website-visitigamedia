@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CheckCircle2, Download, ExternalLink, Inbox, LoaderCircle, Mail, MessageCircle, Search, ShieldAlert, Trash2, UserRoundCheck, X } from 'lucide-react';
-import { deleteContactLead, listContactLeads, updateContactLead } from '@/lib/adminApi';
+import { deleteContactLead, listContactLeads, markContactMessagesRead, updateContactLead } from '@/lib/adminApi';
 import type { ContactLead, LeadStatus } from '@/types/admin';
 
 const statusOptions: ReadonlyArray<{ value: LeadStatus | 'all'; label: string }> = [
@@ -42,7 +42,7 @@ export default function LeadsPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    try { setItems(await listContactLeads()); setError(''); }
+    try { setItems(await listContactLeads()); await markContactMessagesRead(); setError(''); }
     catch (reason) { setError(reason instanceof Error ? reason.message : 'Leads tidak dapat dimuat.'); }
     finally { setLoading(false); }
   }, []);
