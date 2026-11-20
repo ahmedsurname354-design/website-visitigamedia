@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronLeft, ContactRound, Film, Home, Inbox, LayoutDashboard, LoaderCircle, LogOut, Menu, Newspaper, Package, PanelsTopLeft, Sparkles } from 'lucide-react';
+import { BriefcaseBusiness, ChevronLeft, ContactRound, Film, Home, Inbox, LayoutDashboard, LoaderCircle, LogOut, Menu, Newspaper, Package, PanelsTopLeft, Sparkles } from 'lucide-react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { countNewContactLeads } from '@/lib/adminApi';
@@ -12,6 +12,7 @@ const links = [
   { to: '/admin/contact', label: 'Kontak', icon: ContactRound },
   { to: '/admin/about', label: 'About', icon: Sparkles },
   { to: '/admin/leads', label: 'Prospek', icon: Inbox },
+  { to: '/admin/careers', label: 'Careers', icon: BriefcaseBusiness },
   { to: '/admin/products', label: 'Produk', icon: Package },
   { to: '/admin/services', label: 'Layanan', icon: Film },
   { to: '/admin/portfolios', label: 'Portofolio', icon: PanelsTopLeft },

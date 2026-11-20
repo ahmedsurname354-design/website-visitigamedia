@@ -79,6 +79,10 @@ const seoByPath: Record<string, Record<Lang, SeoCopy>> = {
     id: { title: 'Kebijakan Privasi — Visitiga', description: 'Pelajari cara Visitiga mengumpulkan, menggunakan, dan melindungi data yang Anda berikan melalui website.' },
     en: { title: 'Privacy Policy — Visitiga', description: 'Learn how Visitiga collects, uses, and protects information you provide through this website.' },
   },
+  '/careers': {
+    id: { title: 'Karier & Kemitraan — Visitiga', description: 'Temukan peluang kemitraan dan lowongan pekerjaan bersama Visitiga Media.' },
+    en: { title: 'Careers & Partnerships — Visitiga', description: 'Explore partnership opportunities and open positions at Visitiga Media.' },
+  },
 };
 
 export function getStaticSeo(pathname: string, lang: Lang): SeoCopy {

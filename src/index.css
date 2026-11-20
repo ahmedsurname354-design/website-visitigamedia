@@ -310,6 +310,11 @@ body {
 
 /* FAQ */
 .faq-page { min-height: 100vh; padding-top: clamp(8.5rem, 14vw, 11rem); }
+.careers-page { min-height: 100vh; padding-top: clamp(8.5rem, 14vw, 11rem); }
+.careers-page__intro { max-width: 46rem; margin-top: 1.5rem; color: var(--editorial-muted); font-size: 1.08rem; line-height: 1.85; }
+.careers-page h2, .careers-page h3 { color: var(--editorial-ink); }
+.careers-page .brand-surface-dark h2, .careers-page .brand-surface-dark h3 { color: var(--editorial-on-dark); }
+@media (max-width: 640px) { .careers-page { padding-top: 7.5rem; } }
 .faq-page__header { max-width: 54rem; }
 .faq-page__introduction { max-width: 46rem; margin-top: 1.5rem; color: var(--editorial-muted); font-size: 1rem; line-height: 1.8; }
 .faq-list { max-width: 62rem; margin-top: clamp(3rem, 7vw, 5.5rem); border-top: 1px solid var(--editorial-line); }

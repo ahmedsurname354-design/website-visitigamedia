@@ -11,7 +11,7 @@ export default function PageMeta() {
   const { lang, dict } = useTranslation();
   const serviceSlug = path.startsWith('/services/') ? path.slice('/services/'.length) : undefined;
   const isServiceLanding = isServiceLandingSlug(serviceSlug);
-  const knownPaths = ['/', '/about', '/services', '/product', '/portfolio', '/video', '/contact', '/news', '/faq', '/privacy'];
+  const knownPaths = ['/', '/about', '/services', '/product', '/portfolio', '/video', '/contact', '/news', '/faq', '/privacy', '/careers'];
   const staticPath = path.startsWith('/news/') ? '/news' : path;
   const isNewsDetail = path.startsWith('/news/');
   const isCaseStudy = path.startsWith('/portfolio/');
@@ -20,7 +20,7 @@ export default function PageMeta() {
     ? { title: lang === 'id' ? 'Halaman Tidak Ditemukan — Visitiga' : 'Page Not Found — Visitiga', description: lang === 'id' ? 'Halaman yang Anda cari tidak ditemukan.' : 'The page you are looking for could not be found.' }
     : getStaticSeo(staticPath, lang);
   const structuredData = useMemo(() => {
-    const breadcrumbNames: Record<string, string> = { '/about': 'Tentang Kami', '/services': 'Layanan', '/product': 'Produk', '/portfolio': 'Portofolio', '/video': 'Video', '/contact': 'Kontak', '/news': 'Berita', '/faq': 'FAQ', '/privacy': 'Kebijakan Privasi' };
+    const breadcrumbNames: Record<string, string> = { '/about': 'Tentang Kami', '/services': 'Layanan', '/product': 'Produk', '/portfolio': 'Portofolio', '/video': 'Video', '/contact': 'Kontak', '/news': 'Berita', '/faq': 'FAQ', '/privacy': 'Kebijakan Privasi', '/careers': 'Karier & Kemitraan' };
     const currentName = breadcrumbNames[path] || (isServiceLanding ? getStaticSeo(path, lang).title.split('|')[0].trim() : '');
     const breadcrumbs = path !== '/' && currentName ? {
       '@context': 'https://schema.org', '@type': 'BreadcrumbList',

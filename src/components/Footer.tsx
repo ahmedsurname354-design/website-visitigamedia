@@ -14,7 +14,7 @@ const footerCopy = {
   id: {
     description: 'Solusi LED display profesional untuk bisnis Anda di seluruh Indonesia. Kualitas premium, desain kreatif, dan layanan terbaik.',
     groups: [
-      { title: 'Perusahaan', links: [['Tentang Kami', '/about'], ['Kontak', '/contact'], ['Kebijakan Privasi', '/privacy']] },
+      { title: 'Perusahaan', links: [['Tentang Kami', '/about'], ['Careers', '/careers'], ['Kontak', '/contact'], ['Kebijakan Privasi', '/privacy']] },
       { title: 'Layanan', links: [['LED Luar Ruang', '/services'], ['Layar Dalam Ruang', '/services'], ['Sewa LED', '/services'], ['Produk', '/product']] },
       { title: 'Informasi', links: [['Portofolio', '/portfolio'], ['Berita', '/news'], ['Tanya Jawab', '/faq'], ['Dukungan', 'mailto:marcomm@visitiga.com?subject=Konsultasi%20Visitiga%20Media']] },
     ],
@@ -23,7 +23,7 @@ const footerCopy = {
   en: {
     description: 'Professional LED display solutions for businesses across Indonesia. Premium quality, creative design, and excellent service.',
     groups: [
-      { title: 'Company', links: [['About Us', '/about'], ['Contact', '/contact'], ['Privacy Policy', '/privacy']] },
+      { title: 'Company', links: [['About Us', '/about'], ['Careers', '/careers'], ['Contact', '/contact'], ['Privacy Policy', '/privacy']] },
       { title: 'Services', links: [['Outdoor LED', '/services'], ['Indoor Display', '/services'], ['LED Rental', '/services'], ['Products', '/product']] },
       { title: 'Information', links: [['Portfolio', '/portfolio'], ['News', '/news'], ['FAQ', '/faq'], ['Support', 'mailto:marcomm@visitiga.com?subject=Visitiga%20Media%20Consultation']] },
     ],

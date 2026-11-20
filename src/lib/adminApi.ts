@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { translateContent } from '@/lib/translation';
-import type { AboutContent, AboutContentInput, ContactLead, ContactSettings, ContactSettingsInput, HomepageContent, HomepageContentInput, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, PortfolioSlugAlias, Product, ProductCatalogue, ProductInput, ServiceContent, ServiceContentInput, ServiceLandingContent, ServiceLandingInput, ServiceLandingSlug } from '@/types/admin';
+import type { AboutContent, AboutContentInput, CareerJob, CareerJobInput, CareerSubmission, CareerSubmissionStatus, ContactLead, ContactSettings, ContactSettingsInput, HomepageContent, HomepageContentInput, LeadStatus, NewsInput, NewsRecord, Portfolio, PortfolioInput, PortfolioSlugAlias, Product, ProductCatalogue, ProductInput, ServiceContent, ServiceContentInput, ServiceLandingContent, ServiceLandingInput, ServiceLandingSlug } from '@/types/admin';
 
 function client(): SupabaseClient {
   if (!supabase) throw new Error('Supabase belum dikonfigurasi.');
@@ -328,3 +328,24 @@ export async function countNewContactLeads(): Promise<number> {
   if (error) throw error;
   return count ?? 0;
 }
+
+export async function listCareerJobs(): Promise<CareerJob[]> {
+  const { data, error } = await client().from('careers_jobs').select('*').order('sort_order').order('created_at', { ascending: false });
+  if (error) throw error;
+  return data as CareerJob[];
+}
+
+export async function saveCareerJob(input: CareerJobInput, id?: string): Promise<void> {
+  for (const locale of [input.content_id, input.content_en]) {
+    if (!locale.title.trim() || !locale.description.trim()) throw new Error('Judul dan deskripsi lowongan wajib diisi untuk setiap bahasa.');
+  }
+  const payload = { ...input, title: input.content_en.title, department: input.content_en.department, location: input.content_en.location, employment_type: input.content_en.employment_type, description: input.content_en.description, qualifications: input.content_en.qualifications, responsibilities: input.content_en.responsibilities };
+  const query = id ? client().from('careers_jobs').update(payload).eq('id', id) : client().from('careers_jobs').insert(payload);
+  const { error } = await query;
+  if (error) throw error;
+}
+
+export async function deleteCareerJob(id: string): Promise<void> { const { error } = await client().from('careers_jobs').delete().eq('id', id); if (error) throw error; }
+export async function listCareerSubmissions(): Promise<CareerSubmission[]> { const { data, error } = await client().from('careers_submissions').select('*,job:careers_jobs(title)').order('created_at', { ascending: false }); if (error) throw error; return data as CareerSubmission[]; }
+export async function updateCareerSubmission(id: number, input: { status: CareerSubmissionStatus; notes: string }): Promise<void> { const { error } = await client().from('careers_submissions').update(input).eq('id', id); if (error) throw error; }
+export async function deleteCareerSubmission(id: number): Promise<void> { const { error } = await client().from('careers_submissions').delete().eq('id', id); if (error) throw error; }

@@ -19,6 +19,7 @@ const VideoPage = lazy(publicPageLoaders.video);
 const ContactPage = lazy(publicPageLoaders.contact);
 const FAQPage = lazy(publicPageLoaders.faq);
 const PrivacyPage = lazy(publicPageLoaders.privacy);
+const CareersPage = lazy(publicPageLoaders.careers);
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 const ProductPage = lazy(publicPageLoaders.product);
 const NewsPage = lazy(publicPageLoaders.news);
@@ -33,6 +34,7 @@ const NewsManagerPage = lazy(() => import('@/pages/admin/NewsManagerPage'));
 const ProductsManagerPage = lazy(() => import('@/pages/admin/ProductsManagerPage'));
 const ServicesManagerPage = lazy(() => import('@/pages/admin/ServicesManagerPage'));
 const LeadsPage = lazy(() => import('@/pages/admin/LeadsPage'));
+const CareersManagerPage = lazy(() => import('@/pages/admin/CareersManagerPage'));
 const AdminAuthBoundary = lazy(() => import('@/components/admin/AdminAuthBoundary'));
 const ProtectedRoute = lazy(() => import('@/components/admin/ProtectedRoute'));
 const AdminLayout = lazy(() => import('@/components/admin/AdminLayout'));
@@ -103,6 +105,7 @@ function AnimatedRoutes() {
               <Route path="contact" element={<ContactPage />} />
               <Route path="faq" element={<FAQPage />} />
               <Route path="privacy" element={<PrivacyPage />} />
+              <Route path="careers" element={<CareersPage />} />
               <Route path="news" element={<NewsPage />} />
               <Route path="news/:id" element={<NewsDetailPage />} />
               <Route path="*" element={<NotFoundPage />} />
@@ -120,6 +123,7 @@ function AnimatedRoutes() {
                   <Route path="portfolios" element={<PortfoliosPage />} />
                   <Route path="news" element={<NewsManagerPage />} />
                   <Route path="leads" element={<LeadsPage />} />
+                  <Route path="careers" element={<CareersManagerPage />} />
                 </Route>
               </Route>
             </Route>

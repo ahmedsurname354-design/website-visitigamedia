@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-const publicRoutes = ['/id/', '/id/about/', '/id/services/', '/id/product/', '/id/portfolio/', '/id/video/', '/id/contact/', '/id/news/', '/id/faq/', '/id/privacy/'];
+const publicRoutes = ['/id/', '/id/about/', '/id/services/', '/id/product/', '/id/portfolio/', '/id/video/', '/id/contact/', '/id/news/', '/id/faq/', '/id/privacy/', '/id/careers/'];
 
 test('all public routes activate without browser or network errors', async ({ page }) => {
   const problems: string[] = [];

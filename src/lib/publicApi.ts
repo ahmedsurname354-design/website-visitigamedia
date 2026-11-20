@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { AboutContent, ContactSettings, HomepageContent, NewsRecord, Portfolio, Product, ProductCatalogue } from '@/types/admin';
+import type { AboutContent, CareerJob, ContactSettings, HomepageContent, NewsRecord, Portfolio, Product, ProductCatalogue } from '@/types/admin';
 
 async function client(): Promise<SupabaseClient> {
   const { supabase } = await import('@/lib/supabase');
@@ -47,4 +47,10 @@ export async function getProductCatalogue(): Promise<ProductCatalogue | null> {
   const { data, error } = await (await client()).from('product_catalogue').select('*').eq('id', 1).maybeSingle();
   if (error) throw error;
   return data as ProductCatalogue | null;
+}
+
+export async function listPublicCareerJobs(): Promise<CareerJob[]> {
+  const { data, error } = await (await client()).from('careers_jobs').select('*').eq('status', 'published').order('sort_order').order('created_at', { ascending: false });
+  if (error) throw error;
+  return data as CareerJob[];
 }

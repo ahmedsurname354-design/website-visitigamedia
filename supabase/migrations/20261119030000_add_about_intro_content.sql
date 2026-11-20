@@ -25,7 +25,7 @@ alter table public.about_content
     and content_en ?& array['intro', 'eyebrow', 'title', 'items', 'process']
     and jsonb_typeof(content_id->'intro') = 'object'
     and jsonb_typeof(content_en->'intro') = 'object'
-    and jsonb_typeof(content_id->'intro'->'features') = 'array'
+    and jsonb_typeof(content_id->'intro'->'features') = 'array' 
     and jsonb_typeof(content_en->'intro'->'features') = 'array'
     and jsonb_array_length(content_id->'intro'->'features') = 4
     and jsonb_array_length(content_en->'intro'->'features') = 4

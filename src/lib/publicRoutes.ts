@@ -14,6 +14,7 @@ export const publicPageLoaders = {
   contact: () => import('@/pages/ContactPage'),
   faq: () => import('@/pages/FAQPage'),
   privacy: () => import('@/pages/PrivacyPage'),
+  careers: () => import('@/pages/CareersPage'),
   news: () => import('@/pages/NewsPage'),
   newsDetail: () => import('@/pages/NewsDetailPage'),
 } satisfies Record<string, PageLoader>;
@@ -27,6 +28,7 @@ const routeLoaders: Record<string, PageLoader> = {
   '/contact': publicPageLoaders.contact,
   '/faq': publicPageLoaders.faq,
   '/privacy': publicPageLoaders.privacy,
+  '/careers': publicPageLoaders.careers,
   '/news': publicPageLoaders.news,
 };
 
