@@ -12,10 +12,11 @@ const groups: Array<{ label: string; links: AdminLink[] }> = [
   { label: 'Dashboard', links: [{ to: '/admin', label: 'Ringkasan', icon: LayoutDashboard, end: true }] },
   { label: 'Konten website', links: [
     { to: '/admin/homepage', label: 'Beranda', icon: Home }, { to: '/admin/about', label: 'About', icon: Sparkles },
+    { to: '/admin/careers/content', label: 'Careers · Konten', icon: BriefcaseBusiness },
     { to: '/admin/products', label: 'Produk', icon: Package }, { to: '/admin/services', label: 'Layanan', icon: Film },
     { to: '/admin/portfolios', label: 'Portofolio', icon: PanelsTopLeft }, { to: '/admin/news', label: 'Berita', icon: Newspaper },
   ] },
-  { label: 'Pesan & leads', links: [{ to: '/admin/leads', label: 'Prospek', icon: Inbox, notification: 'contacts' as const }, { to: '/admin/careers', label: 'Careers', icon: BriefcaseBusiness, notification: 'careers' as const }] },
+  { label: 'Pesan & leads', links: [{ to: '/admin/leads', label: 'Prospek', icon: Inbox, notification: 'contacts' as const }, { to: '/admin/careers/submissions', label: 'Careers · Pesan', icon: BriefcaseBusiness, notification: 'careers' as const }] },
   { label: 'Pengaturan', links: [{ to: '/admin/contact', label: 'Kontak', icon: ContactRound }] },
 ];
 
@@ -85,6 +86,6 @@ export default function AdminLayout() {
 
 function NotificationCenter({ counts, open, onToggle, onClose }: { counts: AdminNotificationCounts; open: boolean; onToggle: () => void; onClose: () => void }) {
   const total = counts.contacts + counts.partnerships + counts.applications;
-  const items = useMemo(() => [{ label: 'Prospek kontak', count: counts.contacts, to: '/admin/leads' }, { label: 'Partnership Careers', count: counts.partnerships, to: '/admin/careers' }, { label: 'Lamaran pekerjaan', count: counts.applications, to: '/admin/careers' }], [counts]);
+  const items = useMemo(() => [{ label: 'Prospek kontak', count: counts.contacts, to: '/admin/leads' }, { label: 'Partnership Careers', count: counts.partnerships, to: '/admin/careers/submissions' }, { label: 'Lamaran pekerjaan', count: counts.applications, to: '/admin/careers/submissions' }], [counts]);
   return <div className="relative"><button type="button" onClick={onToggle} aria-label={`Notifikasi${total ? `, ${total} belum dilihat` : ''}`} aria-expanded={open} className="relative rounded-xl p-2.5 text-slate-500 transition hover:bg-slate-100 hover:text-orange-600"><Bell className="h-5 w-5" />{total > 0 && <span className="absolute -right-1 -top-1 min-w-5 rounded-full bg-red-500 px-1 text-center text-[10px] font-black leading-5 text-white">{total > 99 ? '99+' : total}</span>}</button>{open && <><button type="button" aria-label="Tutup notifikasi" className="fixed inset-0 z-40 cursor-default" onClick={onClose} /><div className="absolute right-0 top-12 z-50 w-72 rounded-2xl border border-slate-200 bg-white p-4 shadow-2xl"><div className="flex items-center justify-between"><h2 className="font-black text-slate-900">Notifikasi</h2><span className="text-xs font-bold text-slate-400">{total} belum dilihat</span></div><div className="mt-3 space-y-1">{items.map((item) => <NavLink key={item.label} to={item.to} onClick={onClose} className="flex items-center justify-between rounded-xl px-3 py-3 text-sm hover:bg-slate-50"><span className="text-slate-600">{item.label}</span><span className={`rounded-full px-2 py-1 text-xs font-black ${item.count ? 'bg-red-50 text-red-600' : 'bg-slate-100 text-slate-400'}`}>{item.count}</span></NavLink>)}</div></div></>}</div>;
 }

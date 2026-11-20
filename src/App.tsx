@@ -124,6 +124,9 @@ function AnimatedRoutes() {
                   <Route path="news" element={<NewsManagerPage />} />
                   <Route path="leads" element={<LeadsPage />} />
                   <Route path="careers" element={<CareersManagerPage />} />
+                  <Route path="careers/content" element={<CareersManagerPage />} />
+                  <Route path="careers/jobs" element={<CareersManagerPage />} />
+                  <Route path="careers/submissions" element={<CareersManagerPage />} />
                 </Route>
               </Route>
             </Route>
